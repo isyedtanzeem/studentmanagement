@@ -64,6 +64,12 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 12 * 1024 * 1024) {
+      alert(`File "${file.name}" exceeds 12 MB limit. Please attach a compressed document.`);
+      e.target.value = '';
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const fileData = event.target?.result as string;
@@ -87,11 +93,18 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
       });
     };
     reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   const handleAddCustomAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (file.size > 12 * 1024 * 1024) {
+      alert(`File "${file.name}" exceeds 12 MB limit. Please attach a compressed document.`);
+      e.target.value = '';
+      return;
+    }
 
     const title = customDocTitle.trim() || 'Additional Certificate';
     const reader = new FileReader();
@@ -114,6 +127,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
       setCustomDocTitle('');
     };
     reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   const handleRemoveAttachment = (id: string) => {
