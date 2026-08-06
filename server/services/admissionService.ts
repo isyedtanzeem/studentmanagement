@@ -1,5 +1,6 @@
-import { dbStore, AdmissionRecord, StudentRecord, VerificationChecklist } from '../config/db';
+import { dbStore, AdmissionRecord, StudentRecord, VerificationChecklist, SystemUser } from '../config/db';
 import { DashboardModel } from '../models/Dashboard';
+import { hashPassword } from '../utils/passwordUtils';
 
 export interface AdmissionQueryParams {
   page?: number;
@@ -231,14 +232,19 @@ export class AdmissionService {
     return newApp;
   }
 
-  public static updateApplicationStatus(
+  public static async updateApplicationStatus(
     id: string,
     status: 'Pending' | 'Under Review' | 'Document Verification' | 'Approved' | 'Rejected',
     remarks?: string
-  ): AdmissionRecord | null {
+  ): Promise<AdmissionRecord | null> {
     DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
+
+    if (status === 'Approved') {
+      const result = await this.approveAndEnrollStudent(id, undefined, remarks);
+      return result ? result.application : app;
+    }
 
     app.status = status;
     if (remarks && status === 'Rejected') {
@@ -256,7 +262,7 @@ export class AdmissionService {
       actorName: 'Admissions Officer',
       actorRole: 'Officer',
       timestamp: new Date().toISOString(),
-      badgeType: status === 'Approved' ? 'success' : status === 'Rejected' ? 'danger' : 'info'
+      badgeType: status === 'Rejected' ? 'danger' : 'info'
     });
 
     return app;
@@ -298,13 +304,13 @@ export class AdmissionService {
     return app;
   }
 
-  public static approveAndEnrollStudent(id: string, customStudentRollNo?: string, approvedBy?: string): { application: AdmissionRecord; student: StudentRecord } | null {
+  public static async approveAndEnrollStudent(id: string, customStudentRollNo?: string, approvedBy?: string): Promise<{ application: AdmissionRecord; student: StudentRecord } | null> {
     DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
 
     // 1. Generate Admission Roll Number if not supplied
-    const rollNo = customStudentRollNo || this.generateAdmissionRollNumber(app.department, 2026);
+    const rollNo = customStudentRollNo || app.generatedStudentId || this.generateAdmissionRollNumber(app.department, 2026);
 
     // 2. Mark application as Approved
     app.status = 'Approved';
@@ -312,7 +318,7 @@ export class AdmissionService {
     app.updatedAt = new Date().toISOString();
 
     // 3. Create active Student Record (Student Enrollment)
-    const newStudentId = `std-${Date.now()}`;
+    const newStudentId = app.enrolledStudentId || `std-${Date.now()}`;
     const newStudent: StudentRecord = {
       id: newStudentId,
       studentId: rollNo,
@@ -323,7 +329,11 @@ export class AdmissionService {
       gender: app.gender,
       status: 'Active',
       enrollmentYear: 2026,
-      gpa: 0.0, // Initial fresh enrollment CGPA
+      currentSemester: 1,
+      currentYear: 1,
+      academicBatch: '2026-2030',
+      attendancePercentage: 92.0,
+      gpa: 8.80,
       createdAt: new Date().toISOString(),
       photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
       dateOfBirth: app.dateOfBirth || '2005-01-01',
@@ -336,11 +346,49 @@ export class AdmissionService {
     dbStore.admissions.set(id, app);
     dbStore.students.set(newStudentId, newStudent);
 
+    // 4. Create or activate SystemUser account for student login
+    const normalizedEmail = app.email.toLowerCase().trim();
+    let existingUser: SystemUser | null = null;
+    for (const u of dbStore.users.values()) {
+      if (u.email.toLowerCase().trim() === normalizedEmail) {
+        existingUser = u;
+        break;
+      }
+    }
+
+    const defaultPasswordHash = await hashPassword('Password123!');
+
+    if (existingUser) {
+      existingUser.role = 'Student';
+      existingUser.department = app.department;
+      existingUser.studentId = rollNo;
+      existingUser.employeeId = rollNo;
+      existingUser.status = 'Active';
+      existingUser.fullName = app.applicantName;
+      dbStore.users.set(existingUser.id, existingUser);
+    } else {
+      const newUserId = `usr_std_${Date.now()}`;
+      const newUser: SystemUser = {
+        id: newUserId,
+        email: app.email,
+        passwordHash: defaultPasswordHash,
+        fullName: app.applicantName,
+        role: 'Student',
+        department: app.department,
+        studentId: rollNo,
+        employeeId: rollNo,
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
+        status: 'Active',
+        createdAt: new Date().toISOString()
+      };
+      dbStore.users.set(newUserId, newUser);
+    }
+
     // Activity Log
     dbStore.activities.unshift({
       id: `act-${Date.now()}`,
       title: 'Admission Approved & Student Enrolled',
-      description: `${app.applicantName} enrolled into ${app.department} with Roll No: ${rollNo}.`,
+      description: `${app.applicantName} enrolled into ${app.department} with Roll No: ${rollNo}. Student login activated for ${app.email}.`,
       category: 'Admission',
       actorName: approvedBy || 'Academic Registrar Cell',
       actorRole: 'Registrar',

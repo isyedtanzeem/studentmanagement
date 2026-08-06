@@ -94,7 +94,7 @@ export class AdmissionController {
         return;
       }
 
-      const updated = AdmissionService.updateApplicationStatus(id, status, remarks);
+      const updated = await AdmissionService.updateApplicationStatus(id, status, remarks);
 
       if (!updated) {
         res.status(404).json({
@@ -144,7 +144,7 @@ export class AdmissionController {
       const { id } = req.params;
       const { customRollNumber, approvedBy } = req.body;
 
-      const result = AdmissionService.approveAndEnrollStudent(id, customRollNumber, approvedBy);
+      const result = await AdmissionService.approveAndEnrollStudent(id, customRollNumber, approvedBy);
 
       if (!result) {
         res.status(404).json({

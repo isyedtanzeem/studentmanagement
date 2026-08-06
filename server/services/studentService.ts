@@ -309,81 +309,220 @@ export class StudentService {
   public getStudentPortalData(user: any) {
     DashboardModel.seedDataIfEmpty();
     const studentsList = Array.from(dbStore.students.values());
+    const userEmail = (user.email || '').toLowerCase().trim();
 
-    // Match student by email or employeeId/studentId, or default to std-1
+    // 1. Strict student lookup by email or studentId/employeeId
     let student = studentsList.find(
-      s => s.email.toLowerCase() === user.email?.toLowerCase() || s.studentId === user.studentId || s.studentId === user.employeeId
+      s => s.email.toLowerCase().trim() === userEmail ||
+           (user.studentId && s.studentId === user.studentId) ||
+           (user.employeeId && s.studentId === user.employeeId)
     );
 
-    if (!student && studentsList.length > 0) {
-      student = studentsList[0]; // Aarav Sharma fallback
+    // 2. Check if an approved admission application exists for this user email
+    if (!student && userEmail) {
+      const admissionsList = Array.from(dbStore.admissions.values());
+      const approvedApp = admissionsList.find(
+        a => a.email.toLowerCase().trim() === userEmail && a.status === 'Approved'
+      );
+      if (approvedApp) {
+        const rollNo = approvedApp.generatedStudentId || `2026${(approvedApp.department || 'GEN').substring(0, 3).toUpperCase()}1001`;
+        student = {
+          id: approvedApp.enrolledStudentId || `std-${Date.now()}`,
+          studentId: rollNo,
+          fullName: approvedApp.applicantName,
+          email: approvedApp.email,
+          phone: approvedApp.phone || '+91 98765 00000',
+          department: approvedApp.department || 'Computer Science & Engineering',
+          gender: approvedApp.gender || 'Male',
+          status: 'Active',
+          enrollmentYear: 2026,
+          currentSemester: 1,
+          currentYear: 1,
+          academicBatch: '2026-2030',
+          attendancePercentage: 92.0,
+          gpa: 8.80,
+          createdAt: new Date().toISOString(),
+          photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
+          dateOfBirth: approvedApp.dateOfBirth || '2005-01-01',
+          address: approvedApp.address || `${approvedApp.state || 'India'} Address`,
+          guardianName: approvedApp.fatherName || approvedApp.motherName || 'Parent / Guardian',
+          guardianPhone: approvedApp.phone || '+91 98765 00000'
+        };
+        dbStore.students.set(student.id, student);
+      }
     }
 
-    // Related courses
-    const allCourses = Array.from(dbStore.courses.values());
-    const enrolledCourses = allCourses.length > 0
-      ? allCourses.slice(0, 5)
-      : [
-          {
-            id: 'crs-101',
-            code: 'CS101',
-            title: 'Data Structures & Algorithms in C++',
-            instructorName: 'Prof. Ramesh Kulkarni',
-            credits: 4,
-            department: 'Computer Science & Engineering',
-            status: 'Active'
-          },
-          {
-            id: 'crs-102',
-            code: 'CS204',
-            title: 'Machine Learning & Artificial Intelligence',
-            instructorName: 'Dr. Vikramaditya Sen',
-            credits: 4,
-            department: 'Computer Science & Engineering',
-            status: 'Active'
-          }
-        ];
+    // 3. Fallback for demo student user account
+    if (!student) {
+      if (userEmail === 'student@scholarcore.edu.in' || user.role === 'Student') {
+        student = studentsList[0] || {
+          id: 'std-1',
+          studentId: '2024CSE1001',
+          fullName: user.fullName || 'Aarav Sharma',
+          email: user.email || 'student@scholarcore.edu.in',
+          phone: '+91 98765 43210',
+          department: user.department || 'Computer Science & Engineering',
+          gender: 'Male',
+          status: 'Active',
+          enrollmentYear: 2024,
+          currentSemester: 3,
+          currentYear: 2,
+          academicBatch: '2024-2028',
+          attendancePercentage: 88.5,
+          gpa: 8.95,
+          createdAt: '2024-07-15T09:00:00Z',
+          photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
+          dateOfBirth: '2004-03-14',
+          address: 'B-104, Vasant Kunj, New Delhi, Delhi 110070',
+          guardianName: 'Rajesh Sharma',
+          guardianPhone: '+91 98112 34567'
+        };
+      } else {
+        student = studentsList[0];
+      }
+    }
 
-    // Subject-wise attendance breakdown
-    const subjectAttendance = [
-      { code: 'CS101', title: 'Data Structures & Algorithms', totalClasses: 25, attended: 23, percentage: 92, status: 'Good' },
-      { code: 'CS204', title: 'Machine Learning & AI', totalClasses: 21, attended: 18, percentage: 86, status: 'Good' },
-      { code: 'CS202', title: 'Database Management Systems', totalClasses: 30, attended: 27, percentage: 90, status: 'Good' },
-      { code: 'MA201', title: 'Discrete Mathematics & Logic', totalClasses: 20, attended: 17, percentage: 85, status: 'Good' },
-      { code: 'EC205', title: 'Digital Electronics & Circuits', totalClasses: 25, attended: 22, percentage: 88, status: 'Good' },
-      { code: 'CS209', title: 'Full Stack Web Engineering Lab', totalClasses: 20, attended: 19, percentage: 95, status: 'Excellent' }
-    ];
+    const dept = student.department || 'Computer Science & Engineering';
 
-    // SGPA Trend
+    // Department-Specific Course Catalog (Strict Data Isolation)
+    const deptCoursesMap: Record<string, any[]> = {
+      'Computer Science & Engineering': [
+        { id: 'crs-cs-101', code: 'CS101', title: 'Data Structures & Algorithms in C++', instructorName: 'Prof. Ramesh Kulkarni', credits: 4, department: 'Computer Science & Engineering', status: 'Active' },
+        { id: 'crs-cs-102', code: 'CS204', title: 'Machine Learning & Artificial Intelligence', instructorName: 'Dr. Vikramaditya Sen', credits: 4, department: 'Computer Science & Engineering', status: 'Active' },
+        { id: 'crs-cs-103', code: 'CS202', title: 'Database Management Systems', instructorName: 'Dr. Sunita Deshmukh', credits: 4, department: 'Computer Science & Engineering', status: 'Active' },
+        { id: 'crs-cs-104', code: 'CS209', title: 'Full Stack Web Engineering Lab', instructorName: 'Prof. Ramesh Kulkarni', credits: 3, department: 'Computer Science & Engineering', status: 'Active' },
+        { id: 'crs-cs-105', code: 'MA201', title: 'Discrete Mathematics & Graph Theory', instructorName: 'Dr. S. K. Gupta', credits: 4, department: 'Computer Science & Engineering', status: 'Active' },
+        { id: 'crs-cs-106', code: 'CS205', title: 'Operating Systems & Architecture', instructorName: 'Dr. Amit Vikram', credits: 3, department: 'Computer Science & Engineering', status: 'Active' }
+      ],
+      'Electronics & Communication': [
+        { id: 'crs-ec-101', code: 'EC101', title: 'VLSI Design & Semiconductor Physics', instructorName: 'Dr. Venkatesh Iyer', credits: 4, department: 'Electronics & Communication', status: 'Active' },
+        { id: 'crs-ec-102', code: 'EC204', title: 'Signals, Systems & DSP Analysis', instructorName: 'Prof. Meenakshi Sundaram', credits: 4, department: 'Electronics & Communication', status: 'Active' },
+        { id: 'crs-ec-103', code: 'EC202', title: 'Wireless & Optical Communications', instructorName: 'Dr. Ananya Reddy', credits: 4, department: 'Electronics & Communication', status: 'Active' },
+        { id: 'crs-ec-104', code: 'EC205', title: 'Microcontrollers & Embedded Systems Lab', instructorName: 'Prof. Rajesh Khanna', credits: 3, department: 'Electronics & Communication', status: 'Active' },
+        { id: 'crs-ec-105', code: 'EC208', title: 'Analog Integrated Circuit Design', instructorName: 'Dr. S. Narayanan', credits: 4, department: 'Electronics & Communication', status: 'Active' }
+      ],
+      'Electrical & Electronics': [
+        { id: 'crs-ee-101', code: 'EE101', title: 'Power Systems & Smart Grid Engineering', instructorName: 'Dr. K. V. Ramana', credits: 4, department: 'Electrical & Electronics', status: 'Active' },
+        { id: 'crs-ee-102', code: 'EE204', title: 'Control Systems & Industrial Automation', instructorName: 'Prof. Suresh Nair', credits: 4, department: 'Electrical & Electronics', status: 'Active' },
+        { id: 'crs-ee-103', code: 'EE202', title: 'Electrical Machines & Transformers', instructorName: 'Dr. Lakshmi Prasanna', credits: 4, department: 'Electrical & Electronics', status: 'Active' },
+        { id: 'crs-ee-104', code: 'EE205', title: 'High Voltage & Power Electronics Lab', instructorName: 'Prof. Anand Vardhan', credits: 3, department: 'Electrical & Electronics', status: 'Active' }
+      ],
+      'Mechanical Engineering': [
+        { id: 'crs-me-101', code: 'ME101', title: 'Applied Engineering Thermodynamics', instructorName: 'Dr. Harish Chandra', credits: 4, department: 'Mechanical Engineering', status: 'Active' },
+        { id: 'crs-me-102', code: 'ME204', title: 'Fluid Mechanics & Hydraulic Machines', instructorName: 'Prof. Balram Pillai', credits: 4, department: 'Mechanical Engineering', status: 'Active' },
+        { id: 'crs-me-103', code: 'ME202', title: 'CAD/CAM & Digital Manufacturing', instructorName: 'Dr. Rohan Deshmukh', credits: 4, department: 'Mechanical Engineering', status: 'Active' },
+        { id: 'crs-me-104', code: 'ME205', title: 'Heat & Mass Transfer Engineering', instructorName: 'Prof. S. K. Mahapatra', credits: 3, department: 'Mechanical Engineering', status: 'Active' },
+        { id: 'crs-me-105', code: 'ME209', title: 'Robotics & Mechatronics Automation Lab', instructorName: 'Dr. Nitin Kulkarni', credits: 3, department: 'Mechanical Engineering', status: 'Active' }
+      ],
+      'Biotechnology & Life Sciences': [
+        { id: 'crs-bt-101', code: 'BT101', title: 'Bioprocess Engineering & Fermentation', instructorName: 'Dr. Kavita Subramanian', credits: 4, department: 'Biotechnology & Life Sciences', status: 'Active' },
+        { id: 'crs-bt-102', code: 'BT204', title: 'Molecular Biology & Human Genetics', instructorName: 'Prof. Arun Kumar', credits: 4, department: 'Biotechnology & Life Sciences', status: 'Active' },
+        { id: 'crs-bt-103', code: 'BT202', title: 'Recombinant DNA Technology & CRISPR', instructorName: 'Dr. Priya Rajagopal', credits: 4, department: 'Biotechnology & Life Sciences', status: 'Active' },
+        { id: 'crs-bt-104', code: 'BT205', title: 'Bioinformatics & Genomic Analytics', instructorName: 'Prof. S. Ranganathan', credits: 3, department: 'Biotechnology & Life Sciences', status: 'Active' },
+        { id: 'crs-bt-105', code: 'BT209', title: 'Industrial Microbiology & Cell Culture Lab', instructorName: 'Dr. Deepa Menon', credits: 3, department: 'Biotechnology & Life Sciences', status: 'Active' }
+      ],
+      'Department of Management Studies': [
+        { id: 'crs-mb-101', code: 'MB101', title: 'Corporate Finance & Portfolio Management', instructorName: 'Dr. Vikramaditya Roy', credits: 4, department: 'Department of Management Studies', status: 'Active' },
+        { id: 'crs-mb-102', code: 'MB204', title: 'Marketing Analytics & Digital Strategy', instructorName: 'Prof. Shalini Kapoor', credits: 4, department: 'Department of Management Studies', status: 'Active' },
+        { id: 'crs-mb-103', code: 'MB202', title: 'Organizational Leadership & Behavior', instructorName: 'Dr. Rajeshwar Sharma', credits: 4, department: 'Department of Management Studies', status: 'Active' },
+        { id: 'crs-mb-104', code: 'MB205', title: 'Business Analytics with Python & R', instructorName: 'Prof. Anirudh Sen', credits: 3, department: 'Department of Management Studies', status: 'Active' }
+      ],
+      'Civil Engineering': [
+        { id: 'crs-ce-101', code: 'CE101', title: 'Advanced Structural Analysis & Steel Design', instructorName: 'Dr. G. S. Murthy', credits: 4, department: 'Civil Engineering', status: 'Active' },
+        { id: 'crs-ce-102', code: 'CE204', title: 'Environmental Engineering & Waste Management', instructorName: 'Prof. N. K. Chaudhury', credits: 4, department: 'Civil Engineering', status: 'Active' },
+        { id: 'crs-ce-103', code: 'CE202', title: 'Geotechnical Engineering & Soil Mechanics', instructorName: 'Dr. S. P. Mukherjee', credits: 4, department: 'Civil Engineering', status: 'Active' },
+        { id: 'crs-ce-104', code: 'CE205', title: 'Transportation & Highway Engineering', instructorName: 'Prof. V. K. Bhasin', credits: 3, department: 'Civil Engineering', status: 'Active' }
+      ]
+    };
+
+    const enrolledCourses = deptCoursesMap[dept] || deptCoursesMap['Computer Science & Engineering'];
+
+    // Subject-wise attendance breakdown (Department Specific)
+    const subjectAttendance = enrolledCourses.map((c, idx) => {
+      const totalClasses = 22 + (idx * 3) % 10;
+      const attended = totalClasses - (idx % 3);
+      const percentage = Math.round((attended / totalClasses) * 100);
+      return {
+        code: c.code,
+        title: c.title,
+        totalClasses,
+        attended,
+        percentage,
+        status: percentage >= 90 ? 'Excellent' : percentage >= 75 ? 'Good' : 'Warning'
+      };
+    });
+
+    // SGPA History
     const sgpaHistory = [
       { semester: 'Sem 1', sgpa: 8.70, year: '2024' },
       { semester: 'Sem 2', sgpa: 8.90, year: '2025' },
-      { semester: 'Sem 3 (Current)', sgpa: student?.gpa || 8.95, year: '2026' }
+      { semester: 'Sem 3 (Current)', sgpa: student.gpa || 8.95, year: '2026' }
     ];
 
-    // Timetable
-    const weeklySchedule = [
-      { day: 'Monday', time: '09:00 AM - 10:30 AM', subject: 'CS101: Data Structures', room: 'Turing Hall A', instructor: 'Prof. Ramesh Kulkarni' },
-      { day: 'Monday', time: '11:00 AM - 12:30 PM', subject: 'CS204: Machine Learning', room: 'AI Lab 3', instructor: 'Dr. Vikramaditya Sen' },
-      { day: 'Tuesday', time: '10:00 AM - 11:30 AM', subject: 'CS202: DBMS', room: 'Bhabha Block B', instructor: 'Dr. Sunita Deshmukh' },
-      { day: 'Wednesday', time: '09:00 AM - 12:00 PM', subject: 'CS209: Web Eng Lab', room: 'Software Lab 2', instructor: 'Prof. Ramesh Kulkarni' },
-      { day: 'Thursday', time: '02:00 PM - 03:30 PM', subject: 'MA201: Discrete Math', room: 'Lecture Theatre 101', instructor: 'Dr. S. K. Gupta' },
-      { day: 'Friday', time: '11:00 AM - 12:30 PM', subject: 'EC205: Digital Circuits', room: 'Hardware Lab', instructor: 'Dr. Venkatesh Iyer' }
-    ];
+    // Department Specific Timetable Schedule
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const times = ['09:00 AM - 10:30 AM', '11:00 AM - 12:30 PM', '02:00 PM - 03:30 PM', '03:45 PM - 05:15 PM'];
+    const deptPrefix = dept.split(' ')[0].toUpperCase();
 
-    // Documents Vault
+    const weeklySchedule = enrolledCourses.slice(0, 5).map((c, idx) => ({
+      day: days[idx % days.length],
+      time: times[idx % times.length],
+      subject: `${c.code}: ${c.title}`,
+      room: `${deptPrefix} Block - Room ${101 + idx}`,
+      instructor: c.instructorName
+    }));
+
+    // Student Vault Attachments & Documents
+    let userAttachments: any[] = [];
+    const matchedApp = Array.from(dbStore.admissions.values()).find(
+      a => a.email.toLowerCase().trim() === student.email.toLowerCase().trim() || a.enrolledStudentId === student.id
+    );
+
+    if (matchedApp && matchedApp.attachments && matchedApp.attachments.length > 0) {
+      userAttachments = matchedApp.attachments.map((att: any) => ({
+        id: att.id || `doc-${Date.now()}`,
+        name: att.name || `${att.category} Document`,
+        category: att.category || 'Admission Document',
+        status: 'Verified',
+        date: att.uploadedAt ? att.uploadedAt.split('T')[0] : '2026-08-01',
+        fileData: att.fileData
+      }));
+    }
+
     const documents = [
-      { id: 'doc-101', name: 'Class X Secondary Marksheet', category: 'Academic Proof', status: 'Verified', date: '2024-07-15' },
-      { id: 'doc-102', name: 'Class XII Senior Secondary Certificate', category: 'Academic Proof', status: 'Verified', date: '2024-07-15' },
-      { id: 'doc-103', name: 'Semester 3 Fee Payment Receipt (#REC-2026-9021)', category: 'Finance', status: 'Verified', date: '2026-01-10' },
-      { id: 'doc-104', name: 'Official Bonafide Student Certificate', category: 'General', status: 'Approved', date: '2026-02-01' }
+      ...userAttachments,
+      { id: 'doc-101', name: 'Class X Secondary Board Marksheet', category: 'Academic Proof', status: 'Verified', date: '2024-07-15' },
+      { id: 'doc-102', name: 'Class XII Senior Secondary Passing Certificate', category: 'Academic Proof', status: 'Verified', date: '2024-07-15' },
+      { id: 'doc-103', name: `Semester 1 Fee Receipt (#REC-${student.studentId})`, category: 'Finance', status: 'Verified', date: '2026-01-10' },
+      { id: 'doc-104', name: `Official Bonafide Certificate (${dept})`, category: 'General', status: 'Approved', date: '2026-02-01' }
     ];
 
-    // Notices
+    // Department Specific Notices & Announcements
     const notices = [
-      { id: 'not-1', title: 'Mid-Term Examination Schedule Released (Spring 2026)', date: 'Today', category: 'Exam', priority: 'High', description: 'Mid-term exams commence from March 10, 2026. Hall tickets available for download in student portal.' },
-      { id: 'not-2', title: 'ScholarCore Annual Hackathon 2026 Registration Open', date: 'Yesterday', category: 'Events', priority: 'Medium', description: 'Register your 4-member teams before Feb 25. Cash prizes up to ₹2,50,000.' },
-      { id: 'not-3', title: 'Library Book Return Reminder', date: '3 days ago', category: 'Library', priority: 'Low', description: 'Please return "Introduction to Algorithms (4th Ed)" by Friday to avoid overdue fines.' }
+      {
+        id: 'not-1',
+        title: `${dept} Mid-Term Examination Schedule Released (Spring 2026)`,
+        date: 'Today',
+        category: 'Exam',
+        priority: 'High',
+        description: `Mid-term examinations for all ${dept} degree courses commence from March 10, 2026. Hall tickets available in the portal.`
+      },
+      {
+        id: 'not-2',
+        title: `ScholarCore ${dept} Annual Academic Symposium 2026`,
+        date: 'Yesterday',
+        category: 'Events',
+        priority: 'Medium',
+        description: `Students registered in ${dept} are invited to submit research papers and technical project entries before Feb 25.`
+      },
+      {
+        id: 'not-3',
+        title: 'Central University Library Book Return Reminder',
+        date: '3 days ago',
+        category: 'Library',
+        priority: 'Low',
+        description: 'Please return all overdue reference books to avoid daily late fine levies.'
+      }
     ];
 
     return {

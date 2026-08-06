@@ -100,12 +100,28 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadDocName.trim()) return;
+
+    const newDoc = {
+      id: `doc-${Date.now()}`,
+      name: uploadDocName,
+      category: uploadDocType,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Submitted'
+    };
+
+    if (portalData) {
+      setPortalData({
+        ...portalData,
+        documents: [newDoc, ...(portalData.documents || [])]
+      });
+    }
+
     setUploadSuccess(`Document "${uploadDocName}" uploaded successfully to Student Vault.`);
     setTimeout(() => {
       setUploadSuccess(null);
       setIsUploadModalOpen(false);
       setUploadDocName('');
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -219,7 +235,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
-            Ranked #4 in CSE Department (Class of '28)
+            Ranked #4 in {student.department}
           </div>
         </div>
 
@@ -240,7 +256,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
-            Attended 142 of 160 Conducted Lectures
+            Current Semester Department Lectures
           </div>
         </div>
 
@@ -250,10 +266,10 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             <div>
               <p className="text-[11px] text-slate-500 font-mono uppercase tracking-wider">Active Subjects</p>
               <h3 className="text-2xl font-bold text-slate-900 mt-1 font-mono">
-                6 Courses
+                {courses.length} Courses
               </h3>
               <p className="text-[11px] text-blue-600 mt-1 flex items-center gap-1 font-semibold">
-                <BookOpen className="w-3.5 h-3.5" /> 22 Total Credits
+                <BookOpen className="w-3.5 h-3.5" /> {courses.reduce((acc: number, c: any) => acc + (c.credits || 3), 0)} Total Credits
               </p>
             </div>
             <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-600">
@@ -261,7 +277,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
-            5 Theory + 1 Full Stack Eng Lab
+            Department of {student.department}
           </div>
         </div>
 
@@ -282,7 +298,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-500">
-            Receipt #REC-2026-9021 Verified
+            Receipt #REC-{student.studentId} Verified
           </div>
         </div>
       </div>
@@ -329,29 +345,22 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-slate-900">Current Semester Enrolled Subjects</h2>
-              <p className="text-xs text-slate-500">Registered courses for Spring 2026 Semester 3</p>
+              <p className="text-xs text-slate-500">Registered courses for Spring 2026 Semester {student.currentSemester || 1}</p>
             </div>
             <span className="text-xs font-mono text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg font-semibold">
-              Batch 2024-2028 • B.Tech CSE
+              Batch {student.academicBatch || '2026-2030'} • {student.department}
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { code: 'CS101', title: 'Data Structures & Algorithms in C++', faculty: 'Prof. Ramesh Kulkarni', credits: 4, room: 'Turing Hall A', schedule: 'Mon/Wed 09:00 AM', status: 'Enrolled' },
-              { code: 'CS204', title: 'Machine Learning & Artificial Intelligence', faculty: 'Dr. Vikramaditya Sen', credits: 4, room: 'AI Lab 3', schedule: 'Mon/Fri 11:00 AM', status: 'Enrolled' },
-              { code: 'CS202', title: 'Database Management Systems', faculty: 'Dr. Sunita Deshmukh', credits: 4, room: 'Bhabha Block B', schedule: 'Tue/Thu 10:00 AM', status: 'Enrolled' },
-              { code: 'MA201', title: 'Discrete Mathematics & Logic', faculty: 'Dr. S. K. Gupta', credits: 3, room: 'Lecture Hall 101', schedule: 'Thu 02:00 PM', status: 'Enrolled' },
-              { code: 'EC205', title: 'Digital Electronics & Circuits', faculty: 'Dr. Venkatesh Iyer', credits: 3, room: 'Hardware Lab', schedule: 'Fri 11:00 AM', status: 'Enrolled' },
-              { code: 'CS209', title: 'Full Stack Web Engineering Lab', faculty: 'Prof. Ramesh Kulkarni', credits: 4, room: 'Software Lab 2', schedule: 'Wed 09:00 AM', status: 'Enrolled' }
-            ].map((course, idx) => (
+            {courses.map((course: any, idx: number) => (
               <div key={idx} className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-3 hover:border-blue-300 transition-all">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-xs font-semibold">
                     {course.code}
                   </span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
-                    {course.credits} Credits
+                    {course.credits || 4} Credits
                   </span>
                 </div>
 
@@ -360,15 +369,15 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
                 <div className="space-y-1.5 text-xs text-slate-600 pt-1 border-t border-slate-100 font-mono">
                   <p className="flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                    <span>Faculty: {course.faculty}</span>
+                    <span>Faculty: {course.instructorName || course.faculty || 'Department Faculty'}</span>
                   </p>
                   <p className="flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Room: {course.room}</span>
+                    <span>Department: {course.department}</span>
                   </p>
                   <p className="flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Schedule: {course.schedule}</span>
+                    <span>Status: {course.status || 'Active'}</span>
                   </p>
                 </div>
               </div>
@@ -428,14 +437,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              {[
-                { code: 'CS101', title: 'Data Structures & Algorithms', total: 25, attended: 23, percentage: 92 },
-                { code: 'CS204', title: 'Machine Learning & AI', total: 21, attended: 18, percentage: 86 },
-                { code: 'CS202', title: 'Database Management Systems', total: 30, attended: 27, percentage: 90 },
-                { code: 'MA201', title: 'Discrete Mathematics & Logic', total: 20, attended: 17, percentage: 85 },
-                { code: 'EC205', title: 'Digital Electronics & Circuits', total: 25, attended: 22, percentage: 88 },
-                { code: 'CS209', title: 'Full Stack Web Engineering Lab', total: 20, attended: 19, percentage: 95 }
-              ].map((sub, idx) => (
+              {subjectAttendance.map((sub: any, idx: number) => (
                 <div key={idx} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                   <div className="flex justify-between items-center text-xs">
                     <span className="font-semibold text-slate-900 font-mono">{sub.code}: {sub.title}</span>
@@ -453,7 +455,7 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
                   </div>
 
                   <div className="flex justify-between items-center text-[11px] text-slate-600 font-mono">
-                    <span>Attended: {sub.attended} / {sub.total} Classes</span>
+                    <span>Attended: {sub.attended} / {sub.totalClasses || sub.total || 25} Classes</span>
                     <span className={sub.percentage >= 75 ? 'text-emerald-700 font-medium' : 'text-rose-600 font-medium'}>
                       {sub.percentage >= 75 ? 'Eligible for Exams' : 'Shortage Alert'}
                     </span>
@@ -604,28 +606,31 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
 
           <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
             <div className="space-y-3 font-mono text-xs">
-              {[
-                { name: 'Class X Secondary Board Marksheet & Certificate', category: 'Academic', date: '2024-07-15', status: 'Verified' },
-                { name: 'Class XII Senior Secondary Passing Certificate', category: 'Academic', date: '2024-07-15', status: 'Verified' },
-                { name: 'Semester 3 Tuition Fee Payment Receipt (#REC-2026-9021)', category: 'Finance', date: '2026-01-10', status: 'Verified' },
-                { name: 'Official Bonafide Student Enrollment Certificate', category: 'General', date: '2026-02-01', status: 'Approved' },
-                { name: 'Aadhaar Card / Government Identity Proof', category: 'Identity', date: '2024-07-15', status: 'Verified' }
-              ].map((doc, idx) => (
+              {documents.map((doc: any, idx: number) => (
                 <div key={idx} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-slate-100/60 transition-all">
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-blue-600 shrink-0" />
                     <div>
                       <p className="font-semibold text-slate-900">{doc.name}</p>
-                      <p className="text-[10px] text-slate-500">{doc.category} • Uploaded on {doc.date}</p>
+                      <p className="text-[10px] text-slate-500">{doc.category || 'Academic'} • Uploaded on {doc.date || doc.uploadedAt || '2026-02-01'}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-semibold">
-                      {doc.status}
+                      {doc.status || 'Verified'}
                     </span>
                     <button
-                      onClick={() => alert(`Downloading verified document: ${doc.name}`)}
+                      onClick={() => {
+                        if (doc.fileData) {
+                          const link = document.createElement('a');
+                          link.href = doc.fileData;
+                          link.download = doc.name;
+                          link.click();
+                        } else {
+                          alert(`Downloading verified document: ${doc.name}`);
+                        }
+                      }}
                       className="p-1.5 bg-white hover:bg-slate-100 rounded-lg text-slate-600 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer"
                       title="Download File"
                     >
