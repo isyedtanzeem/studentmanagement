@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { AdmissionApplication, CreateAdmissionInput } from '../../types/admission';
+import { AdmissionApplication, CreateAdmissionInput, AdmissionAttachment } from '../../types/admission';
 import { admissionApi } from '../../api/admissionApi';
+import { DEPARTMENTS, DEPARTMENT_DEGREES, INDIAN_STATES } from '../../constants/admissionConstants';
 import {
   GraduationCap,
   Phone,
@@ -24,22 +25,16 @@ import {
   RefreshCw,
   Download,
   Info,
-  LogOut
+  LogOut,
+  Plus,
+  Trash2,
+  Paperclip,
+  Eye
 } from 'lucide-react';
 
 interface ApplicantPortalPageProps {
   onBackToStaffLogin: () => void;
 }
-
-const DEPARTMENTS = [
-  'Computer Science & Engineering',
-  'Electronics & Communication',
-  'Electrical & Electronics',
-  'Mechanical Engineering',
-  'Biotechnology & Life Sciences',
-  'Department of Management Studies',
-  'Civil Engineering'
-];
 
 const SAMPLE_PHONES = [
   { label: 'Sample Applicant 1', phone: '+91 98765 11001' },
@@ -72,15 +67,92 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     gender: 'Male',
     dateOfBirth: '',
     category: 'General',
-    state: 'Maharashtra',
+    state: INDIAN_STATES[0],
     address: '',
     department: DEPARTMENTS[0],
-    degree: 'B.Tech',
+    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]][0],
     academicTerm: '2026-2027 Session',
     classXPercentage: 88.5,
     classXIIPercentage: 89.2,
-    entranceExamScore: 'JEE Main 94.5 Percentile'
+    entranceExamScore: 'JEE Main 94.5 Percentile',
+    attachments: []
   });
+
+  const [customDocTitle, setCustomDocTitle] = useState('');
+
+  // Handle department change & auto sync degree
+  const handleDepartmentChange = (newDept: string) => {
+    const availableDegrees = DEPARTMENT_DEGREES[newDept] || ['B.Tech'];
+    setFormData((prev) => ({
+      ...prev,
+      department: newDept,
+      degree: availableDegrees[0]
+    }));
+  };
+
+  // Handle file uploads
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, categoryName: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const fileData = event.target?.result as string;
+      const newAttachment: AdmissionAttachment = {
+        id: `att-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+        type: file.type || 'application/pdf',
+        category: categoryName,
+        fileData,
+        uploadedAt: new Date().toISOString()
+      };
+
+      setFormData((prev) => {
+        const existing = prev.attachments || [];
+        const filtered = existing.filter((a) => a.category !== categoryName);
+        return {
+          ...prev,
+          attachments: [...filtered, newAttachment]
+        };
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAddCustomAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const title = customDocTitle.trim() || 'Additional Certificate';
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const fileData = event.target?.result as string;
+      const newAttachment: AdmissionAttachment = {
+        id: `att-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+        type: file.type || 'application/pdf',
+        category: title,
+        fileData,
+        uploadedAt: new Date().toISOString()
+      };
+
+      setFormData((prev) => ({
+        ...prev,
+        attachments: [...(prev.attachments || []), newAttachment]
+      }));
+      setCustomDocTitle('');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAttachment = (id: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      attachments: (prev.attachments || []).filter((a) => a.id !== id)
+    }));
+  };
 
   // Uploaded docs mock state
   const [uploadedDocs, setUploadedDocs] = useState<{
@@ -549,14 +621,21 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Domicile State</label>
-                        <input
-                          type="text"
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Domicile State / UT <span className="text-rose-500">*</span>
+                        </label>
+                        <select
                           value={formData.state}
                           onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                          placeholder="Maharashtra / Delhi / Karnataka"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
-                        />
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
+                          required
+                        >
+                          {INDIAN_STATES.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
 
@@ -601,7 +680,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         </label>
                         <select
                           value={formData.department}
-                          onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                          onChange={(e) => handleDepartmentChange(e.target.value)}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                           required
                         >
@@ -614,17 +693,19 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Degree Program</label>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Degree Program <span className="text-rose-500">*</span>
+                        </label>
                         <select
                           value={formData.degree}
                           onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white"
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                         >
-                          <option value="B.Tech">B.Tech (Bachelor of Technology)</option>
-                          <option value="M.Tech">M.Tech (Master of Technology)</option>
-                          <option value="MBA">MBA (Master of Business Administration)</option>
-                          <option value="B.Sc">B.Sc (Honours)</option>
-                          <option value="Diploma">Diploma Engineering</option>
+                          {(DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
+                            <option key={deg} value={deg}>
+                              {deg}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
@@ -736,34 +817,116 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                     <div className="pb-3 border-b border-slate-100 flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-blue-600" />
                       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                        Step 4: Document Uploads & Declaration
+                        Step 4: Document Uploads & Attachments
                       </h3>
                     </div>
 
+                    {/* Standard Required Documents */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
-                        { key: 'classX', title: 'Class X Marksheet / Passing Certificate', req: true },
-                        { key: 'classXII', title: 'Class XII Senior Secondary Marksheet', req: true },
-                        { key: 'idProof', title: 'Identity Proof (Aadhaar / Passport / Voter ID)', req: true },
-                        { key: 'migration', title: 'Transfer / Migration Certificate', req: false }
-                      ].map((doc) => (
-                        <div
-                          key={doc.key}
-                          className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-3"
-                        >
-                          <div className="min-w-0">
-                            <h4 className="text-xs font-semibold text-slate-900 truncate">{doc.title}</h4>
-                            <p className="text-[10px] text-slate-500 font-mono">
-                              {doc.req ? 'Mandatory Verification Doc' : 'Optional / Secondary Doc'}
-                            </p>
-                          </div>
+                        { key: 'Class X Marksheet', title: 'Class X Marksheet / Passing Certificate', req: true },
+                        { key: 'Class XII Marksheet', title: 'Class XII Senior Secondary Marksheet', req: true },
+                        { key: 'Identity Proof', title: 'Identity Proof (Aadhaar / Passport / Voter ID)', req: true },
+                        { key: 'Transfer Certificate', title: 'Transfer / Migration Certificate', req: false }
+                      ].map((doc) => {
+                        const existingAtt = (formData.attachments || []).find((a) => a.category === doc.key);
+                        return (
+                          <div
+                            key={doc.key}
+                            className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-3"
+                          >
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-semibold text-slate-900 truncate">{doc.title}</h4>
+                              {existingAtt ? (
+                                <p className="text-[10px] text-emerald-600 font-mono truncate">
+                                  ✓ {existingAtt.name} ({existingAtt.size})
+                                </p>
+                              ) : (
+                                <p className="text-[10px] text-slate-500 font-mono">
+                                  {doc.req ? 'Mandatory Verification Doc' : 'Optional / Secondary Doc'}
+                                </p>
+                              )}
+                            </div>
 
-                          <label className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-mono font-semibold text-slate-700 cursor-pointer transition-all shrink-0">
-                            <Upload className="w-3 h-3 inline mr-1 text-blue-600" />
-                            Attached
-                          </label>
+                            <label className={`px-3 py-1.5 rounded-lg border text-[11px] font-mono font-semibold cursor-pointer transition-all shrink-0 flex items-center gap-1 ${
+                              existingAtt
+                                ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                                : 'border-slate-300 bg-white hover:bg-slate-100 text-slate-700'
+                            }`}>
+                              <Upload className="w-3 h-3 text-blue-600" />
+                              <input
+                                type="file"
+                                className="hidden"
+                                onChange={(e) => handleFileUpload(e, doc.key)}
+                              />
+                              <span>{existingAtt ? 'Re-upload' : 'Attach File'}</span>
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Custom Attachments Section */}
+                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                          <Paperclip className="w-3.5 h-3.5 text-blue-600" />
+                          Additional Document Attachments
+                        </h4>
+                        <span className="text-[10px] text-slate-500 font-mono">
+                          {(formData.attachments || []).length} Attached
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center gap-2">
+                        <input
+                          type="text"
+                          value={customDocTitle}
+                          onChange={(e) => setCustomDocTitle(e.target.value)}
+                          placeholder="e.g. Caste Certificate / Income Proof / Sports Certificate"
+                          className="flex-1 w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-600 bg-white"
+                        />
+                        <label className="w-full sm:w-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold cursor-pointer flex items-center justify-center gap-1 shrink-0 transition-colors">
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Attach File</span>
+                          <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleAddCustomAttachment}
+                          />
+                        </label>
+                      </div>
+
+                      {/* Attachment List */}
+                      {(formData.attachments || []).length > 0 && (
+                        <div className="space-y-2 pt-2 border-t border-slate-200">
+                          {(formData.attachments || []).map((att) => (
+                            <div
+                              key={att.id}
+                              className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between text-xs gap-2"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <Paperclip className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                <div className="min-w-0">
+                                  <span className="font-semibold text-slate-900 block truncate">{att.category}</span>
+                                  <span className="text-[10px] text-slate-500 font-mono block truncate">
+                                    {att.name} ({att.size || 'Attached'})
+                                  </span>
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveAttachment(att.id)}
+                                className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-rose-50 transition-colors"
+                                title="Remove attachment"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
 
                     <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">

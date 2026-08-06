@@ -1,3 +1,13 @@
+export interface AdmissionAttachment {
+  id: string;
+  name: string;
+  size?: string;
+  type?: string;
+  category: string;
+  fileData?: string;
+  uploadedAt: string;
+}
+
 export interface VerificationChecklist {
   classXMarksheet: boolean;
   classXIIMarksheet: boolean;
@@ -29,6 +39,7 @@ export interface AdmissionApplication {
   classXPercentage?: number;
   classXIIPercentage?: number;
   entranceExamScore?: string;
+  attachments?: AdmissionAttachment[];
   status: AdmissionStatus;
   rejectionReason?: string;
   verificationChecklist?: VerificationChecklist;
@@ -90,4 +101,5 @@ export interface CreateAdmissionInput {
   classXPercentage?: number;
   classXIIPercentage?: number;
   entranceExamScore?: string;
+  attachments?: AdmissionAttachment[];
 }

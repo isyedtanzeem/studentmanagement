@@ -29,6 +29,7 @@ export interface CreateAdmissionInput {
   classXPercentage?: number;
   classXIIPercentage?: number;
   entranceExamScore?: string;
+  attachments?: any[];
 }
 
 export class AdmissionService {
@@ -202,6 +203,7 @@ export class AdmissionService {
       classXPercentage: input.classXPercentage,
       classXIIPercentage: input.classXIIPercentage,
       entranceExamScore: input.entranceExamScore,
+      attachments: input.attachments || [],
       status: 'Pending',
       verificationChecklist: {
         classXMarksheet: false,

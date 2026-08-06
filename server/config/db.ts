@@ -107,6 +107,16 @@ export interface VerificationChecklist {
   verifiedAt?: string;
 }
 
+export interface AdmissionAttachment {
+  id: string;
+  name: string;
+  size?: string;
+  type?: string;
+  category: string;
+  fileData?: string;
+  uploadedAt: string;
+}
+
 export interface AdmissionRecord {
   id: string;
   applicationNumber: string;
@@ -126,6 +136,7 @@ export interface AdmissionRecord {
   classXPercentage?: number;
   classXIIPercentage?: number;
   entranceExamScore?: string;
+  attachments?: AdmissionAttachment[];
   status: 'Pending' | 'Under Review' | 'Document Verification' | 'Approved' | 'Rejected';
   rejectionReason?: string;
   verificationChecklist?: VerificationChecklist;

@@ -15,7 +15,9 @@ import {
   Mail,
   MapPin,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Paperclip,
+  Download
 } from 'lucide-react';
 import { AdmissionApplication, AdmissionStatus } from '../../types/admission';
 
@@ -328,6 +330,55 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
                   )}
                 </div>
               </div>
+            </div>
+
+            {/* Applicant Attached Files & Documents */}
+            <div className="bg-black/40 border border-white/10 p-4 rounded-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Paperclip className="w-4 h-4 text-[#D4AF37]" />
+                  Uploaded Attachments Dossier ({application.attachments?.length || 0})
+                </h4>
+              </div>
+
+              {application.attachments && application.attachments.length > 0 ? (
+                <div className="space-y-2 text-[11px] font-mono">
+                  {application.attachments.map((att) => (
+                    <div
+                      key={att.id}
+                      className="flex items-center justify-between p-2.5 rounded-lg bg-white/5 border border-white/10"
+                    >
+                      <div className="min-w-0 pr-2">
+                        <span className="text-white font-medium block truncate">{att.category}</span>
+                        <span className="text-[10px] text-zinc-400 block truncate">
+                          {att.name} ({att.size || 'File Attached'})
+                        </span>
+                      </div>
+
+                      {att.fileData ? (
+                        <a
+                          href={att.fileData}
+                          download={att.name}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2.5 py-1 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] rounded flex items-center gap-1 shrink-0 transition-colors"
+                        >
+                          <Download className="w-3 h-3" />
+                          <span>Download</span>
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-zinc-500 bg-white/5 px-2 py-0.5 rounded">
+                          Attached
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-3 bg-white/5 rounded-lg text-center text-zinc-500 font-mono text-[11px]">
+                  No additional attachments uploaded for this application.
+                </div>
+              )}
             </div>
           </div>
 
