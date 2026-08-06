@@ -12,7 +12,8 @@ import {
   Loader2,
   Sparkles,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  KeyRound
 } from 'lucide-react';
 
 interface LoginPageProps {
@@ -86,53 +87,55 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-gray-200 flex flex-col justify-between selection:bg-[#D4AF37]/30 selection:text-[#D4AF37]">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-blue-600/20 selection:text-blue-900">
       {/* Top Header */}
-      <header className="h-16 border-b border-white/10 px-8 flex items-center justify-between bg-black/40 backdrop-blur-md">
+      <header className="h-16 border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur-md shadow-xs sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-lg flex items-center justify-center">
-            <span className="text-[#D4AF37] font-bold text-lg serif-font">S</span>
+          <div className="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20">
+            <span className="serif-font">S</span>
           </div>
           <div>
-            <h1 className="text-base font-semibold serif-font text-white">
-              ScholarCore <span className="text-[#D4AF37] italic font-light">ERP</span>
+            <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
+              <span>ScholarCore</span>
+              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-mono">ERP</span>
             </h1>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Enterprise Auth v1.0</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Enterprise Auth System v1.0</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {onNavigateToApplicantPortal && (
             <button
               onClick={onNavigateToApplicantPortal}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-600 border border-blue-500/50 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs transition-all cursor-pointer"
             >
-              <GraduationCap className="w-4 h-4 text-blue-200" />
+              <GraduationCap className="w-4 h-4 text-blue-600" />
               <span>Student Applicant Portal (2026-27)</span>
             </button>
           )}
 
-          <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-            <span>Authentication Active</span>
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-600 font-medium bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-emerald-700 text-[11px] font-semibold">Authentication Active</span>
           </div>
         </div>
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 flex items-center justify-center p-6 my-auto">
-        <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+        <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          
           {/* Left Column: Quick Role Presets & Architecture Info */}
-          <div className="lg:col-span-5 bg-card-dark border-glass p-6 rounded-xl flex flex-col justify-between space-y-6">
+          <div className="lg:col-span-5 bg-white border border-slate-200/90 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
             <div>
-              <div className="flex items-center gap-2 text-[#D4AF37] text-xs font-mono uppercase tracking-wider mb-2">
-                <Sparkles className="w-4 h-4" />
+              <div className="flex items-center gap-2 text-blue-600 text-xs font-mono font-bold uppercase tracking-wider mb-2">
+                <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>Demo Role Quick Switcher</span>
               </div>
-              <h2 className="text-xl font-light text-white serif-font mb-2">
+              <h2 className="text-lg font-bold text-slate-900 tracking-tight mb-1">
                 Simulate Commercial RBAC Roles
               </h2>
-              <p className="text-xs text-gray-400 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
                 Select a pre-configured role below to populate authorized credentials and experience role-based permission routing.
               </p>
 
@@ -142,55 +145,61 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     key={preset.role}
                     type="button"
                     onClick={() => handlePresetSelect(preset)}
-                    className={`w-full p-2.5 rounded-lg border text-left transition-all flex items-center justify-between ${
+                    className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
                       selectedPreset === preset.role
-                        ? 'bg-[#D4AF37]/10 border-[#D4AF37] text-white shadow-[0_0_12px_rgba(212,175,55,0.15)]'
-                        : 'bg-black/40 border-white/5 text-gray-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-blue-50/80 border-blue-500 text-blue-900 shadow-sm shadow-blue-500/10'
+                        : 'bg-slate-50/70 border-slate-200/80 text-slate-700 hover:bg-slate-100/80 hover:border-slate-300'
                     }`}
                   >
                     <div>
-                      <p className="text-xs font-semibold flex items-center gap-1.5">
-                        <span className={selectedPreset === preset.role ? 'text-[#D4AF37]' : 'text-gray-400'}>
+                      <p className="text-xs font-bold flex items-center gap-1.5">
+                        <span className={selectedPreset === preset.role ? 'text-blue-700 font-bold' : 'text-slate-800'}>
                           {preset.role}
                         </span>
                       </p>
-                      <p className="text-[10px] text-gray-500">{preset.name} ({preset.dept})</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">{preset.name} • {preset.dept}</p>
                     </div>
-                    <ArrowRight className={`w-3.5 h-3.5 ${selectedPreset === preset.role ? 'text-[#D4AF37]' : 'text-gray-600'}`} />
+                    <ArrowRight className={`w-4 h-4 shrink-0 ${selectedPreset === preset.role ? 'text-blue-600' : 'text-slate-400'}`} />
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="p-3 bg-black/50 border border-white/5 rounded-lg text-[11px] text-gray-400 space-y-1">
-              <p className="text-[#D4AF37] font-mono font-semibold text-[10px] uppercase">Default Demo Password</p>
-              <p className="font-mono text-white">Password123!</p>
-              <p className="text-[10px] text-gray-500 pt-1">Bcrypt salted & hashed in backend engine.</p>
+            <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl text-[11px] text-slate-600 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-blue-700 font-mono font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+                  <KeyRound className="w-3 h-3 text-blue-600" /> Default Demo Password
+                </span>
+                <span className="text-[10px] text-slate-400">Bcrypt Salted</span>
+              </div>
+              <p className="font-mono text-slate-900 font-bold text-xs bg-white px-2.5 py-1 rounded border border-slate-200">
+                Password123!
+              </p>
             </div>
           </div>
 
           {/* Right Column: Login Form */}
-          <div className="lg:col-span-7 bg-card-dark border-glass p-8 rounded-xl flex flex-col justify-between shadow-2xl">
+          <div className="lg:col-span-7 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-sm flex flex-col justify-between">
             <div className="space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-white serif-font tracking-tight">Account Authentication</h3>
-                <p className="text-xs text-gray-400 mt-1">
+                <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Account Authentication</h3>
+                <p className="text-xs text-slate-500 mt-1">
                   Enter your credentials to access the Student Information System.
                 </p>
               </div>
 
               {error && (
-                <div className="p-3.5 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3 text-xs text-red-400">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-xs text-rose-700 font-medium">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                   <span>{error}</span>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-300 mb-1.5">Email Address</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-gray-500 absolute left-3.5 top-3" />
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
                       type="email"
                       required
@@ -199,25 +208,25 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         setEmail(e.target.value);
                         if (error) clearError();
                       }}
-                      placeholder="user@scholarcore.edu"
-                      className="w-full pl-10 pr-4 py-2.5 bg-black/60 border border-white/10 rounded-lg text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37] transition-all"
+                      placeholder="user@scholarcore.edu.in"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                     />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
-                    <label className="block text-xs font-medium text-gray-300">Password</label>
+                    <label className="block text-xs font-semibold text-slate-700">Password</label>
                     <button
                       type="button"
                       onClick={onNavigateToForgotPassword}
-                      className="text-[11px] text-[#D4AF37] hover:underline"
+                      className="text-[11px] text-blue-600 hover:text-blue-700 font-semibold hover:underline"
                     >
                       Forgot password?
                     </button>
                   </div>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-gray-500 absolute left-3.5 top-3" />
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
@@ -227,12 +236,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         if (error) clearError();
                       }}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 bg-black/60 border border-white/10 rounded-lg text-xs text-white placeholder-gray-600 focus:outline-none focus:border-[#D4AF37] transition-all"
+                      className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-3 text-gray-500 hover:text-gray-300 transition-colors"
+                      className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -240,31 +249,31 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between text-xs pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer text-gray-400 hover:text-gray-300">
+                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 select-none">
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="rounded bg-black border-white/20 text-[#D4AF37] focus:ring-0 focus:ring-offset-0"
+                      className="rounded border-slate-300 text-blue-600 focus:ring-blue-500/20 w-4 h-4"
                     />
-                    <span>Keep me logged in for 7 days</span>
+                    <span className="text-xs font-medium">Keep me logged in for 7 days</span>
                   </label>
-                  <span className="text-gray-500 text-[10px]">JWT + HttpOnly Cookie</span>
+                  <span className="text-slate-400 text-[10px] font-mono">JWT + HttpOnly Cookie</span>
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 bg-[#D4AF37] hover:bg-[#c2a032] text-black font-semibold rounded-lg text-xs tracking-wide transition-all shadow-[0_0_20px_rgba(212,175,55,0.2)] flex items-center justify-center gap-2 mt-4"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 mt-4 cursor-pointer disabled:opacity-70"
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-black" />
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
                       <span>Authenticating Credentials...</span>
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="w-4 h-4 text-black" />
+                      <ShieldCheck className="w-4 h-4 text-white" />
                       <span>Sign In to Portal</span>
                     </>
                   )}
@@ -272,9 +281,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </form>
             </div>
 
-            <div className="pt-6 border-t border-white/10 mt-6 flex justify-between items-center text-[10px] text-gray-500">
+            <div className="pt-6 border-t border-slate-100 mt-6 flex justify-between items-center text-[10px] text-slate-500 font-mono">
               <span className="flex items-center gap-1">
-                <Building2 className="w-3 h-3 text-gray-600" />
+                <Building2 className="w-3 h-3 text-slate-400" />
                 ScholarCore Enterprise Instance
               </span>
               <span>256-bit AES Encryption</span>
@@ -284,9 +293,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </main>
 
       {/* Footer */}
-      <footer className="h-10 border-t border-white/10 px-8 bg-black flex items-center justify-between text-[10px] text-gray-500">
+      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-mono">
         <div>ScholarCore SIMS Auth Module • JWT + Bcrypt Engine</div>
-        <div>Session Timeout: 15m (AccessToken) / 7d (RefreshToken)</div>
+        <div className="hidden sm:block">Session Timeout: 15m (AccessToken) / 7d (RefreshToken)</div>
       </footer>
     </div>
   );

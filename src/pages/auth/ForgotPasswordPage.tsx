@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, ArrowLeft, CheckCircle2, AlertCircle, Loader2, KeyRound } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, AlertCircle, KeyRound, ArrowRight } from 'lucide-react';
 
 interface ForgotPasswordPageProps {
   onBackToLogin: () => void;
@@ -12,7 +12,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   onNavigateToResetPassword
 }) => {
   const { forgotPassword } = useAuth();
-  const [email, setEmail] = useState('superadmin@scholarcore.edu');
+  const [email, setEmail] = useState('superadmin@scholarcore.edu.in');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successResult, setSuccessResult] = useState<{ message: string; resetToken?: string } | null>(null);
@@ -33,123 +33,110 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-gray-200 flex flex-col justify-between selection:bg-[#D4AF37]/30 selection:text-[#D4AF37]">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-blue-600/20 selection:text-blue-900">
       {/* Top Header */}
-      <header className="h-16 border-b border-white/10 px-8 flex items-center justify-between bg-black/40 backdrop-blur-md">
+      <header className="h-16 border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur-md shadow-xs sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-lg flex items-center justify-center">
-            <span className="text-[#D4AF37] font-bold text-lg serif-font">S</span>
+          <div className="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20">
+            <span className="serif-font">S</span>
           </div>
           <div>
-            <h1 className="text-base font-semibold serif-font text-white">
-              ScholarCore <span className="text-[#D4AF37] italic font-light">ERP</span>
+            <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
+              <span>ScholarCore</span>
+              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-mono">ERP</span>
             </h1>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Password Recovery Service</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Password Recovery Service</p>
           </div>
         </div>
 
         <button
           onClick={onBackToLogin}
-          className="text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+          className="text-xs text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-xl cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <ArrowLeft className="w-3.5 h-3.5 text-blue-600" />
           <span>Back to Sign In</span>
         </button>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-6 my-auto">
-        <div className="max-w-md w-full bg-card-dark border-glass p-8 rounded-xl shadow-2xl space-y-6">
-          <div className="w-12 h-12 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl flex items-center justify-center text-[#D4AF37] mb-2">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+        <div className="max-w-md w-full bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6">
+          <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center text-blue-600 mb-2">
             <KeyRound className="w-6 h-6" />
           </div>
 
           <div>
-            <h2 className="text-2xl font-light text-white serif-font tracking-tight">Recover Password</h2>
-            <p className="text-xs text-gray-400 mt-1">
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Recover Password</h2>
+            <p className="text-xs text-slate-500 mt-1">
               Enter your registered institutional email address. We will issue an encrypted reset link.
             </p>
           </div>
 
           {error && (
-            <div className="p-3.5 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-3 text-xs text-red-400">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-xs text-rose-700 font-medium">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
           {successResult ? (
             <div className="space-y-4">
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs space-y-2">
-                <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                  <CheckCircle2 className="w-4 h-4" />
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-2">
+                <div className="flex items-center gap-2 text-emerald-800 font-bold">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   <span>Reset Request Issued</span>
                 </div>
-                <p className="text-gray-300 leading-relaxed">{successResult.message}</p>
+                <p className="text-slate-600 leading-relaxed">{successResult.message}</p>
               </div>
 
               {successResult.resetToken && (
-                <div className="p-4 bg-black/60 border border-[#D4AF37]/30 rounded-lg text-xs space-y-2">
-                  <p className="text-[#D4AF37] font-semibold text-[11px] uppercase tracking-wider">
+                <div className="p-4 bg-blue-50/60 border border-blue-200/80 rounded-xl text-xs space-y-2">
+                  <p className="text-blue-700 font-bold text-[11px] uppercase tracking-wider font-mono">
                     Dev Test Helper Token
                   </p>
-                  <p className="font-mono text-[10px] text-gray-400 break-all bg-black/80 p-2 rounded border border-white/5">
+                  <p className="font-mono text-[10px] text-slate-700 break-all bg-white p-2.5 rounded-lg border border-slate-200 select-all">
                     {successResult.resetToken}
                   </p>
                   <button
                     onClick={() => onNavigateToResetPassword(successResult.resetToken!)}
-                    className="w-full py-2 bg-[#D4AF37] hover:bg-[#c2a032] text-black font-semibold rounded text-xs transition-all mt-1"
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
                   >
-                    Proceed to Reset Form with Token
+                    <span>Proceed to Reset Password Form</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               )}
-
-              <button
-                onClick={onBackToLogin}
-                className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-lg text-xs font-medium transition-all"
-              >
-                Return to Login Screen
-              </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-300 mb-1.5">Registered Institutional Email</label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-gray-500 absolute left-3.5 top-3" />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="user@scholarcore.edu"
-                    className="w-full pl-10 pr-4 py-2.5 bg-black/60 border border-white/10 rounded-lg text-xs text-white focus:outline-none focus:border-[#D4AF37] transition-all"
-                  />
-                </div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Institutional Email</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="user@scholarcore.edu.in"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+                />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-[#D4AF37] hover:bg-[#c2a032] text-black font-semibold rounded-lg text-xs tracking-wide transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center justify-center gap-2"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Processing Reset Link...</span>
-                  </>
-                ) : (
-                  <span>Send Reset Request</span>
-                )}
+                <span>Send Password Reset Link</span>
               </button>
             </form>
           )}
         </div>
       </main>
 
-      <footer className="h-10 border-t border-white/10 px-8 bg-black flex items-center justify-center text-[10px] text-gray-500">
-        ScholarCore Password Service • Encrypted Token Validity: 60 Minutes
+      {/* Footer */}
+      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-mono">
+        <div>ScholarCore SIMS Auth Module • Password Service</div>
+        <div>256-Bit TLS Security</div>
       </footer>
     </div>
   );
