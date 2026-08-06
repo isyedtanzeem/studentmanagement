@@ -20,8 +20,7 @@ import {
   UserProfileData,
   OrganizationSettings,
   SystemUserItem,
-  RolePermissionDefinition,
-  RolePermissionModule
+  RolePermissionDefinition
 } from '../../api/settingsApi';
 import {
   User,
@@ -38,10 +37,6 @@ import {
   RefreshCw,
   Search,
   Lock,
-  Eye,
-  Edit,
-  Trash2,
-  Check,
   X,
   Sparkles,
   Layers
@@ -84,7 +79,7 @@ export const SettingsManagementView: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   // --- 3. Preferences / Theme State ---
-  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system' | 'luxury_gold'>('luxury_gold');
+  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system' | 'luxury_gold'>('light');
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [smsAlerts, setSmsAlerts] = useState(true);
   const [desktopNotifs, setDesktopNotifs] = useState(true);
@@ -131,9 +126,8 @@ export const SettingsManagementView: React.FC = () => {
         setEditAvatarUrl(data.user.avatarUrl || '');
       } else if (activeTab === 'theme') {
         const prefs = await fetchPreferences(accessToken || undefined);
-        const selectedTheme = (prefs.theme as any) || currentGlobalTheme || 'luxury_gold';
-        setThemeMode(selectedTheme);
-        setTheme(selectedTheme);
+        setThemeMode('light');
+        setTheme('light');
         setEmailAlerts(prefs.emailAlerts ?? true);
         setSmsAlerts(prefs.smsAlerts ?? true);
         setDesktopNotifs(prefs.desktopNotifs ?? true);
@@ -151,26 +145,24 @@ export const SettingsManagementView: React.FC = () => {
         setRolePermissions(rolesData);
       }
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Failed to load settings data' });
+      setMessage({ type: 'error', text: err.message || 'Failed to load tab settings data' });
     } finally {
       setLoading(false);
     }
   };
 
-  // --- Action Handlers ---
-
-  // Update Profile Submit
+  // Profile Save
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
     try {
-      await updateUserProfile(
+      const updated = await updateUserProfile(
         { fullName: editName, email: editEmail, department: editDept, avatarUrl: editAvatarUrl },
         accessToken || undefined
       );
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
-      await loadTabData();
+      setProfile(prev => (prev ? { ...prev, user: updated } : null));
+      setMessage({ type: 'success', text: 'Profile information updated successfully!' });
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Failed to update profile' });
     } finally {
@@ -178,24 +170,26 @@ export const SettingsManagementView: React.FC = () => {
     }
   };
 
-  // Avatar Selection
+  // Avatar Select Helper
   const handleSelectAvatar = async (url: string) => {
     setEditAvatarUrl(url);
-    setShowAvatarPicker(false);
     try {
       await updateUserAvatar(url, accessToken || undefined);
-      setMessage({ type: 'success', text: 'Profile picture updated successfully!' });
-      await loadTabData();
+      if (profile) {
+        setProfile({ ...profile, user: { ...profile.user, avatarUrl: url } });
+      }
+      setShowAvatarPicker(false);
+      setMessage({ type: 'success', text: 'Avatar image updated!' });
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Failed to set avatar' });
+      setMessage({ type: 'error', text: 'Failed to update avatar image' });
     }
   };
 
-  // Change Password Submit
+  // Password Submit
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'New password and confirmation do not match.' });
+      setMessage({ type: 'error', text: 'New passwords do not match!' });
       return;
     }
     if (newPassword.length < 8) {
@@ -218,23 +212,23 @@ export const SettingsManagementView: React.FC = () => {
     }
   };
 
-  // Select Theme Helper (applies immediately to DOM + state)
-  const handleSelectThemePreset = (mode: 'light' | 'dark' | 'system' | 'luxury_gold') => {
+  // Select Theme Helper
+  const handleSelectThemePreset = (mode: any) => {
     setThemeMode(mode);
-    setTheme(mode);
+    setTheme('light');
   };
 
-  // Save Preferences / Theme
+  // Save Preferences
   const handleSaveTheme = async () => {
     setLoading(true);
     setMessage(null);
     try {
-      setTheme(themeMode);
+      setTheme('light');
       await updatePreferences(
-        { theme: themeMode, emailAlerts, smsAlerts, desktopNotifs },
+        { theme: 'light', emailAlerts, smsAlerts, desktopNotifs },
         accessToken || undefined
       );
-      setMessage({ type: 'success', text: 'Theme & Notification preferences saved successfully!' });
+      setMessage({ type: 'success', text: 'Notification preferences saved successfully!' });
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Failed to save preferences' });
     } finally {
@@ -379,31 +373,29 @@ export const SettingsManagementView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Module Title Banner */}
-      <div className="bg-[#12121a] rounded-2xl border border-white/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden shadow-2xl">
-        <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-semibold text-xs uppercase tracking-wider flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <span className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-semibold text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
               System Settings & Administration
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Control Center & User Governance
           </h2>
-          <p className="text-sm text-zinc-400 max-w-2xl">
+          <p className="text-sm text-slate-500 max-w-2xl">
             Manage your personal profile, security credentials, visual theme preferences, institutional metadata, system users, and security role access matrix.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 relative z-10">
+        <div className="flex items-center gap-3">
           <button
             onClick={loadTabData}
             disabled={loading}
-            className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 text-sm font-medium"
+            className="px-4 py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-2 text-sm font-medium cursor-pointer"
           >
-            <RefreshCw className={`w-4 h-4 text-amber-400 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 text-blue-600 ${loading ? 'animate-spin' : ''}`} />
             <span>Sync Settings</span>
           </button>
         </div>
@@ -414,32 +406,32 @@ export const SettingsManagementView: React.FC = () => {
         <div
           className={`p-4 rounded-xl border flex items-center justify-between gap-3 text-sm font-medium ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
           <div className="flex items-center gap-2.5">
             {message.type === 'success' ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
             )}
             <span>{message.text}</span>
           </div>
-          <button onClick={() => setMessage(null)} className="text-zinc-400 hover:text-white">
+          <button onClick={() => setMessage(null)} className="text-slate-400 hover:text-slate-700 cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Tab Navigation */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-white/10">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200">
         <button
           onClick={() => setActiveTab('profile')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'profile'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
+              ? 'bg-blue-600 text-white font-bold shadow-sm'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <User className="w-4 h-4" />
@@ -448,10 +440,10 @@ export const SettingsManagementView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('password')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'password'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
+              ? 'bg-blue-600 text-white font-bold shadow-sm'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <KeyRound className="w-4 h-4" />
@@ -459,23 +451,11 @@ export const SettingsManagementView: React.FC = () => {
         </button>
 
         <button
-          onClick={() => setActiveTab('theme')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'theme'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
-          }`}
-        >
-          <Palette className="w-4 h-4" />
-          <span>Theme & Preferences</span>
-        </button>
-
-        <button
           onClick={() => setActiveTab('organization')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'organization'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
+              ? 'bg-blue-600 text-white font-bold shadow-sm'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Building2 className="w-4 h-4" />
@@ -484,10 +464,10 @@ export const SettingsManagementView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('users')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'users'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
+              ? 'bg-blue-600 text-white font-bold shadow-sm'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -496,10 +476,10 @@ export const SettingsManagementView: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('roles')}
-          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap ${
+          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'roles'
-              ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20'
-              : 'bg-[#12121a] text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5'
+              ? 'bg-blue-600 text-white font-bold shadow-sm'
+              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -511,7 +491,7 @@ export const SettingsManagementView: React.FC = () => {
       {activeTab === 'profile' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Avatar Card */}
-          <div className="bg-[#12121a] rounded-2xl border border-white/10 p-6 flex flex-col items-center text-center space-y-4 relative">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col items-center text-center space-y-4 shadow-sm">
             <div className="relative group">
               <img
                 src={
@@ -520,11 +500,11 @@ export const SettingsManagementView: React.FC = () => {
                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'
                 }
                 alt="User Profile Avatar"
-                className="w-32 h-32 rounded-full object-cover border-4 border-amber-500/30 shadow-xl"
+                className="w-32 h-32 rounded-full object-cover border-4 border-blue-100 shadow-md"
               />
               <button
                 onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                className="absolute bottom-1 right-1 p-2.5 rounded-full bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-lg"
+                className="absolute bottom-1 right-1 p-2.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-md cursor-pointer"
                 title="Change Avatar"
               >
                 <Camera className="w-4 h-4" />
@@ -532,44 +512,44 @@ export const SettingsManagementView: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-xl font-bold text-slate-900">
                 {profile?.user.fullName || authUser?.fullName || 'User Account'}
               </h3>
-              <p className="text-sm text-amber-400 font-medium">
+              <p className="text-sm text-blue-600 font-semibold">
                 {profile?.user.role || authUser?.role || 'System Member'}
               </p>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 {profile?.user.department || 'Academic Department'}
               </p>
             </div>
 
-            <div className="w-full pt-4 border-t border-white/10 text-xs text-zinc-400 space-y-2 text-left">
+            <div className="w-full pt-4 border-t border-slate-200 text-xs text-slate-600 space-y-2 text-left">
               <div className="flex justify-between">
                 <span>Employee / Student ID:</span>
-                <span className="text-white font-mono font-medium">
-                  {profile?.user.employeeId || profile?.user.studentId || 'EMP-101'}
+                <span className="text-slate-900 font-mono font-semibold">
+                  {profile?.user.employeeId || profile?.user.studentId || 'EMP-VC-001'}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span>Account Status:</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase">
+                <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px] uppercase border border-emerald-200">
                   {profile?.user.status || 'Active'}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>System Member Since:</span>
-                <span className="text-zinc-300">
+                <span className="text-slate-700 font-medium">
                   {profile?.user.createdAt
                     ? new Date(profile.user.createdAt).toLocaleDateString()
-                    : '2024'}
+                    : '06/08/2026'}
                 </span>
               </div>
             </div>
 
             {/* Avatar Picker Modal Popup */}
             {showAvatarPicker && (
-              <div className="w-full p-4 rounded-xl bg-[#1a1a24] border border-amber-500/30 space-y-3 mt-4 text-left">
-                <p className="text-xs font-semibold text-amber-400">Select Preset Avatar:</p>
+              <div className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 mt-4 text-left shadow-sm">
+                <p className="text-xs font-semibold text-blue-600">Select Preset Avatar:</p>
                 <div className="grid grid-cols-3 gap-2">
                   {presetAvatars.map((url, idx) => (
                     <img
@@ -577,12 +557,12 @@ export const SettingsManagementView: React.FC = () => {
                       src={url}
                       alt={`Avatar option ${idx + 1}`}
                       onClick={() => handleSelectAvatar(url)}
-                      className="w-14 h-14 rounded-full object-cover cursor-pointer hover:scale-110 hover:border-2 border-amber-400 transition-all"
+                      className="w-14 h-14 rounded-full object-cover cursor-pointer hover:scale-105 border-2 border-transparent hover:border-blue-500 transition-all"
                     />
                   ))}
                 </div>
                 <div className="pt-2">
-                  <label className="text-[11px] text-zinc-400 block mb-1">
+                  <label className="text-[11px] text-slate-500 block mb-1">
                     Or enter Custom Image URL:
                   </label>
                   <div className="flex gap-2">
@@ -591,11 +571,11 @@ export const SettingsManagementView: React.FC = () => {
                       value={editAvatarUrl}
                       onChange={e => setEditAvatarUrl(e.target.value)}
                       placeholder="https://example.com/avatar.jpg"
-                      className="w-full px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                     />
                     <button
                       onClick={() => handleSelectAvatar(editAvatarUrl)}
-                      className="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-xs cursor-pointer hover:bg-blue-700"
                     >
                       Apply
                     </button>
@@ -606,13 +586,13 @@ export const SettingsManagementView: React.FC = () => {
           </div>
 
           {/* Edit Profile Form */}
-          <div className="lg:col-span-2 bg-[#12121a] rounded-2xl border border-white/10 p-6 space-y-6">
-            <div className="border-b border-white/10 pb-4">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <User className="w-5 h-5 text-amber-400" />
+          <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+            <div className="border-b border-slate-200 pb-4">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <User className="w-5 h-5 text-blue-600" />
                 <span>Personal Profile & Contact Information</span>
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-slate-500">
                 Update your account display name, official email address, and departmental affiliation.
               </p>
             </div>
@@ -620,58 +600,58 @@ export const SettingsManagementView: React.FC = () => {
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                    Full Name <span className="text-rose-400">*</span>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    Full Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={editName}
                     onChange={e => setEditName(e.target.value)}
                     required
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                    Email Address <span className="text-rose-400">*</span>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    Email Address <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={editEmail}
                     onChange={e => setEditEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                     Department / Cell
                   </label>
                   <input
                     type="text"
                     value={editDept}
                     onChange={e => setEditDept(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                     Assigned System Role
                   </label>
                   <input
                     type="text"
                     disabled
                     value={profile?.user.role || 'Super Admin'}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-sm text-zinc-400 cursor-not-allowed"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-sm text-slate-500 cursor-not-allowed font-medium"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Avatar Image URL
                 </label>
                 <input
@@ -679,7 +659,7 @@ export const SettingsManagementView: React.FC = () => {
                   value={editAvatarUrl}
                   onChange={e => setEditAvatarUrl(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all font-mono text-xs"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all font-mono text-xs"
                 />
               </div>
 
@@ -687,7 +667,7 @@ export const SettingsManagementView: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 text-sm"
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 text-sm cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>{loading ? 'Saving...' : 'Save Profile Changes'}</span>
@@ -700,21 +680,21 @@ export const SettingsManagementView: React.FC = () => {
 
       {/* --- TAB 2: CHANGE PASSWORD & SECURITY --- */}
       {activeTab === 'password' && (
-        <div className="max-w-3xl mx-auto bg-[#12121a] rounded-2xl border border-white/10 p-6 space-y-6">
-          <div className="border-b border-white/10 pb-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <KeyRound className="w-5 h-5 text-amber-400" />
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+          <div className="border-b border-slate-200 pb-4">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <KeyRound className="w-5 h-5 text-blue-600" />
               <span>Change Security Password</span>
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-slate-500">
               Update your secret login password. Strong passwords contain uppercase letters, numbers, and special symbols.
             </p>
           </div>
 
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div>
-              <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                Current Password <span className="text-rose-400">*</span>
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                Current Password <span className="text-rose-500">*</span>
               </label>
               <input
                 type="password"
@@ -722,14 +702,14 @@ export const SettingsManagementView: React.FC = () => {
                 onChange={e => setCurrentPassword(e.target.value)}
                 required
                 placeholder="••••••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                  New Password <span className="text-rose-400">*</span>
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                  New Password <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -737,13 +717,13 @@ export const SettingsManagementView: React.FC = () => {
                   onChange={e => setNewPassword(e.target.value)}
                   required
                   placeholder="Min 8 characters"
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                  Confirm New Password <span className="text-rose-400">*</span>
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                  Confirm New Password <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -751,16 +731,16 @@ export const SettingsManagementView: React.FC = () => {
                   onChange={e => setConfirmPassword(e.target.value)}
                   required
                   placeholder="Re-enter new password"
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1">
-              <p className="font-semibold flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5" /> Password Requirements Check:
+            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-1">
+              <p className="font-semibold flex items-center gap-1.5 text-blue-800">
+                <Lock className="w-3.5 h-3.5 text-blue-600" /> Password Requirements Check:
               </p>
-              <ul className="list-disc list-inside space-y-0.5 text-zinc-400">
+              <ul className="list-disc list-inside space-y-0.5 text-slate-600">
                 <li>Minimum length of 8 characters</li>
                 <li>At least one number or special character</li>
                 <li>Different from default demo credentials</li>
@@ -771,7 +751,7 @@ export const SettingsManagementView: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 text-sm"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 text-sm cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>{loading ? 'Updating...' : 'Update Security Password'}</span>
@@ -784,131 +764,72 @@ export const SettingsManagementView: React.FC = () => {
       {/* --- TAB 3: THEME & PREFERENCES --- */}
       {activeTab === 'theme' && (
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="bg-[#12121a] rounded-2xl border border-white/10 p-6 space-y-6">
-            <div className="border-b border-white/10 pb-4">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Palette className="w-5 h-5 text-amber-400" />
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+            <div className="border-b border-slate-200 pb-4">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Palette className="w-5 h-5 text-blue-600" />
                 <span>Interface Theme & Styling Preset</span>
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-slate-500">
                 Choose your preferred visual atmosphere and color balance across the portal.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {/* Luxury Gold Dark Theme */}
-              <div
-                onClick={() => handleSelectThemePreset('luxury_gold')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all space-y-3 relative overflow-hidden ${
-                  themeMode === 'luxury_gold'
-                    ? 'bg-black/80 border-amber-500 shadow-xl shadow-amber-500/10 ring-2 ring-amber-500/50'
-                    : 'bg-black/40 border-white/10 hover:border-white/30'
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-amber-400">Luxury Dark Gold</span>
-                  {themeMode === 'luxury_gold' && (
-                    <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                  )}
-                </div>
-                <div className="h-16 rounded-lg bg-[#0d0d12] border border-amber-500/30 p-2 flex flex-col justify-between">
-                  <div className="w-12 h-2 rounded bg-amber-500" />
-                  <div className="w-full h-2 rounded bg-white/10" />
-                </div>
-              </div>
-
-              {/* Dark Slate Theme */}
-              <div
-                onClick={() => handleSelectThemePreset('dark')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all space-y-3 relative overflow-hidden ${
-                  themeMode === 'dark'
-                    ? 'bg-black/80 border-amber-500 shadow-xl ring-2 ring-amber-500/50'
-                    : 'bg-black/40 border-white/10 hover:border-white/30'
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-zinc-200">Midnight Dark</span>
-                  {themeMode === 'dark' && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
-                </div>
-                <div className="h-16 rounded-lg bg-zinc-900 border border-zinc-700 p-2 flex flex-col justify-between">
-                  <div className="w-12 h-2 rounded bg-indigo-500" />
-                  <div className="w-full h-2 rounded bg-white/10" />
-                </div>
-              </div>
-
-              {/* Light Academic Theme */}
+              {/* Light Theme */}
               <div
                 onClick={() => handleSelectThemePreset('light')}
                 className={`p-4 rounded-xl border cursor-pointer transition-all space-y-3 relative overflow-hidden ${
                   themeMode === 'light'
-                    ? 'bg-black/80 border-amber-500 shadow-xl ring-2 ring-amber-500/50'
-                    : 'bg-black/40 border-white/10 hover:border-white/30'
+                    ? 'bg-blue-50/50 border-blue-600 shadow-md ring-2 ring-blue-500/30'
+                    : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-zinc-200">Academic Light</span>
-                  {themeMode === 'light' && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
+                  <span className="text-xs font-bold text-slate-900">Academic Light</span>
+                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
                 </div>
                 <div className="h-16 rounded-lg bg-slate-100 border border-slate-300 p-2 flex flex-col justify-between">
                   <div className="w-12 h-2 rounded bg-blue-600" />
                   <div className="w-full h-2 rounded bg-slate-300" />
                 </div>
               </div>
-
-              {/* System Preference */}
-              <div
-                onClick={() => handleSelectThemePreset('system')}
-                className={`p-4 rounded-xl border cursor-pointer transition-all space-y-3 relative overflow-hidden ${
-                  themeMode === 'system'
-                    ? 'bg-black/80 border-amber-500 shadow-xl ring-2 ring-amber-500/50'
-                    : 'bg-black/40 border-white/10 hover:border-white/30'
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-zinc-200">OS Auto System</span>
-                  {themeMode === 'system' && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
-                </div>
-                <div className="h-16 rounded-lg bg-gradient-to-r from-zinc-900 to-slate-200 border border-white/20 p-2 flex flex-col justify-between">
-                  <div className="w-12 h-2 rounded bg-amber-400" />
-                  <div className="w-full h-2 rounded bg-white/20" />
-                </div>
-              </div>
             </div>
 
             {/* Notification & Alert Toggles */}
-            <div className="border-t border-white/10 pt-6 space-y-4">
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider text-amber-400">
+            <div className="border-t border-slate-200 pt-6 space-y-4">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-blue-600">
                 Notification Channels
               </h4>
 
               <div className="space-y-3">
-                <label className="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 cursor-pointer">
-                  <span className="text-sm text-zinc-200">Official Email Alert Summaries</span>
+                <label className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                  <span className="text-sm text-slate-800 font-medium">Official Email Alert Summaries</span>
                   <input
                     type="checkbox"
                     checked={emailAlerts}
                     onChange={e => setEmailAlerts(e.target.checked)}
-                    className="w-4 h-4 accent-amber-500 rounded"
+                    className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 cursor-pointer">
-                  <span className="text-sm text-zinc-200">SMS Urgent Gateway Dispatch</span>
+                <label className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                  <span className="text-sm text-slate-800 font-medium">SMS Urgent Gateway Dispatch</span>
                   <input
                     type="checkbox"
                     checked={smsAlerts}
                     onChange={e => setSmsAlerts(e.target.checked)}
-                    className="w-4 h-4 accent-amber-500 rounded"
+                    className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 cursor-pointer">
-                  <span className="text-sm text-zinc-200">Desktop Push Notifications</span>
+                <label className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                  <span className="text-sm text-slate-800 font-medium">Desktop Push Notifications</span>
                   <input
                     type="checkbox"
                     checked={desktopNotifs}
                     onChange={e => setDesktopNotifs(e.target.checked)}
-                    className="w-4 h-4 accent-amber-500 rounded"
+                    className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                   />
                 </label>
               </div>
@@ -918,10 +839,10 @@ export const SettingsManagementView: React.FC = () => {
               <button
                 onClick={handleSaveTheme}
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 text-sm"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 text-sm cursor-pointer"
               >
                 <Save className="w-4 h-4" />
-                <span>Save Theme Preferences</span>
+                <span>Save Preferences</span>
               </button>
             </div>
           </div>
@@ -930,13 +851,13 @@ export const SettingsManagementView: React.FC = () => {
 
       {/* --- TAB 4: ORGANIZATION SETTINGS --- */}
       {activeTab === 'organization' && orgForm && (
-        <div className="bg-[#12121a] rounded-2xl border border-white/10 p-6 space-y-6">
-          <div className="border-b border-white/10 pb-4">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-amber-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+          <div className="border-b border-slate-200 pb-4">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-blue-600" />
               <span>Institutional Organization Profile</span>
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-slate-500">
               Configure institution branding, registration details, academic year defaults, contact channels, and currency formats.
             </p>
           </div>
@@ -944,80 +865,80 @@ export const SettingsManagementView: React.FC = () => {
           <form onSubmit={handleSaveOrgSettings} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
-                  Institution Name <span className="text-rose-400">*</span>
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                  Institution Name <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={orgForm.institutionName}
                   onChange={e => setOrgForm({ ...orgForm, institutionName: e.target.value })}
                   required
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all font-semibold"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all font-semibold"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Official Tagline / Motto
                 </label>
                 <input
                   type="text"
                   value={orgForm.tagline}
                   onChange={e => setOrgForm({ ...orgForm, tagline: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Affiliation / University Board
                 </label>
                 <input
                   type="text"
                   value={orgForm.affiliationBody}
                   onChange={e => setOrgForm({ ...orgForm, affiliationBody: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Accreditation Grade
                 </label>
                 <input
                   type="text"
                   value={orgForm.accreditationGrade}
                   onChange={e => setOrgForm({ ...orgForm, accreditationGrade: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Contact Email Address
                 </label>
                 <input
                   type="email"
                   value={orgForm.contactEmail}
                   onChange={e => setOrgForm({ ...orgForm, contactEmail: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Contact Phone Number
                 </label>
                 <input
                   type="text"
                   value={orgForm.contactPhone}
                   onChange={e => setOrgForm({ ...orgForm, contactPhone: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Academic Year Format
                 </label>
                 <input
@@ -1025,32 +946,32 @@ export const SettingsManagementView: React.FC = () => {
                   value={orgForm.academicYearFormat}
                   onChange={e => setOrgForm({ ...orgForm, academicYearFormat: e.target.value })}
                   placeholder="e.g., 2026-2027"
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                   Default Currency Symbol
                 </label>
                 <input
                   type="text"
                   value={orgForm.currencySymbol}
                   onChange={e => setOrgForm({ ...orgForm, currencySymbol: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all font-bold"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-300 block mb-1.5">
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                 Campus Address
               </label>
               <textarea
                 value={orgForm.address}
                 onChange={e => setOrgForm({ ...orgForm, address: e.target.value })}
                 rows={2}
-                className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500 transition-all"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all"
               />
             </div>
 
@@ -1058,7 +979,7 @@ export const SettingsManagementView: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 text-sm"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 text-sm cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>Save Organization Details</span>
@@ -1072,23 +993,23 @@ export const SettingsManagementView: React.FC = () => {
       {activeTab === 'users' && (
         <div className="space-y-6">
           {/* User List Search Bar */}
-          <div className="bg-[#12121a] rounded-2xl border border-white/10 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
             <div className="flex items-center gap-3 w-full md:w-auto flex-1">
               <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-3" />
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
                   type="text"
                   value={userSearch}
                   onChange={e => setUserSearch(e.target.value)}
                   placeholder="Search user name, email, ID..."
-                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <select
                 value={userRoleFilter}
                 onChange={e => setUserRoleFilter(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-zinc-300 focus:outline-none focus:border-amber-500"
+                className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-700 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
                 <option value="ALL">All Roles</option>
                 <option value="Super Admin">Super Admin</option>
@@ -1101,7 +1022,7 @@ export const SettingsManagementView: React.FC = () => {
               <select
                 value={userStatusFilter}
                 onChange={e => setUserStatusFilter(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-zinc-300 focus:outline-none focus:border-amber-500"
+                className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs text-slate-700 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
                 <option value="ALL">All Status</option>
                 <option value="Active">Active</option>
@@ -1110,7 +1031,7 @@ export const SettingsManagementView: React.FC = () => {
 
               <button
                 onClick={handleFilterUsers}
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-zinc-300 hover:text-white"
+                className="px-4 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-700 hover:bg-slate-200 cursor-pointer font-medium"
               >
                 Filter
               </button>
@@ -1118,7 +1039,7 @@ export const SettingsManagementView: React.FC = () => {
 
             <button
               onClick={() => setIsAddUserOpen(true)}
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 text-sm shrink-0"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 text-sm shrink-0 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add System User</span>
@@ -1126,11 +1047,11 @@ export const SettingsManagementView: React.FC = () => {
           </div>
 
           {/* Users Table */}
-          <div className="bg-[#12121a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-black/40 border-b border-white/10 text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
                     <th className="py-3.5 px-4">User</th>
                     <th className="py-3.5 px-4">Email</th>
                     <th className="py-3.5 px-4">Role</th>
@@ -1139,16 +1060,16 @@ export const SettingsManagementView: React.FC = () => {
                     <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                   {usersList.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-zinc-500">
+                      <td colSpan={6} className="py-12 text-center text-slate-500">
                         No system users found matching filters.
                       </td>
                     </tr>
                   ) : (
                     usersList.map(u => (
-                      <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
+                      <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
                         <td className="py-3 px-4 flex items-center gap-3">
                           <img
                             src={
@@ -1156,23 +1077,23 @@ export const SettingsManagementView: React.FC = () => {
                               'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'
                             }
                             alt={u.fullName}
-                            className="w-9 h-9 rounded-full object-cover border border-amber-500/30"
+                            className="w-9 h-9 rounded-full object-cover border border-slate-200"
                           />
                           <div>
-                            <p className="font-semibold text-white">{u.fullName}</p>
-                            <p className="text-xs text-zinc-500 font-mono">
+                            <p className="font-semibold text-slate-900">{u.fullName}</p>
+                            <p className="text-xs text-slate-500 font-mono">
                               {u.employeeId || u.studentId || u.id}
                             </p>
                           </div>
                         </td>
 
-                        <td className="py-3 px-4 font-mono text-xs text-zinc-300">{u.email}</td>
+                        <td className="py-3 px-4 font-mono text-xs text-slate-600">{u.email}</td>
 
                         <td className="py-3 px-4">
                           <select
                             value={u.role}
                             onChange={e => handleChangeUserRole(u.id, e.target.value)}
-                            className="px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-xs text-amber-400 font-medium focus:outline-none"
+                            className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs text-blue-700 font-semibold focus:outline-none cursor-pointer"
                           >
                             <option value="Super Admin">Super Admin</option>
                             <option value="Admin">Admin</option>
@@ -1182,15 +1103,15 @@ export const SettingsManagementView: React.FC = () => {
                           </select>
                         </td>
 
-                        <td className="py-3 px-4 text-xs text-zinc-400">{u.department || 'N/A'}</td>
+                        <td className="py-3 px-4 text-xs text-slate-600">{u.department || 'N/A'}</td>
 
                         <td className="py-3 px-4">
                           <button
                             onClick={() => handleToggleUserStatus(u.id, u.status)}
-                            className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold border transition-all ${
+                            className={`px-2.5 py-1 rounded-full text-[10px] uppercase font-bold border transition-all cursor-pointer ${
                               u.status === 'Active'
-                                ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
-                                : 'bg-rose-500/20 border-rose-500/30 text-rose-400'
+                                ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                                : 'bg-rose-50 border-rose-200 text-rose-800'
                             }`}
                           >
                             {u.status}
@@ -1203,7 +1124,7 @@ export const SettingsManagementView: React.FC = () => {
                               setResetModalUser(u);
                               setGeneratedPassResult(null);
                             }}
-                            className="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 text-xs font-medium flex items-center gap-1.5 ml-auto"
+                            className="px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 text-xs font-semibold flex items-center gap-1.5 ml-auto cursor-pointer"
                             title="Reset Password"
                           >
                             <Lock className="w-3.5 h-3.5" />
@@ -1220,16 +1141,16 @@ export const SettingsManagementView: React.FC = () => {
 
           {/* Add User Modal */}
           {isAddUserOpen && (
-            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="bg-[#12121a] rounded-2xl border border-white/10 w-full max-w-lg p-6 space-y-4 shadow-2xl relative">
-                <div className="flex justify-between items-center border-b border-white/10 pb-3">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-amber-400" />
+            <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-lg p-6 space-y-4 shadow-xl relative">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <Users className="w-5 h-5 text-blue-600" />
                     <span>Create New System User Account</span>
                   </h3>
                   <button
                     onClick={() => setIsAddUserOpen(false)}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-slate-400 hover:text-slate-700 cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -1237,7 +1158,7 @@ export const SettingsManagementView: React.FC = () => {
 
                 <form onSubmit={handleCreateUserSubmit} className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-zinc-300 block mb-1">
+                    <label className="text-xs font-semibold text-slate-700 block mb-1">
                       Full Name *
                     </label>
                     <input
@@ -1246,12 +1167,12 @@ export const SettingsManagementView: React.FC = () => {
                       value={newUserForm.fullName}
                       onChange={e => setNewUserForm({ ...newUserForm, fullName: e.target.value })}
                       placeholder="e.g., Dr. Ananya Sharma"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-zinc-300 block mb-1">
+                    <label className="text-xs font-semibold text-slate-700 block mb-1">
                       Email Address *
                     </label>
                     <input
@@ -1260,19 +1181,19 @@ export const SettingsManagementView: React.FC = () => {
                       value={newUserForm.email}
                       onChange={e => setNewUserForm({ ...newUserForm, email: e.target.value })}
                       placeholder="user@scholarcore.edu.in"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-medium text-zinc-300 block mb-1">
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">
                         System Role *
                       </label>
                       <select
                         value={newUserForm.role}
                         onChange={e => setNewUserForm({ ...newUserForm, role: e.target.value })}
-                        className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                        className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                       >
                         <option value="Super Admin">Super Admin</option>
                         <option value="Admin">Admin</option>
@@ -1283,7 +1204,7 @@ export const SettingsManagementView: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="text-xs font-medium text-zinc-300 block mb-1">
+                      <label className="text-xs font-semibold text-slate-700 block mb-1">
                         Employee ID
                       </label>
                       <input
@@ -1291,25 +1212,25 @@ export const SettingsManagementView: React.FC = () => {
                         value={newUserForm.employeeId}
                         onChange={e => setNewUserForm({ ...newUserForm, employeeId: e.target.value })}
                         placeholder="EMP-202"
-                        className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                        className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-zinc-300 block mb-1">
+                    <label className="text-xs font-semibold text-slate-700 block mb-1">
                       Department
                     </label>
                     <input
                       type="text"
                       value={newUserForm.department}
                       onChange={e => setNewUserForm({ ...newUserForm, department: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-zinc-300 block mb-1">
+                    <label className="text-xs font-semibold text-slate-700 block mb-1">
                       Initial Password (Optional)
                     </label>
                     <input
@@ -1317,7 +1238,7 @@ export const SettingsManagementView: React.FC = () => {
                       value={newUserForm.password}
                       onChange={e => setNewUserForm({ ...newUserForm, password: e.target.value })}
                       placeholder="Default: ScholarCore2026!"
-                      className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
@@ -1325,14 +1246,14 @@ export const SettingsManagementView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setIsAddUserOpen(false)}
-                      className="px-4 py-2 rounded-xl bg-white/5 text-zinc-300 hover:text-white text-xs font-medium"
+                      className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={loading}
-                      className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20"
+                      className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm cursor-pointer"
                     >
                       Create Account
                     </button>
@@ -1344,11 +1265,11 @@ export const SettingsManagementView: React.FC = () => {
 
           {/* Admin Reset Password Modal */}
           {resetModalUser && (
-            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="bg-[#12121a] rounded-2xl border border-white/10 w-full max-w-md p-6 space-y-4 shadow-2xl relative">
-                <div className="flex justify-between items-center border-b border-white/10 pb-3">
-                  <h3 className="text-md font-bold text-white flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-amber-400" />
+            <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-md p-6 space-y-4 shadow-xl relative">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                  <h3 className="text-md font-bold text-slate-900 flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-blue-600" />
                     <span>Reset User Password</span>
                   </h3>
                   <button
@@ -1356,26 +1277,26 @@ export const SettingsManagementView: React.FC = () => {
                       setResetModalUser(null);
                       setGeneratedPassResult(null);
                     }}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-slate-400 hover:text-slate-700 cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
-                <p className="text-xs text-zinc-300">
-                  Reset login credentials for <strong className="text-amber-400">{resetModalUser.fullName}</strong> ({resetModalUser.email}).
+                <p className="text-xs text-slate-600">
+                  Reset login credentials for <strong className="text-blue-700">{resetModalUser.fullName}</strong> ({resetModalUser.email}).
                 </p>
 
                 {generatedPassResult ? (
-                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 text-center">
-                    <p className="text-xs text-emerald-400 font-semibold">
+                  <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2 text-center">
+                    <p className="text-xs text-emerald-800 font-semibold">
                       Password Reset Complete!
                     </p>
-                    <p className="text-xs text-zinc-300">Temporary Password Generated:</p>
-                    <div className="p-2 bg-black/60 rounded-lg text-amber-400 font-mono font-bold text-lg select-all border border-amber-500/30">
+                    <p className="text-xs text-slate-600">Temporary Password Generated:</p>
+                    <div className="p-2 bg-slate-100 rounded-lg text-blue-700 font-mono font-bold text-lg select-all border border-blue-200">
                       {generatedPassResult}
                     </div>
-                    <p className="text-[11px] text-zinc-400">
+                    <p className="text-[11px] text-slate-500">
                       Provide this temporary password securely to the user.
                     </p>
                   </div>
@@ -1383,14 +1304,14 @@ export const SettingsManagementView: React.FC = () => {
                   <div className="pt-2 flex justify-end gap-2">
                     <button
                       onClick={() => setResetModalUser(null)}
-                      className="px-4 py-2 rounded-xl bg-white/5 text-zinc-300 hover:text-white text-xs"
+                      className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleAdminResetPassword}
                       disabled={loading}
-                      className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs"
+                      className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm cursor-pointer"
                     >
                       Confirm Reset
                     </button>
@@ -1405,24 +1326,24 @@ export const SettingsManagementView: React.FC = () => {
       {/* --- TAB 6: ROLE PERMISSIONS MATRIX --- */}
       {activeTab === 'roles' && (
         <div className="space-y-6">
-          <div className="bg-[#12121a] rounded-2xl border border-white/10 p-6 space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-amber-400" />
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-blue-600" />
                   <span>Role-Based Access Control (RBAC) Matrix</span>
                 </h3>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-slate-500">
                   Define modular permissions across View, Create, Edit, Delete, and Export capabilities per system role.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-xs text-zinc-400">Select Role:</label>
+                <label className="text-xs text-slate-600 font-medium">Select Role:</label>
                 <select
                   value={selectedRole}
                   onChange={e => setSelectedRole(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-amber-400 font-bold focus:outline-none"
+                  className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs text-blue-700 font-bold focus:outline-none cursor-pointer"
                 >
                   {rolePermissions.map(r => (
                     <option key={r.role} value={r.role}>
@@ -1435,17 +1356,17 @@ export const SettingsManagementView: React.FC = () => {
 
             {/* Selected Role Description Banner */}
             {rolePermissions.find(r => r.role === selectedRole) && (
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex justify-between items-center gap-4">
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex justify-between items-center gap-4">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-amber-400">{selectedRole} Role</h4>
-                  <p className="text-xs text-zinc-300">
+                  <h4 className="text-sm font-bold text-blue-900">{selectedRole} Role</h4>
+                  <p className="text-xs text-slate-600">
                     {rolePermissions.find(r => r.role === selectedRole)?.description}
                   </p>
                 </div>
                 <button
                   onClick={() => handleSaveRolePermissions(selectedRole)}
                   disabled={loading}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all shadow-lg text-xs flex items-center gap-1.5 shrink-0"
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-sm text-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
                 >
                   <Save className="w-3.5 h-3.5" />
                   <span>Save Role Matrix</span>
@@ -1454,10 +1375,10 @@ export const SettingsManagementView: React.FC = () => {
             )}
 
             {/* Matrix Table */}
-            <div className="bg-black/40 rounded-xl border border-white/10 overflow-hidden">
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/5 border-b border-white/10 text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                  <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
                     <th className="py-3.5 px-4">System Module</th>
                     <th className="py-3.5 px-4 text-center">View</th>
                     <th className="py-3.5 px-4 text-center">Create</th>
@@ -1466,13 +1387,13 @@ export const SettingsManagementView: React.FC = () => {
                     <th className="py-3.5 px-4 text-center">Export</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
                   {rolePermissions
                     .find(r => r.role === selectedRole)
                     ?.permissions.map(p => (
-                      <tr key={p.module} className="hover:bg-white/[0.02]">
-                        <td className="py-3 px-4 font-medium text-white flex items-center gap-2">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <tr key={p.module} className="hover:bg-slate-50">
+                        <td className="py-3 px-4 font-semibold text-slate-900 flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                           <span>{p.module} Module</span>
                         </td>
 
@@ -1481,7 +1402,7 @@ export const SettingsManagementView: React.FC = () => {
                             type="checkbox"
                             checked={p.view}
                             onChange={() => handleTogglePermission(selectedRole, p.module, 'view')}
-                            className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                           />
                         </td>
 
@@ -1490,7 +1411,7 @@ export const SettingsManagementView: React.FC = () => {
                             type="checkbox"
                             checked={p.create}
                             onChange={() => handleTogglePermission(selectedRole, p.module, 'create')}
-                            className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                           />
                         </td>
 
@@ -1499,7 +1420,7 @@ export const SettingsManagementView: React.FC = () => {
                             type="checkbox"
                             checked={p.edit}
                             onChange={() => handleTogglePermission(selectedRole, p.module, 'edit')}
-                            className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                           />
                         </td>
 
@@ -1508,7 +1429,7 @@ export const SettingsManagementView: React.FC = () => {
                             type="checkbox"
                             checked={p.delete}
                             onChange={() => handleTogglePermission(selectedRole, p.module, 'delete')}
-                            className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                           />
                         </td>
 
@@ -1517,7 +1438,7 @@ export const SettingsManagementView: React.FC = () => {
                             type="checkbox"
                             checked={p.export}
                             onChange={() => handleTogglePermission(selectedRole, p.module, 'export')}
-                            className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                            className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
                           />
                         </td>
                       </tr>

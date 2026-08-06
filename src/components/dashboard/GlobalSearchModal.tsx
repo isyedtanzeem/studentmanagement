@@ -123,25 +123,25 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 animate-in fade-in duration-200">
-      <div className="bg-[#12121a] border border-amber-500/30 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl shadow-amber-500/10 flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[80vh]">
         {/* Search Bar Input */}
-        <div className="p-4 border-b border-white/10 flex items-center gap-3 bg-black/40">
-          <Search className="w-5 h-5 text-amber-400 shrink-0" />
+        <div className="p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50">
+          <Search className="w-5 h-5 text-blue-600 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
             autoFocus
             placeholder="Search students, courses, departments, applications, or jump to workspace module..."
-            className="w-full bg-transparent text-sm text-white focus:outline-none placeholder:text-zinc-500 font-sans"
+            className="w-full bg-transparent text-sm text-slate-900 focus:outline-none placeholder:text-slate-400 font-sans"
           />
           {query && (
-            <button onClick={() => setQuery('')} className="text-zinc-400 hover:text-white">
+            <button onClick={() => setQuery('')} className="text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-zinc-400 font-mono">
+          <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] text-slate-500 font-mono shadow-2xs">
             ESC
           </span>
         </div>
@@ -149,8 +149,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         {/* Results Body */}
         <div className="p-4 overflow-y-auto space-y-4 flex-1 font-sans">
           {loading && (
-            <div className="py-8 text-center text-xs text-amber-400 flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+            <div className="py-8 text-center text-xs text-blue-600 flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
               <span>Searching across ScholarCore SIMS database...</span>
             </div>
           )}
@@ -158,7 +158,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {/* Module Navigation Jump Shortcuts */}
           {(!query || filteredQuickModules.length > 0) && (
             <div className="space-y-2">
-              <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-blue-700 uppercase tracking-wider block">
                 Workspace Quick Jump
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -171,10 +171,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         onSelectModule(mod.id as any);
                         onClose();
                       }}
-                      className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-amber-500/40 hover:bg-amber-500/10 transition-all text-left flex items-center justify-between group"
+                      className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-left flex items-center justify-between group shadow-2xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+                        <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
                           <Icon className="w-4 h-4" />
                         </div>
                         <div>

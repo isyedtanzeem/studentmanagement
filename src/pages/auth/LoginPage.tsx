@@ -11,11 +11,13 @@ import {
   AlertCircle,
   Loader2,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  GraduationCap
 } from 'lucide-react';
 
 interface LoginPageProps {
   onNavigateToForgotPassword: () => void;
+  onNavigateToApplicantPortal?: () => void;
 }
 
 const DEMO_PRESETS: {
@@ -56,7 +58,10 @@ const DEMO_PRESETS: {
   }
 ];
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateToForgotPassword }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({
+  onNavigateToForgotPassword,
+  onNavigateToApplicantPortal
+}) => {
   const { login, isLoading, error, clearError } = useAuth();
   const [email, setEmail] = useState('superadmin@scholarcore.edu.in');
   const [password, setPassword] = useState('Password123!');
@@ -96,9 +101,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateToForgotPassword
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-gray-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-          <span>Authentication Portal Active</span>
+        <div className="flex items-center gap-4">
+          {onNavigateToApplicantPortal && (
+            <button
+              onClick={onNavigateToApplicantPortal}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-600 border border-blue-500/50 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+            >
+              <GraduationCap className="w-4 h-4 text-blue-200" />
+              <span>Student Applicant Portal (2026-27)</span>
+            </button>
+          )}
+
+          <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+            <span>Authentication Active</span>
+          </div>
         </div>
       </header>
 

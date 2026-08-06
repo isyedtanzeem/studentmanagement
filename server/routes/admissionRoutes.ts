@@ -4,7 +4,11 @@ import { protect } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-// Apply auth middleware to all admission management routes
+// Public unauthenticated routes for applicant admission portal
+router.post('/public/lookup', AdmissionController.publicLookupByPhone);
+router.post('/public/apply', AdmissionController.publicCreateApplication);
+
+// Apply auth middleware to all officer admission management routes
 router.use(protect as any);
 
 // Roll Number Generator helper endpoint

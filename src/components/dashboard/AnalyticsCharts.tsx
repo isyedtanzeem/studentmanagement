@@ -43,18 +43,18 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
   return (
     <div className="space-y-4">
       {/* Chart Navigation Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0d0d12]/80 border border-white/10 rounded-xl p-3 backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
           <button
             id="tab-growth"
             onClick={() => setActiveTab('growth')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
               activeTab === 'growth'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <TrendingUp className="w-3.5 h-3.5" />
+            <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
             Student Growth
           </button>
 
@@ -63,11 +63,11 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
             onClick={() => setActiveTab('departments')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
               activeTab === 'departments'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <BarChart2 className="w-3.5 h-3.5" />
+            <BarChart2 className="w-3.5 h-3.5 text-blue-600" />
             Dept Wise Students
           </button>
 
@@ -76,11 +76,11 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
             onClick={() => setActiveTab('gender')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
               activeTab === 'gender'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <PieIcon className="w-3.5 h-3.5" />
+            <PieIcon className="w-3.5 h-3.5 text-blue-600" />
             Gender Ratio
           </button>
 
@@ -89,25 +89,25 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
             onClick={() => setActiveTab('admissions')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
               activeTab === 'admissions'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3.5 h-3.5 text-blue-600" />
             Admission Trends
           </button>
         </div>
 
         {/* Timeframe Filter Buttons */}
-        <div className="flex items-center gap-1 bg-black/40 border border-white/10 rounded-lg p-1 self-end sm:self-auto">
+        <div className="flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-lg p-1 self-end sm:self-auto">
           {(['year', 'semester', 'month'] as const).map((t) => (
             <button
               key={t}
               onClick={() => onTimeframeChange(t)}
               className={`px-2.5 py-1 rounded text-[11px] font-mono transition-all capitalize ${
                 timeframe === t
-                  ? 'bg-amber-500/20 text-amber-300 font-semibold'
-                  : 'text-zinc-500 hover:text-zinc-300'
+                  ? 'bg-white text-blue-700 font-semibold shadow-2xs border border-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {t}
@@ -117,17 +117,17 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
       </div>
 
       {/* Main Chart Container */}
-      <div className="bg-[#0d0d12]/90 border border-white/10 rounded-xl p-5 backdrop-blur-md relative overflow-hidden">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs relative overflow-hidden">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-100 font-sans flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <h3 className="text-sm font-semibold text-slate-900 font-sans flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
               {activeTab === 'growth' && 'Student Enrollment & Active Growth Trajectory'}
               {activeTab === 'departments' && 'Department-Wise Student Distribution & Capacity'}
               {activeTab === 'gender' && 'Institutional Diversity & Gender Balance Ratio'}
               {activeTab === 'admissions' && 'Monthly Admission Application vs Acceptance Trends'}
             </h3>
-            <p className="text-xs text-zinc-400 font-mono mt-0.5">
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
               Verified SIMS institutional metrics database
             </p>
           </div>

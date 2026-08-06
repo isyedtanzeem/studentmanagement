@@ -4,12 +4,13 @@ import { ThemeProvider } from './context/ThemeContext';
 import { LoginPage } from './pages/auth/LoginPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
+import { ApplicantPortalPage } from './pages/applicant/ApplicantPortalPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
-  const [currentView, setCurrentView] = useState<'login' | 'forgot-password' | 'reset-password'>('login');
+  const [currentView, setCurrentView] = useState<'login' | 'forgot-password' | 'reset-password' | 'applicant-portal'>('login');
   const [resetToken, setResetToken] = useState<string>('');
 
   // If user is authenticated, render protected dashboard directly
@@ -17,11 +18,23 @@ function AppContent() {
     return (
       <ProtectedRoute
         fallbackLogin={
-          <LoginPage onNavigateToForgotPassword={() => setCurrentView('forgot-password')} />
+          <LoginPage
+            onNavigateToForgotPassword={() => setCurrentView('forgot-password')}
+            onNavigateToApplicantPortal={() => setCurrentView('applicant-portal')}
+          />
         }
       >
         <DashboardPage />
       </ProtectedRoute>
+    );
+  }
+
+  // Applicant Portal Page
+  if (currentView === 'applicant-portal') {
+    return (
+      <ApplicantPortalPage
+        onBackToStaffLogin={() => setCurrentView('login')}
+      />
     );
   }
 
@@ -47,7 +60,12 @@ function AppContent() {
     );
   }
 
-  return <LoginPage onNavigateToForgotPassword={() => setCurrentView('forgot-password')} />;
+  return (
+    <LoginPage
+      onNavigateToForgotPassword={() => setCurrentView('forgot-password')}
+      onNavigateToApplicantPortal={() => setCurrentView('applicant-portal')}
+    />
+  );
 }
 
 export default function App() {

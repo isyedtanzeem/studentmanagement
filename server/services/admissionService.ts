@@ -153,6 +153,25 @@ export class AdmissionService {
     };
   }
 
+  public static getApplicationsByPhone(phone: string): AdmissionRecord[] {
+    DashboardModel.seedDataIfEmpty();
+    const cleanInput = phone.replace(/\D/g, '');
+    if (!cleanInput) return [];
+
+    const all = Array.from(dbStore.admissions.values());
+    return all.filter((a) => {
+      if (!a.phone) return false;
+      const cleanPhone = a.phone.replace(/\D/g, '');
+      return (
+        cleanPhone === cleanInput ||
+        cleanPhone.endsWith(cleanInput) ||
+        cleanInput.endsWith(cleanPhone) ||
+        cleanPhone.includes(cleanInput) ||
+        cleanInput.includes(cleanPhone)
+      );
+    });
+  }
+
   public static getApplicationById(id: string): AdmissionRecord | null {
     DashboardModel.seedDataIfEmpty();
     return dbStore.admissions.get(id) || null;

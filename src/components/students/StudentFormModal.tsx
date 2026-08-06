@@ -129,19 +129,19 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-[#0f0f15] border border-white/10 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden my-8 relative flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden my-8 relative flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <User className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white serif-font">
+              <h3 className="text-lg font-bold text-slate-900">
                 {isEditing ? 'Edit Student Record' : 'Register New Student'}
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-slate-500">
                 {isEditing ? `Updating profile ID: ${initialData?.studentId}` : 'Enter student credentials & academic info'}
               </p>
             </div>
@@ -149,7 +149,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition-all"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -158,24 +158,24 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         {/* Modal Form Body */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
           {error && (
-            <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 font-mono">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 font-mono">
               {error}
             </div>
           )}
 
           {/* Photo Upload Section */}
-          <div className="space-y-3 bg-white/5 p-4 rounded-xl border border-white/10">
-            <label className="text-zinc-300 font-semibold flex items-center justify-between">
+          <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <label className="text-slate-800 font-semibold flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <Camera className="w-4 h-4 text-[#D4AF37]" />
+                <Camera className="w-4 h-4 text-blue-600" />
                 Student Profile Photo
               </span>
               <div className="flex items-center gap-2 font-normal text-[11px]">
                 <button
                   type="button"
                   onClick={() => setPhotoMode('preset')}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
-                    photoMode === 'preset' ? 'bg-[#D4AF37] text-black font-semibold' : 'text-zinc-400 hover:text-white'
+                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                    photoMode === 'preset' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200'
                   }`}
                 >
                   Presets
@@ -183,8 +183,8 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setPhotoMode('custom')}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
-                    photoMode === 'custom' ? 'bg-[#D4AF37] text-black font-semibold' : 'text-zinc-400 hover:text-white'
+                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                    photoMode === 'custom' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200'
                   }`}
                 >
                   Custom Upload
@@ -199,8 +199,8 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, photoUrl: url }))}
-                    className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 ${
-                      formData.photoUrl === url ? 'border-[#D4AF37] scale-105 shadow-[0_0_10px_rgba(212,175,55,0.4)]' : 'border-transparent opacity-60 hover:opacity-100'
+                    className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
+                      formData.photoUrl === url ? 'border-blue-600 scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img src={url} alt="preset avatar" className="w-full h-full object-cover" />
@@ -209,11 +209,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl border border-white/20 overflow-hidden flex-shrink-0 bg-black">
+                <div className="w-14 h-14 rounded-xl border border-slate-300 overflow-hidden flex-shrink-0 bg-slate-100">
                   {formData.photoUrl ? (
                     <img src={formData.photoUrl} alt="preview" className="w-full h-full object-cover" />
                   ) : (
-                    <User className="w-8 h-8 m-3 text-zinc-600" />
+                    <User className="w-8 h-8 m-3 text-slate-400" />
                   )}
                 </div>
 
@@ -223,7 +223,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                     placeholder="Enter Image URL (e.g. https://...)"
                     value={formData.photoUrl || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, photoUrl: e.target.value }))}
-                    className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
                   />
                   <div className="relative">
                     <input
@@ -235,9 +235,9 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                     />
                     <label
                       htmlFor="photo-file-input"
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-zinc-300 hover:text-white cursor-pointer transition-all"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-slate-700 cursor-pointer transition-all"
                     >
-                      <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <Upload className="w-3.5 h-3.5 text-blue-600" />
                       Upload Local File
                     </label>
                   </div>
@@ -249,11 +249,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
           {/* Basic Personal Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">
-                Full Name <span className="text-rose-400">*</span>
+              <label className="block text-slate-700 mb-1 font-medium">
+                Full Name <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   name="fullName"
@@ -261,17 +261,17 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   placeholder="e.g. Aarav Sharma"
                   value={formData.fullName || ''}
                   onChange={handleChange}
-                  className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">
-                Email Address <span className="text-rose-400">*</span>
+              <label className="block text-slate-700 mb-1 font-medium">
+                Email Address <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="email"
                   name="email"
@@ -279,53 +279,53 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   placeholder="e.g. aarav.sharma@scholarcore.edu.in"
                   value={formData.email || ''}
                   onChange={handleChange}
-                  className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Mobile Number (+91)</label>
+              <label className="block text-slate-700 mb-1 font-medium">Mobile Number (+91)</label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   name="phone"
                   placeholder="+91 98765 43210"
                   value={formData.phone || ''}
                   onChange={handleChange}
-                  className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Date of Birth</label>
+              <label className="block text-slate-700 mb-1 font-medium">Date of Birth</label>
               <div className="relative">
-                <Calendar className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="date"
                   name="dateOfBirth"
                   value={formData.dateOfBirth || ''}
                   onChange={handleChange}
-                  className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
           </div>
 
           {/* Academic Profile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Academic Department</label>
+              <label className="block text-slate-700 mb-1 font-medium">Academic Department</label>
               <select
                 name="department"
                 value={formData.department || DEPARTMENTS[0]}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
                 {DEPARTMENTS.map(dept => (
-                  <option key={dept} value={dept} className="bg-zinc-900 text-white">
+                  <option key={dept} value={dept}>
                     {dept}
                   </option>
                 ))}
@@ -333,7 +333,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Enrollment Year</label>
+              <label className="block text-slate-700 mb-1 font-medium">Enrollment Year</label>
               <input
                 type="number"
                 name="enrollmentYear"
@@ -341,12 +341,12 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 max="2026"
                 value={formData.enrollmentYear || 2024}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">CGPA (0.00 - 10.00 Scale)</label>
+              <label className="block text-slate-700 mb-1 font-medium">CGPA (0.00 - 10.00 Scale)</label>
               <input
                 type="number"
                 step="0.01"
@@ -355,85 +355,85 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 name="gpa"
                 value={formData.gpa ?? 8.5}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Gender</label>
+              <label className="block text-slate-700 mb-1 font-medium">Gender</label>
               <select
                 name="gender"
                 value={formData.gender || 'Male'}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
-                <option value="Male" className="bg-zinc-900">Male</option>
-                <option value="Female" className="bg-zinc-900">Female</option>
-                <option value="Other" className="bg-zinc-900">Other</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Status</label>
+              <label className="block text-slate-700 mb-1 font-medium">Status</label>
               <select
                 name="status"
                 value={formData.status || 'Active'}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
-                <option value="Active" className="bg-zinc-900">Active</option>
-                <option value="Inactive" className="bg-zinc-900">Inactive</option>
-                <option value="Graduated" className="bg-zinc-900">Graduated</option>
-                <option value="Suspended" className="bg-zinc-900">Suspended</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Graduated">Graduated</option>
+                <option value="Suspended">Suspended</option>
               </select>
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-zinc-400 mb-1 font-medium">Residential Address</label>
+              <label className="block text-slate-700 mb-1 font-medium">Residential Address</label>
               <input
                 type="text"
                 name="address"
                 placeholder="e.g. 100 University Drive, Campus Housing Apt 4B"
                 value={formData.address || ''}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
 
           {/* Guardian Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Guardian Full Name</label>
+              <label className="block text-slate-700 mb-1 font-medium">Guardian Full Name</label>
               <input
                 type="text"
                 name="guardianName"
                 placeholder="e.g. Robert Vance"
                 value={formData.guardianName || ''}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1 font-medium">Guardian Phone</label>
+              <label className="block text-slate-700 mb-1 font-medium">Guardian Phone</label>
               <input
                 type="text"
                 name="guardianPhone"
                 placeholder="+1 (555) 999-8888"
                 value={formData.guardianPhone || ''}
                 onChange={handleChange}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
 
           {/* Footer Submit Buttons */}
-          <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 font-medium transition-all"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-medium transition-all cursor-pointer"
             >
               Cancel
             </button>
@@ -441,10 +441,10 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)] disabled:opacity-50"
+              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all flex items-center gap-2 shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <Sparkles className="w-4 h-4" />
               )}

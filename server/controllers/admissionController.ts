@@ -210,4 +210,50 @@ export class AdmissionController {
       next(error);
     }
   }
+
+  public static async publicLookupByPhone(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { phone } = req.body;
+      if (!phone) {
+        res.status(400).json({
+          success: false,
+          message: 'Phone number is required.'
+        });
+        return;
+      }
+
+      const list = AdmissionService.getApplicationsByPhone(phone);
+      res.status(200).json({
+        success: true,
+        data: list,
+        count: list.length
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async publicCreateApplication(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { applicantName, email, department, phone } = req.body;
+
+      if (!applicantName || !email || !department || !phone) {
+        res.status(400).json({
+          success: false,
+          message: 'Applicant Name, Mobile Number, Email, and Department are required.'
+        });
+        return;
+      }
+
+      const newApp = AdmissionService.createApplication(req.body);
+
+      res.status(201).json({
+        success: true,
+        data: newApp,
+        message: 'Admission Application submitted successfully! Use your mobile number to track status.'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

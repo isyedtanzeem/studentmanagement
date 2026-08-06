@@ -20,13 +20,15 @@ export const StudentPDFReportModal: React.FC<StudentPDFReportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-[#0a0a0e] border border-white/10 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden relative flex flex-col max-h-[90vh]">
         {/* Header toolbar */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/60 print:hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 print:hidden">
           <div className="flex items-center gap-3">
-            <GraduationCap className="w-5 h-5 text-[#D4AF37]" />
-            <h3 className="text-base font-semibold text-white serif-font">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+              <GraduationCap className="w-4 h-4" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">
               Official Academic Transcript & Dossier
             </h3>
           </div>
@@ -34,7 +36,7 @@ export const StudentPDFReportModal: React.FC<StudentPDFReportModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-4 py-2 bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold rounded-xl text-xs transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all flex items-center gap-2 shadow-md shadow-blue-500/20 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>Print / Save as PDF</span>
@@ -42,7 +44,7 @@ export const StudentPDFReportModal: React.FC<StudentPDFReportModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition-all"
+              className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition-all cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

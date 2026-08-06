@@ -107,23 +107,23 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-[#0f0f15] border border-white/10 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden relative flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden relative flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white serif-font">Bulk Import Students</h3>
-              <p className="text-xs text-zinc-400">Upload CSV file or paste formatted CSV student records</p>
+              <h3 className="text-lg font-bold text-slate-900">Bulk Import Students</h3>
+              <p className="text-xs text-slate-500">Upload CSV file or paste formatted CSV student records</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition-all"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -133,17 +133,17 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
           {importResult ? (
             <div className="space-y-4 text-center py-6">
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h4 className="text-xl text-white font-semibold serif-font">Bulk Import Completed</h4>
-              <p className="text-zinc-300 font-mono text-sm">
-                Successfully imported <strong className="text-emerald-400">{importResult.successCount}</strong> student records.
+              <h4 className="text-xl text-slate-900 font-bold">Bulk Import Completed</h4>
+              <p className="text-slate-600 font-mono text-sm">
+                Successfully imported <strong className="text-emerald-600">{importResult.successCount}</strong> student records.
               </p>
 
               {importResult.errors.length > 0 && (
-                <div className="text-left bg-rose-500/10 border border-rose-500/30 p-4 rounded-xl space-y-2 text-rose-300 font-mono">
-                  <p className="font-semibold text-rose-400">Warnings / Skipped Records ({importResult.failedCount}):</p>
+                <div className="text-left bg-rose-50 border border-rose-200 p-4 rounded-xl space-y-2 text-rose-700 font-mono">
+                  <p className="font-semibold text-rose-800">Warnings / Skipped Records ({importResult.failedCount}):</p>
                   <ul className="list-disc list-inside space-y-1">
                     {importResult.errors.map((err, i) => (
                       <li key={i}>{err}</li>
@@ -154,7 +154,7 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
 
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold transition-all"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all cursor-pointer"
               >
                 Done
               </button>
@@ -162,27 +162,27 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
           ) : (
             <>
               {/* File Drop & Template Actions */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <div className="flex items-center gap-3">
-                  <Upload className="w-5 h-5 text-[#D4AF37]" />
+                  <Upload className="w-5 h-5 text-blue-600" />
                   <div>
-                    <span className="text-white font-semibold block">Upload CSV File</span>
-                    <span className="text-zinc-400">Drag & drop or browse your local system</span>
+                    <span className="text-slate-900 font-semibold block">Upload CSV File</span>
+                    <span className="text-slate-500">Drag & drop or browse your local system</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <label className="px-3.5 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white cursor-pointer transition-all flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-[#D4AF37]" />
+                  <label className="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl text-slate-700 cursor-pointer transition-all flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-blue-600" />
                     <span>Choose CSV File</span>
                     <input type="file" accept=".csv,.txt" onChange={handleFileUpload} className="hidden" />
                   </label>
 
                   <button
                     onClick={handleDownloadSample}
-                    className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-zinc-300 hover:text-white transition-all flex items-center gap-1.5"
+                    className="px-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl text-slate-700 hover:text-slate-900 transition-all flex items-center gap-1.5 cursor-pointer"
                   >
-                    <Download className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <Download className="w-3.5 h-3.5 text-blue-600" />
                     <span>Sample Template</span>
                   </button>
                 </div>
@@ -190,19 +190,19 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
 
               {/* Paste Text Area */}
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">Or Paste CSV Data Directly:</label>
+                <label className="block text-slate-700 mb-1 font-medium">Or Paste CSV Data Directly:</label>
                 <textarea
                   rows={5}
                   value={csvText}
                   onChange={handleTextChange}
                   placeholder={`Full Name,Email,Phone,Department,Gender,Enrollment Year,GPA,Status\nJane Doe,jane.d@scholarcore.edu,+1 (555) 123-4567,Computer Science & Engineering,Female,2024,3.90,Active`}
-                  className="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 font-mono placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               {parseError && (
-                <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 font-mono flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 font-mono flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0 text-rose-600" />
                   <span>{parseError}</span>
                 </div>
               )}
@@ -211,15 +211,15 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
               {parsedStudents.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-white font-semibold">
+                    <h4 className="text-slate-900 font-bold">
                       Validation Preview ({parsedStudents.length} Students Detected)
                     </h4>
-                    <span className="text-emerald-400 font-mono text-[11px]">Ready for import</span>
+                    <span className="text-emerald-700 font-mono text-[11px] font-semibold">Ready for import</span>
                   </div>
 
-                  <div className="border border-white/10 rounded-xl overflow-hidden max-h-48 overflow-y-auto font-mono text-[11px]">
+                  <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto font-mono text-[11px]">
                     <table className="w-full text-left">
-                      <thead className="bg-white/5 text-zinc-400 uppercase text-[10px]">
+                      <thead className="bg-slate-100 text-slate-600 uppercase text-[10px]">
                         <tr>
                           <th className="p-2">#</th>
                           <th className="p-2">Full Name</th>
@@ -229,15 +229,15 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
                           <th className="p-2">GPA</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/5 text-zinc-300">
+                      <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
                         {parsedStudents.map((s, idx) => (
-                          <tr key={idx} className="hover:bg-white/5">
-                            <td className="p-2 text-zinc-500">{idx + 1}</td>
-                            <td className="p-2 text-white font-medium">{s.fullName}</td>
-                            <td className="p-2 text-zinc-400">{s.email}</td>
-                            <td className="p-2 text-zinc-400 truncate max-w-[150px]">{s.department}</td>
-                            <td className="p-2 text-white">{s.enrollmentYear}</td>
-                            <td className="p-2 text-[#D4AF37]">{s.gpa}</td>
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="p-2 text-slate-400">{idx + 1}</td>
+                            <td className="p-2 text-slate-900 font-medium">{s.fullName}</td>
+                            <td className="p-2 text-slate-500">{s.email}</td>
+                            <td className="p-2 text-slate-500 truncate max-w-[150px]">{s.department}</td>
+                            <td className="p-2 text-slate-900">{s.enrollmentYear}</td>
+                            <td className="p-2 text-blue-700 font-semibold">{s.gpa}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -251,10 +251,10 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
 
         {/* Footer */}
         {!importResult && (
-          <div className="p-6 border-t border-white/10 bg-black/60 flex items-center justify-end gap-3">
+          <div className="p-6 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 font-medium transition-all"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-medium transition-all cursor-pointer"
             >
               Cancel
             </button>
@@ -262,10 +262,10 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
             <button
               onClick={handleExecuteImport}
               disabled={loading || parsedStudents.length === 0}
-              className="px-5 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)] disabled:opacity-50"
+              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all flex items-center gap-2 shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <Sparkles className="w-4 h-4" />
               )}

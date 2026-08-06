@@ -125,6 +125,38 @@ class AdmissionApiClient {
     }
     return data;
   }
+
+  public async publicLookupByPhone(phone: string): Promise<{ success: boolean; data: AdmissionApplication[]; count: number }> {
+    const response = await fetch('/api/v1/admissions/public/lookup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ phone })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to lookup admission applications for this mobile number.');
+    }
+    return data;
+  }
+
+  public async publicSubmitApplication(input: CreateAdmissionInput): Promise<{ success: boolean; data: AdmissionApplication; message: string }> {
+    const response = await fetch('/api/v1/admissions/public/apply', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(input)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to submit admission application.');
+    }
+    return data;
+  }
 }
 
 export const admissionApi = new AdmissionApiClient();

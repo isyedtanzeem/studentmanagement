@@ -208,12 +208,12 @@ export const StudentManagementView: React.FC = () => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl font-light text-white serif-font">Student Management Module</h2>
-              <p className="text-xs text-zinc-400">Complete student records, profiling, registration, & academic standing</p>
+              <h2 className="text-xl font-light text-slate-900 serif-font">Student Management Module</h2>
+              <p className="text-xs text-slate-500">Complete student records, profiling, registration, & academic standing</p>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@ export const StudentManagementView: React.FC = () => {
           {selectedIds.length > 0 && (
             <button
               onClick={() => setIsBulkDeleteOpen(true)}
-              className="px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Delete Selected ({selectedIds.length})</span>
@@ -231,17 +231,17 @@ export const StudentManagementView: React.FC = () => {
 
           <button
             onClick={() => setIsImportOpen(true)}
-            className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-blue-600" />
             <span>Bulk Import</span>
           </button>
 
           <button
             onClick={handleExportCSV}
-            className="px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
           >
-            <Download className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Download className="w-3.5 h-3.5 text-blue-600" />
             <span>Export CSV</span>
           </button>
 
@@ -250,7 +250,7 @@ export const StudentManagementView: React.FC = () => {
               setEditingStudent(null);
               setIsFormOpen(true);
             }}
-            className="px-4 py-2 bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold rounded-xl text-xs transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all flex items-center gap-2 shadow-md shadow-blue-500/20"
           >
             <UserPlus className="w-4 h-4" />
             <span>Add Student</span>
@@ -261,42 +261,42 @@ export const StudentManagementView: React.FC = () => {
       {/* Stats Summary Bar */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#0d0d12]/90 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-zinc-500 text-[10px] uppercase font-mono tracking-wider block">Total Enrolled</span>
-              <span className="text-xl font-bold text-white font-mono mt-0.5 block">{stats.total}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Total Enrolled</span>
+              <span className="text-xl font-bold text-slate-900 font-mono mt-0.5 block">{stats.total}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Users className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-[#0d0d12]/90 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-zinc-500 text-[10px] uppercase font-mono tracking-wider block">Active Status</span>
-              <span className="text-xl font-bold text-emerald-400 font-mono mt-0.5 block">{stats.active}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Active Status</span>
+              <span className="text-xl font-bold text-emerald-600 font-mono mt-0.5 block">{stats.active}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-[#0d0d12]/90 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-zinc-500 text-[10px] uppercase font-mono tracking-wider block">Graduated Alumni</span>
-              <span className="text-xl font-bold text-blue-400 font-mono mt-0.5 block">{stats.graduated}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Graduated Alumni</span>
+              <span className="text-xl font-bold text-blue-600 font-mono mt-0.5 block">{stats.graduated}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <GraduationCap className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-[#0d0d12]/90 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-zinc-500 text-[10px] uppercase font-mono tracking-wider block">Average CGPA (10.0)</span>
-              <span className="text-xl font-bold text-[#D4AF37] font-mono mt-0.5 block">{stats.avgGpa}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Average CGPA (10.0)</span>
+              <span className="text-xl font-bold text-blue-700 font-mono mt-0.5 block">{stats.avgGpa}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
+            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Award className="w-4 h-4" />
             </div>
           </div>
@@ -304,22 +304,22 @@ export const StudentManagementView: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#0d0d12]/90 border border-white/10 p-4 rounded-2xl space-y-3">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {/* Search Box */}
           <div className="relative md:col-span-2">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Search by student name, Roll No (e.g. 2024CSE1001), email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-black/60 border border-white/10 rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37]"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-8 py-2 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-2.5 text-zinc-500 hover:text-white"
+                className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -334,11 +334,11 @@ export const StudentManagementView: React.FC = () => {
                 setDepartment(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
-              <option value="ALL" className="bg-zinc-900">All Departments</option>
+              <option value="ALL">All Departments</option>
               {DEPARTMENTS.filter(d => d !== 'ALL').map(d => (
-                <option key={d} value={d} className="bg-zinc-900">{d}</option>
+                <option key={d} value={d}>{d}</option>
               ))}
             </select>
           </div>
@@ -351,13 +351,13 @@ export const StudentManagementView: React.FC = () => {
                 setStatus(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
-              <option value="ALL" className="bg-zinc-900">All Statuses</option>
-              <option value="Active" className="bg-zinc-900">Active</option>
-              <option value="Inactive" className="bg-zinc-900">Inactive</option>
-              <option value="Graduated" className="bg-zinc-900">Graduated</option>
-              <option value="Suspended" className="bg-zinc-900">Suspended</option>
+              <option value="ALL">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Graduated">Graduated</option>
+              <option value="Suspended">Suspended</option>
             </select>
           </div>
 
@@ -369,21 +369,21 @@ export const StudentManagementView: React.FC = () => {
                 setEnrollmentYear(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
-              <option value="ALL" className="bg-zinc-900">All Enrollment Years</option>
-              <option value="2026" className="bg-zinc-900">2026</option>
-              <option value="2024" className="bg-zinc-900">2024</option>
-              <option value="2023" className="bg-zinc-900">2023</option>
-              <option value="2022" className="bg-zinc-900">2022</option>
-              <option value="2021" className="bg-zinc-900">2021</option>
+              <option value="ALL">All Enrollment Years</option>
+              <option value="2026">2026</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
             </select>
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-mono">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono">
           {error}
         </div>
       )}
@@ -413,18 +413,18 @@ export const StudentManagementView: React.FC = () => {
       />
 
       {/* Pagination Footer Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0d0d12]/90 border border-white/10 p-4 rounded-2xl text-xs font-mono text-zinc-400">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-slate-200 p-4 rounded-2xl text-xs font-mono text-slate-600 shadow-sm">
         <div className="flex items-center gap-3">
           <span>Showing items {students.length > 0 ? (pagination.currentPage - 1) * limit + 1 : 0} to {Math.min(pagination.currentPage * limit, pagination.totalItems)} of {pagination.totalItems}</span>
           <div className="flex items-center gap-1.5 ml-4">
-            <span className="text-zinc-500">Per page:</span>
+            <span className="text-slate-500">Per page:</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="bg-black border border-white/10 text-white rounded-lg px-2 py-1 text-xs focus:outline-none"
+              className="bg-slate-50 border border-slate-300 text-slate-800 rounded-lg px-2 py-1 text-xs focus:outline-none"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -437,19 +437,19 @@ export const StudentManagementView: React.FC = () => {
           <button
             disabled={pagination.currentPage <= 1 || loading}
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="px-3 py-1 bg-black border border-white/10 rounded-lg text-white font-semibold">
+          <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-lg text-slate-900 font-semibold">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
 
           <button
             disabled={pagination.currentPage >= pagination.totalPages || loading}
             onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
-            className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -503,33 +503,33 @@ export const StudentManagementView: React.FC = () => {
 
       {/* Delete Confirmation Modal */}
       {deletingStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#0f0f15] border border-rose-500/30 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-white serif-font">Delete Student Record?</h3>
-                <p className="text-zinc-400">This action will remove the student dossier from the database.</p>
+                <h3 className="text-base font-bold text-slate-900">Delete Student Record?</h3>
+                <p className="text-slate-500">This action will remove the student dossier from the database.</p>
               </div>
             </div>
 
-            <div className="bg-black/60 p-3 rounded-xl border border-white/10 font-mono text-zinc-300">
-              <div className="text-white font-bold">{deletingStudent.fullName}</div>
-              <div className="text-zinc-500">ID: {deletingStudent.studentId} • {deletingStudent.department}</div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono text-slate-700">
+              <div className="text-slate-900 font-bold">{deletingStudent.fullName}</div>
+              <div className="text-slate-500">ID: {deletingStudent.studentId} • {deletingStudent.department}</div>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setDeletingStudent(null)}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-zinc-300 font-medium"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-slate-700 font-medium cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl cursor-pointer"
               >
                 Delete Permanently
               </button>
@@ -540,28 +540,28 @@ export const StudentManagementView: React.FC = () => {
 
       {/* Bulk Delete Modal */}
       {isBulkDeleteOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#0f0f15] border border-rose-500/30 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-white serif-font">Delete {selectedIds.length} Selected Students?</h3>
-                <p className="text-zinc-400">Are you sure you want to permanently delete all selected records?</p>
+                <h3 className="text-base font-bold text-slate-900">Delete {selectedIds.length} Selected Students?</h3>
+                <p className="text-slate-500">Are you sure you want to permanently delete all selected records?</p>
               </div>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setIsBulkDeleteOpen(false)}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-zinc-300 font-medium"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-slate-700 font-medium cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmBulkDelete}
-                className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl cursor-pointer"
               >
                 Delete All Selected
               </button>
