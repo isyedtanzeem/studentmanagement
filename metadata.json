@@ -1,0 +1,6 @@
+{
+  "name": "Student Information Management System",
+  "description": "Enterprise-grade Student Information Management System (SIMS) for schools and colleges.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
