@@ -11,9 +11,6 @@ import {
   GraduationCap,
   Edit2,
   Trash2,
-  CheckCircle2,
-  User,
-  Layers,
   FileText
 } from 'lucide-react';
 import { Course } from '../../types/course';
@@ -69,42 +66,42 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-sm flex justify-end">
+      <div className="fixed inset-0 z-50 overflow-hidden bg-slate-900/60 backdrop-blur-sm flex justify-end">
         <motion.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="w-full max-w-xl bg-[#0d0d12] border-l border-white/10 h-full overflow-y-auto flex flex-col shadow-2xl"
+          className="w-full max-w-xl bg-white border-l border-slate-200 h-full overflow-y-auto flex flex-col shadow-2xl"
         >
           {/* Top Bar Header */}
-          <div className="p-6 border-b border-white/10 bg-black/40 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
+          <div className="p-6 border-b border-slate-200 bg-slate-50/90 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37]">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-[#D4AF37] px-2 py-0.5 rounded bg-[#D4AF37]/10 border border-[#D4AF37]/30">
+                  <span className="text-xs font-mono font-bold text-blue-700 px-2 py-0.5 rounded bg-blue-50 border border-blue-200">
                     {activeCourse.code}
                   </span>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border font-semibold ${
                       activeCourse.status === 'Active'
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                        : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-slate-100 text-slate-600 border-slate-200'
                     }`}
                   >
                     {activeCourse.status || 'Active'}
                   </span>
                 </div>
-                <h2 className="text-base font-bold text-white mt-1 font-sans">{activeCourse.title}</h2>
+                <h2 className="text-base font-bold text-slate-900 mt-1">{activeCourse.title}</h2>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -114,93 +111,93 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
           <div className="p-6 space-y-6 flex-1 text-xs">
             {/* Quick Metrics */}
             <div className="grid grid-cols-3 gap-3 font-mono">
-              <div className="bg-black/60 border border-white/10 p-3.5 rounded-xl text-center">
-                <Clock className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-                <span className="text-xs font-bold text-white block truncate">{activeCourse.duration || '4 Years'}</span>
-                <span className="text-[10px] text-zinc-400 uppercase">Duration</span>
+              <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+                <Clock className="w-4 h-4 text-blue-600 mx-auto mb-1" />
+                <span className="text-xs font-bold text-slate-900 block truncate">{activeCourse.duration || '4 Years'}</span>
+                <span className="text-[10px] text-slate-500 uppercase font-semibold">Duration</span>
               </div>
 
-              <div className="bg-black/60 border border-white/10 p-3.5 rounded-xl text-center">
-                <Award className="w-4 h-4 text-purple-400 mx-auto mb-1" />
-                <span className="text-lg font-bold text-white block">{activeCourse.credits}</span>
-                <span className="text-[10px] text-zinc-400 uppercase">Credits</span>
+              <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+                <Award className="w-4 h-4 text-purple-600 mx-auto mb-1" />
+                <span className="text-lg font-bold text-slate-900 block">{activeCourse.credits}</span>
+                <span className="text-[10px] text-slate-500 uppercase font-semibold">Credits</span>
               </div>
 
-              <div className="bg-black/60 border border-white/10 p-3.5 rounded-xl text-center">
-                <Users className="w-4 h-4 text-sky-400 mx-auto mb-1" />
-                <span className="text-lg font-bold text-white block">
+              <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+                <Users className="w-4 h-4 text-indigo-600 mx-auto mb-1" />
+                <span className="text-lg font-bold text-slate-900 block">
                   {activeCourse.enrolledStudentsCount || activeCourse.enrolledStudents}
                 </span>
-                <span className="text-[10px] text-zinc-400 uppercase">Enrolled</span>
+                <span className="text-[10px] text-slate-500 uppercase font-semibold">Enrolled</span>
               </div>
             </div>
 
             {/* Course Fee Structure Card */}
-            <div className="bg-gradient-to-br from-[#D4AF37]/10 via-black to-black border border-[#D4AF37]/30 p-4 rounded-2xl space-y-3 font-mono">
-              <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                <span className="text-[11px] uppercase tracking-wider text-[#D4AF37] font-semibold flex items-center gap-1.5">
-                  <DollarSign className="w-4 h-4" />
+            <div className="bg-blue-50/70 border border-blue-200 p-4 rounded-2xl space-y-3">
+              <div className="flex items-center justify-between border-b border-blue-200/80 pb-2">
+                <span className="text-xs font-bold uppercase tracking-wide text-blue-900 flex items-center gap-1.5">
+                  <DollarSign className="w-4 h-4 text-blue-600" />
                   Academic Fee Structure
                 </span>
-                <span className="text-xs font-bold text-white bg-[#D4AF37]/20 border border-[#D4AF37]/40 px-2.5 py-0.5 rounded-md">
+                <span className="text-xs font-bold text-blue-900 bg-white border border-blue-200 px-2.5 py-0.5 rounded-md font-mono">
                   Total: ₹{totalFee.toLocaleString('en-IN')} / Sem
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-zinc-300">
-                <div className="bg-black/40 border border-white/10 p-2.5 rounded-xl">
-                  <span className="text-zinc-500 text-[10px] block uppercase">Tuition Fee</span>
-                  <span className="text-sm font-bold text-white mt-0.5 block">₹{courseFee.toLocaleString('en-IN')}</span>
+              <div className="grid grid-cols-2 gap-3 text-slate-700">
+                <div className="bg-white border border-blue-100 p-2.5 rounded-xl">
+                  <span className="text-slate-500 text-[10px] uppercase font-medium block">Tuition Fee</span>
+                  <span className="text-sm font-bold text-slate-900 mt-0.5 block font-mono">₹{courseFee.toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="bg-black/40 border border-white/10 p-2.5 rounded-xl">
-                  <span className="text-zinc-500 text-[10px] block uppercase">Lab & Examination Fee</span>
-                  <span className="text-sm font-bold text-white mt-0.5 block">₹{labFee.toLocaleString('en-IN')}</span>
+                <div className="bg-white border border-blue-100 p-2.5 rounded-xl">
+                  <span className="text-slate-500 text-[10px] uppercase font-medium block">Lab & Exam Fee</span>
+                  <span className="text-sm font-bold text-slate-900 mt-0.5 block font-mono">₹{labFee.toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
 
             {/* Department Mapping & Program Details */}
-            <div className="bg-black/60 border border-white/10 p-4 rounded-2xl space-y-3 font-mono">
-              <span className="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold block border-b border-white/10 pb-2 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-[#D4AF37]" />
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-800 block border-b border-slate-200 pb-2 flex items-center gap-1.5">
+                <Building2 className="w-4 h-4 text-blue-600" />
                 Department & Academic Mapping
               </span>
 
-              <div className="grid grid-cols-2 gap-3 text-zinc-300">
+              <div className="grid grid-cols-2 gap-3 text-slate-700">
                 <div className="space-y-0.5">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Mapped Department</span>
-                  <div className="text-white font-semibold">{activeCourse.department}</div>
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Mapped Department</span>
+                  <div className="text-slate-900 font-semibold">{activeCourse.department}</div>
                 </div>
 
                 <div className="space-y-0.5">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Degree Program</span>
-                  <div className="text-white font-semibold">{activeCourse.degreeProgram || 'B.Tech'}</div>
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Degree Program</span>
+                  <div className="text-slate-900 font-semibold">{activeCourse.degreeProgram || 'B.Tech'}</div>
                 </div>
 
                 <div className="space-y-0.5">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Academic Level</span>
-                  <div className="text-amber-400">{activeCourse.level || 'Undergraduate'}</div>
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Academic Level</span>
+                  <div className="text-blue-700 font-semibold">{activeCourse.level || 'Undergraduate'}</div>
                 </div>
 
                 <div className="space-y-0.5">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Primary Faculty Lead</span>
-                  <div className="text-sky-300">{activeCourse.instructorName || 'Faculty Chair'}</div>
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Primary Faculty Lead</span>
+                  <div className="text-indigo-700 font-semibold">{activeCourse.instructorName || 'Faculty Chair'}</div>
                 </div>
               </div>
             </div>
 
             {/* Syllabus & Prerequisites */}
-            <div className="bg-black/60 border border-white/10 p-4 rounded-2xl space-y-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-semibold block border-b border-white/10 pb-2 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-purple-400" />
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-800 block border-b border-slate-200 pb-2 flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-purple-600" />
                 Syllabus & Prerequisites
               </span>
 
               {activeCourse.prerequisites && (
-                <div className="space-y-1 font-mono">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Prerequisites</span>
-                  <p className="text-amber-300 bg-amber-500/10 border border-amber-500/20 p-2 rounded-lg text-xs">
+                <div className="space-y-1">
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Prerequisites</span>
+                  <p className="text-slate-800 bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs font-medium">
                     {activeCourse.prerequisites}
                   </p>
                 </div>
@@ -208,24 +205,24 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
 
               {activeCourse.description ? (
                 <div className="space-y-1">
-                  <span className="text-zinc-500 font-mono text-[10px] uppercase block">Course Summary</span>
-                  <p className="text-zinc-300 font-sans leading-relaxed text-xs">
+                  <span className="text-slate-500 text-[10px] uppercase block font-medium">Course Summary</span>
+                  <p className="text-slate-700 leading-relaxed text-xs">
                     {activeCourse.description}
                   </p>
                 </div>
               ) : (
-                <p className="text-zinc-500 italic font-mono text-xs">No detailed syllabus text added yet.</p>
+                <p className="text-slate-400 italic text-xs">No detailed syllabus text added yet.</p>
               )}
             </div>
 
             {/* Enrolled Students Preview */}
-            <div className="space-y-3 font-mono">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-wider text-[#D4AF37] font-semibold flex items-center gap-1.5">
-                  <GraduationCap className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4 text-blue-600" />
                   Enrolled Students Preview
                 </span>
-                <span className="text-[10px] text-zinc-400">
+                <span className="text-[10px] text-slate-500 font-mono font-medium">
                   {activeCourse.enrolledStudentsCount || activeCourse.enrolledStudents} Registered
                 </span>
               </div>
@@ -235,20 +232,20 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
                   {activeCourse.enrolledStudentsList.map((s: any) => (
                     <div
                       key={s.id}
-                      className="p-3 bg-black/60 border border-white/10 rounded-xl flex items-center justify-between"
+                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between"
                     >
                       <div>
-                        <div className="font-semibold text-white">{s.fullName}</div>
-                        <div className="text-[10px] text-zinc-400">{s.rollNumber} • {s.batchYear}</div>
+                        <div className="font-semibold text-slate-900">{s.fullName}</div>
+                        <div className="text-[10px] text-slate-500 font-mono">{s.rollNumber} • {s.batchYear}</div>
                       </div>
-                      <div className="text-right text-[11px] text-[#D4AF37]">
+                      <div className="text-right text-xs font-medium text-blue-700">
                         {s.academicTerm || 'Enrolled'}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-center text-zinc-500">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-500 font-medium">
                   Active batch roster assigned.
                 </div>
               )}
@@ -256,13 +253,13 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
           </div>
 
           {/* Drawer Action Footer */}
-          <div className="p-6 border-t border-white/10 bg-black/60 flex items-center justify-between gap-3 font-mono sticky bottom-0 z-10 backdrop-blur-md">
+          <div className="p-6 border-t border-slate-200 bg-slate-50/90 flex items-center justify-between gap-3 font-medium sticky bottom-0 z-10 backdrop-blur-md">
             <button
               onClick={() => {
                 onClose();
                 onDelete(activeCourse);
               }}
-              className="px-4 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl border border-red-500/30 text-xs font-semibold transition-colors flex items-center gap-2"
+              className="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl border border-rose-200 text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer"
             >
               <Trash2 className="w-4 h-4" />
               <span>Delete Course</span>
@@ -273,7 +270,7 @@ export const CourseDetailDrawer: React.FC<CourseDetailDrawerProps> = ({
                 onClose();
                 onEdit(activeCourse);
               }}
-              className="px-5 py-2.5 bg-[#D4AF37] hover:bg-[#c49f27] text-black font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-lg shadow-[#D4AF37]/10"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 cursor-pointer"
             >
               <Edit2 className="w-4 h-4" />
               <span>Edit Course</span>

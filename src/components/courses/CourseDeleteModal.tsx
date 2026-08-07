@@ -38,27 +38,27 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-md bg-[#0d0d12] border border-red-500/30 rounded-2xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-md bg-white border border-rose-200 rounded-2xl shadow-xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-white/10 bg-red-950/20">
+          <div className="flex items-center justify-between p-5 border-b border-rose-100 bg-rose-50/80">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-400">
+              <div className="w-10 h-10 rounded-xl bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white font-mono">Delete Academic Course</h3>
-                <p className="text-xs text-red-300 font-mono">{course.code} • {course.title}</p>
+                <h3 className="text-base font-bold text-slate-900">Delete Academic Course</h3>
+                <p className="text-xs text-rose-700 font-mono font-medium">{course.code} • {course.title}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+              className="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -67,59 +67,61 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
           {/* Body */}
           <div className="p-5 space-y-4 text-xs font-sans">
             {errorMessage ? (
-              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 font-mono space-y-1">
-                <div className="font-semibold text-white flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 shrink-0 text-red-400" />
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 font-mono space-y-1">
+                <div className="font-semibold text-rose-900 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
                   <span>Deletion Prevented</span>
                 </div>
                 <p className="text-[11px] leading-relaxed">{errorMessage}</p>
               </div>
             ) : (
-              <p className="text-zinc-300 leading-relaxed">
-                Are you sure you want to permanently delete <strong className="text-white">{course.code} ({course.title})</strong>?
+              <p className="text-slate-700 leading-relaxed font-medium">
+                Are you sure you want to permanently delete <strong className="text-slate-900">{course.code} ({course.title})</strong>?
                 This will remove syllabus mappings, credit structures, and fee configurations.
               </p>
             )}
 
-            <div className="bg-black/60 border border-white/10 p-3 rounded-xl space-y-2 font-mono">
-              <div className="flex justify-between text-zinc-400">
+            <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl space-y-2 font-mono text-xs">
+              <div className="flex justify-between text-slate-600">
                 <span>Department Mapping:</span>
-                <span className="text-white font-medium">{course.department}</span>
+                <span className="text-slate-900 font-medium">{course.department}</span>
               </div>
-              <div className="flex justify-between text-zinc-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Course Duration:</span>
-                <span className="text-amber-400">{course.duration || 'N/A'}</span>
+                <span className="text-blue-700 font-medium">{course.duration || 'N/A'}</span>
               </div>
-              <div className="flex justify-between text-zinc-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Total Semester Fee:</span>
-                <span className="text-white font-bold">₹{(course.totalFee || (course.courseFee || 0)).toLocaleString('en-IN')}</span>
+                <span className="text-slate-900 font-bold">₹{(course.totalFee || (course.courseFee || 0)).toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-zinc-400">
+              <div className="flex justify-between text-slate-600">
                 <span>Enrolled Students:</span>
-                <span className={course.enrolledStudents > 0 ? 'text-amber-400 font-bold' : 'text-white'}>
+                <span className={course.enrolledStudents > 0 ? 'text-amber-700 font-bold' : 'text-slate-900 font-medium'}>
                   {course.enrolledStudents}
                 </span>
               </div>
             </div>
-          </div>
 
-          {/* Actions */}
-          <div className="p-5 border-t border-white/10 bg-black/40 flex items-center justify-end gap-3 font-mono text-xs">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-white/10 text-zinc-300 hover:bg-white/5 transition-colors"
-            >
-              Cancel
-            </button>
+            {/* Actions */}
+            <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-3 font-medium">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors text-xs cursor-pointer"
+              >
+                Cancel
+              </button>
 
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-lg shadow-red-600/20 disabled:opacity-50"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>
-            </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-rose-500/20 disabled:opacity-50 cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>
