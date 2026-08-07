@@ -12,7 +12,7 @@ import {
 } from '../../types/dashboard';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
 import { KPIStatsCards } from '../../components/dashboard/KPIStatsCards';
-import { AnalyticsCharts } from '../../components/dashboard/AnalyticsCharts';
+import { ExecutiveDataSummary } from '../../components/dashboard/ExecutiveDataSummary';
 import { RecentActivitiesFeed } from '../../components/dashboard/RecentActivitiesFeed';
 import { NotificationsPanel } from '../../components/dashboard/NotificationsPanel';
 import { QuickActionsModal } from '../../components/dashboard/QuickActionsModal';
@@ -396,15 +396,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         {/* 1. Dashboard KPI Cards Module */}
         {stats && <KPIStatsCards cards={stats} loading={loading} />}
 
-        {/* 2. Analytics Charts Module */}
-        {chartsData && (
-          <AnalyticsCharts
-            data={chartsData}
-            timeframe={timeframe}
-            onTimeframeChange={handleTimeframeChange}
-            loading={loading}
-          />
-        )}
+        {/* 2. Executive Minimal Data Summary (No Graphs) */}
+        <ExecutiveDataSummary onNavigateToModule={setActiveModule} />
 
         {/* 3. Grid Row: Recent Activities & Notifications */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

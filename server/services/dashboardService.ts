@@ -9,58 +9,81 @@ export class DashboardService {
   public getStats() {
     DashboardModel.seedDataIfEmpty();
 
-    const pendingAdmissionsCount = Array.from(dbStore.admissions.values()).filter(a => a.status === 'Pending').length + 42;
-    const approvedAdmissionsCount = Array.from(dbStore.admissions.values()).filter(a => a.status === 'Approved').length + 298;
+    const studentsList = Array.from(dbStore.students.values());
+    const admissionsList = Array.from(dbStore.admissions.values());
+    const deptsList = Array.from(dbStore.departments.values());
+    const coursesList = Array.from(dbStore.courses.values());
+    const facultyList = Array.from(dbStore.faculty.values());
+
+    const totalStudentsCount = studentsList.length;
+    const activeStudentsCount = studentsList.filter(s => s.status === 'Active').length;
+    const paidFeesCount = studentsList.filter(s => s.feeStatus === 'Paid').length;
+    
+    // Average attendance calculation across active students
+    const avgAttendance = studentsList.length > 0
+      ? (studentsList.reduce((acc, s) => acc + (s.attendancePercentage || 0), 0) / studentsList.length).toFixed(1)
+      : '0.0';
+
+    const pendingAdmissionsCount = admissionsList.filter(a => a.status === 'Pending').length;
+    const approvedAdmissionsCount = admissionsList.filter(a => a.status === 'Approved').length;
+    const totalAdmissionsCount = admissionsList.length;
+
+    const facultyToStudentRatio = facultyList.length > 0
+      ? `1:${Math.round(totalStudentsCount / facultyList.length)}`
+      : '1:0';
+
+    const activeDeptsCount = deptsList.filter(d => d.status === 'Active').length;
+    const totalCredits = coursesList.reduce((acc, c) => acc + (c.credits || 0), 0);
 
     return {
       kpiCards: {
         totalStudents: {
-          value: 2845 + dbStore.students.size - 5,
-          growthRate: '+12.4%',
-          trendText: 'vs. last academic year',
+          value: totalStudentsCount,
+          growthRate: `${((activeStudentsCount / (totalStudentsCount || 1)) * 100).toFixed(0)}% Active`,
+          trendText: `${paidFeesCount} Fees Paid Clear`,
           isPositive: true,
-          period: 'Annual'
+          period: 'Directory Total'
         },
         newAdmissions: {
-          value: approvedAdmissionsCount + 42,
-          growthRate: '+18.2%',
-          trendText: 'Fall 2026 intake',
+          value: approvedAdmissionsCount,
+          growthRate: `${totalAdmissionsCount} Total Apps`,
+          trendText: 'Approved & Enrolled Students',
           isPositive: true,
-          period: 'Current Term'
+          period: 'Current Intake'
         },
         activeStudents: {
-          value: 2680 + dbStore.students.size - 5,
-          growthRate: '+9.1%',
-          trendText: '94.2% active attendance',
+          value: activeStudentsCount,
+          growthRate: `${avgAttendance}% Avg Att.`,
+          trendText: 'Regular Classroom Attendance',
           isPositive: true,
-          period: 'Real-time'
+          period: 'Live Academic'
         },
         departments: {
-          value: 12 + dbStore.departments.size - 5,
-          growthRate: '+2 new',
-          trendText: 'Biotech & AI Research added',
+          value: deptsList.length,
+          growthRate: `${activeDeptsCount} Operational`,
+          trendText: 'Academic Faculties & Wings',
           isPositive: true,
           period: 'Active'
         },
         courses: {
-          value: 84 + dbStore.courses.size - 6,
-          growthRate: '+6 added',
-          trendText: 'Accredited STEM curriculum',
+          value: coursesList.length,
+          growthRate: `${totalCredits} Total Credits`,
+          trendText: 'Accredited Curriculum',
           isPositive: true,
-          period: 'Active'
+          period: 'Active Catalog'
         },
         faculty: {
-          value: 156 + dbStore.faculty.size - 5,
-          growthRate: '+8 hired',
-          trendText: '1:18 Faculty-to-Student ratio',
+          value: facultyList.length,
+          growthRate: `${facultyToStudentRatio} Staff Ratio`,
+          trendText: 'Appointed Teaching Faculty',
           isPositive: true,
-          period: 'Active'
+          period: 'Academic Staff'
         },
         pendingAdmissions: {
           value: pendingAdmissionsCount,
-          growthRate: '-14% turnaround',
-          trendText: 'Awaiting Board Review',
-          isPositive: false, // warning indicator color
+          growthRate: pendingAdmissionsCount > 0 ? `${pendingAdmissionsCount} Pending` : 'All Clear',
+          trendText: 'Awaiting Board Approval',
+          isPositive: pendingAdmissionsCount === 0,
           period: 'Action Required'
         }
       },
