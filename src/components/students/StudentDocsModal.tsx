@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Student, StudentDocument } from '../../types/student';
 import {
   X,
@@ -40,75 +40,89 @@ export const StudentDocsModal: React.FC<StudentDocsModalProps> = ({
   const [newDocTitle, setNewDocTitle] = useState('');
   const [newFileName, setNewFileName] = useState('');
 
+  // Generate seed documents helper
+  const getSeedDocs = (st: Student): StudentDocument[] => {
+    if (st.documents && st.documents.length > 0) {
+      return st.documents;
+    }
+    const id = st.id || 'std';
+    const sId = st.studentId || 'STUDENT';
+    return [
+      {
+        id: `doc-${id}-1`,
+        documentType: 'Aadhaar',
+        title: 'Aadhaar Government Identity Card',
+        fileName: `Aadhaar_${sId}.pdf`,
+        fileSize: '1.4 MB',
+        fileType: 'application/pdf',
+        uploadDate: '2024-07-15',
+        verificationStatus: 'Verified',
+        verifiedBy: 'Registrar Admission Cell',
+        remarks: 'Aadhaar UID verified with UIDAI central database.'
+      },
+      {
+        id: `doc-${id}-2`,
+        documentType: 'Marks Cards',
+        title: 'Class X Secondary Board Marksheet',
+        fileName: `Class10_Marksheet_${sId}.pdf`,
+        fileSize: '2.1 MB',
+        fileType: 'application/pdf',
+        uploadDate: '2024-07-15',
+        verificationStatus: 'Verified',
+        verifiedBy: 'Senior Verification Officer',
+        remarks: 'Scanned original board certificate verified.'
+      },
+      {
+        id: `doc-${id}-3`,
+        documentType: 'Marks Cards',
+        title: 'Class XII Senior Secondary Marksheet',
+        fileName: `Class12_Marksheet_${sId}.pdf`,
+        fileSize: '2.8 MB',
+        fileType: 'application/pdf',
+        uploadDate: '2024-07-16',
+        verificationStatus: 'Verified',
+        verifiedBy: 'Senior Verification Officer',
+        remarks: 'PCM cut-off eligibility validated.'
+      },
+      {
+        id: `doc-${id}-4`,
+        documentType: 'Transfer Certificate',
+        title: 'Institutional Transfer & Migration Certificate',
+        fileName: `TC_Migration_${sId}.pdf`,
+        fileSize: '1.1 MB',
+        fileType: 'application/pdf',
+        uploadDate: '2024-07-18',
+        verificationStatus: 'Verified',
+        verifiedBy: 'Registrar Cell',
+        remarks: 'Original TC surrendered during counsel seat lock.'
+      },
+      {
+        id: `doc-${id}-5`,
+        documentType: 'Passport Photo',
+        title: 'Official Academic Passport Photograph',
+        fileName: `Photo_${sId}.jpg`,
+        fileSize: '450 KB',
+        fileType: 'image/jpeg',
+        uploadDate: '2024-07-15',
+        verificationStatus: 'Verified',
+        verifiedBy: 'ID Card Processing Bureau',
+        remarks: 'High resolution digital photo approved for RFID card printing.'
+      }
+    ];
+  };
+
+  const [docsList, setDocsList] = useState<StudentDocument[]>([]);
+
+  useEffect(() => {
+    if (student) {
+      setDocsList(getSeedDocs(student));
+      setSelectedCategory('ALL');
+      setPreviewDoc(null);
+      setIsUploading(false);
+    }
+  }, [student?.id, student?.studentId]);
+
   if (!isOpen || !student) return null;
-
-  // Default seed documents if none provided
-  const defaultDocs: StudentDocument[] = student.documents && student.documents.length > 0
-    ? student.documents
-    : [
-        {
-          id: `doc-${student.id}-1`,
-          documentType: 'Aadhaar',
-          title: 'Aadhaar Government Identity Card',
-          fileName: `Aadhaar_${student.studentId}.pdf`,
-          fileSize: '1.4 MB',
-          fileType: 'application/pdf',
-          uploadDate: '2024-07-15',
-          verificationStatus: 'Verified',
-          verifiedBy: 'Registrar Admission Cell',
-          remarks: 'Aadhaar UID verified with UIDAI central database.'
-        },
-        {
-          id: `doc-${student.id}-2`,
-          documentType: 'Marks Cards',
-          title: 'Class X Secondary Board Marksheet',
-          fileName: `Class10_Marksheet_${student.studentId}.pdf`,
-          fileSize: '2.1 MB',
-          fileType: 'application/pdf',
-          uploadDate: '2024-07-15',
-          verificationStatus: 'Verified',
-          verifiedBy: 'Senior Verification Officer',
-          remarks: 'Scanned original board certificate verified.'
-        },
-        {
-          id: `doc-${student.id}-3`,
-          documentType: 'Marks Cards',
-          title: 'Class XII Senior Secondary Marksheet',
-          fileName: `Class12_Marksheet_${student.studentId}.pdf`,
-          fileSize: '2.8 MB',
-          fileType: 'application/pdf',
-          uploadDate: '2024-07-16',
-          verificationStatus: 'Verified',
-          verifiedBy: 'Senior Verification Officer',
-          remarks: 'PCM cut-off eligibility validated.'
-        },
-        {
-          id: `doc-${student.id}-4`,
-          documentType: 'Transfer Certificate',
-          title: 'Institutional Transfer & Migration Certificate',
-          fileName: `TC_Migration_${student.studentId}.pdf`,
-          fileSize: '1.1 MB',
-          fileType: 'application/pdf',
-          uploadDate: '2024-07-18',
-          verificationStatus: 'Verified',
-          verifiedBy: 'Registrar Cell',
-          remarks: 'Original TC surrendered during counsel seat lock.'
-        },
-        {
-          id: `doc-${student.id}-5`,
-          documentType: 'Passport Photo',
-          title: 'Official Academic Passport Photograph',
-          fileName: `Photo_${student.studentId}.jpg`,
-          fileSize: '450 KB',
-          fileType: 'image/jpeg',
-          uploadDate: '2024-07-15',
-          verificationStatus: 'Verified',
-          verifiedBy: 'ID Card Processing Bureau',
-          remarks: 'High resolution digital photo approved for RFID card printing.'
-        }
-      ];
-
-  const [docsList, setDocsList] = useState<StudentDocument[]>(defaultDocs);
 
   const filteredDocs = selectedCategory === 'ALL'
     ? docsList
@@ -137,6 +151,12 @@ export const StudentDocsModal: React.FC<StudentDocsModalProps> = ({
             <span>Rejected</span>
           </span>
         );
+      default:
+        return (
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-50 text-slate-700 border border-slate-200">
+            {status || 'Submitted'}
+          </span>
+        );
     }
   };
 
@@ -144,11 +164,12 @@ export const StudentDocsModal: React.FC<StudentDocsModalProps> = ({
     e.preventDefault();
     if (!newDocTitle) return;
 
+    const sId = student.studentId || 'STUDENT';
     const newDoc: StudentDocument = {
       id: `doc-${Date.now()}`,
       documentType: newDocType,
       title: newDocTitle,
-      fileName: newFileName || `${newDocType.replace(/\s+/g, '_')}_${student.studentId}.pdf`,
+      fileName: newFileName || `${newDocType.replace(/\s+/g, '_')}_${sId}.pdf`,
       fileSize: '1.5 MB',
       fileType: 'application/pdf',
       uploadDate: new Date().toISOString().slice(0, 10),
@@ -167,11 +188,14 @@ export const StudentDocsModal: React.FC<StudentDocsModalProps> = ({
   };
 
   const handleDownload = (doc: StudentDocument) => {
-    const link = document.createElement('a');
-    link.href = '#';
-    link.setAttribute('download', doc.fileName);
     alert(`Downloading student document: ${doc.title} (${doc.fileName})`);
   };
+
+  const formattedGpa = typeof student.gpa === 'number'
+    ? student.gpa.toFixed(2)
+    : typeof (student as any).cgpa === 'number'
+    ? (student as any).cgpa.toFixed(2)
+    : '8.50';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs overflow-y-auto">
@@ -185,15 +209,15 @@ export const StudentDocsModal: React.FC<StudentDocsModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-900">{student.fullName}</h3>
+                <h3 className="text-base font-bold text-slate-900">{student.fullName || (student as any).name || 'Student'}</h3>
                 <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 font-mono text-[10px] font-bold">
-                  {student.studentId}
+                  {student.studentId || student.id}
                 </span>
               </div>
               <p className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                <span>{student.department}</span>
+                <span>{student.department || 'Academic Department'}</span>
                 <span>•</span>
-                <span>CGPA: <strong className="text-blue-600">{student.gpa.toFixed(2)}</strong></span>
+                <span>CGPA: <strong className="text-blue-600">{formattedGpa}</strong></span>
               </p>
             </div>
           </div>
