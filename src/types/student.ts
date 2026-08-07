@@ -1,3 +1,17 @@
+export interface StudentDocument {
+  id: string;
+  documentType: 'Aadhaar' | 'Birth Certificate' | 'Transfer Certificate' | 'Marks Cards' | 'Passport Photo' | 'Other';
+  title: string;
+  fileName: string;
+  fileSize: string;
+  fileType: string;
+  uploadDate: string;
+  verificationStatus: 'Verified' | 'Pending' | 'Rejected';
+  verifiedBy?: string;
+  remarks?: string;
+  fileUrl?: string;
+}
+
 export interface Student {
   id: string;
   studentId: string; // Roll No / Enrollment No e.g. 2024CSE1042
@@ -26,6 +40,7 @@ export interface Student {
   address?: string;
   guardianName?: string;
   guardianPhone?: string;
+  documents?: StudentDocument[];
 }
 
 export interface StudentQueryParams {

@@ -37,7 +37,6 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
     { id: 'students', name: 'Student Information Directory', icon: Users, cat: 'Students' },
     { id: 'departments', name: 'Departmental Faculties', icon: Building2, cat: 'Academics' },
     { id: 'courses', name: 'Course Catalog & Syllabus', icon: BookOpen, cat: 'Academics' },
-    { id: 'documents', name: 'Student Academic Records', icon: FileText, cat: 'Documents' },
     { id: 'idcards', name: 'Student Digital ID Cards', icon: CreditCard, cat: 'Verification' },
     { id: 'promotion', name: 'Semester Academic Promotion', icon: TrendingUp, cat: 'Academics' },
     { id: 'alumni', name: 'Graduated Alumni Network', icon: GraduationCap, cat: 'Network' },

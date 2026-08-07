@@ -9,7 +9,8 @@ import {
   Check,
   Building2,
   Mail,
-  GraduationCap
+  GraduationCap,
+  FileText
 } from 'lucide-react';
 
 interface StudentListTableProps {
@@ -18,6 +19,7 @@ interface StudentListTableProps {
   onSelectToggle: (id: string) => void;
   onSelectAllToggle: () => void;
   onView: (student: Student) => void;
+  onViewDocs?: (student: Student) => void;
   onEdit: (student: Student) => void;
   onDelete: (student: Student) => void;
   onOpenPDF: (student: Student) => void;
@@ -32,6 +34,7 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
   onSelectToggle,
   onSelectAllToggle,
   onView,
+  onViewDocs,
   onEdit,
   onDelete,
   onOpenPDF,
@@ -204,6 +207,17 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                         >
                           <Eye className="w-4 h-4 text-blue-600" />
                         </button>
+
+                        {onViewDocs && (
+                          <button
+                            onClick={() => onViewDocs(student)}
+                            title="View Student Documents & Certificates"
+                            className="px-2 py-1 rounded-lg text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-all flex items-center gap-1 text-[10px] font-bold font-mono"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                            <span>Docs</span>
+                          </button>
+                        )}
 
                         <button
                           onClick={() => onEdit(student)}

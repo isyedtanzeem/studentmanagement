@@ -109,13 +109,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
-      id: 'documents',
-      label: 'Student Documents',
-      icon: FileText,
-      description: 'Certificates & Document Vault',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
-    },
-    {
       id: 'idcards',
       label: 'Digital ID Cards',
       icon: CreditCard,

@@ -353,7 +353,6 @@ export class DatabaseStore {
   public departments: Map<string, DepartmentRecord> = new Map();
   public courses: Map<string, CourseRecord> = new Map();
   public faculty: Map<string, FacultyRecord> = new Map();
-  public documents: Map<string, DocumentRecord> = new Map();
   public idCards: Map<string, IdCardRecord> = new Map();
   public promotionHistory: Map<string, PromotionRecord> = new Map();
   public alumni: Map<string, AlumniRecord> = new Map();

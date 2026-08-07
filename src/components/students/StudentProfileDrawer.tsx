@@ -38,7 +38,7 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
   onDelete,
   onOpenPDF
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'academic' | 'guardian'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'academic' | 'documents' | 'guardian'>('overview');
 
   if (!isOpen || !student) return null;
 
@@ -133,7 +133,7 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('academic')}
-            className={`py-3 px-4 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
               activeTab === 'academic'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -142,8 +142,18 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
             Academic Performance
           </button>
           <button
+            onClick={() => setActiveTab('documents')}
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
+              activeTab === 'documents'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            Documents & Certificates
+          </button>
+          <button
             onClick={() => setActiveTab('guardian')}
-            className={`py-3 px-4 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
               activeTab === 'guardian'
                 ? 'border-blue-600 text-blue-600'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -257,6 +267,45 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
                     <span className="text-blue-600 font-semibold">Grade: B+ (3.3)</span>
                   </li>
                 </ul>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'documents' && (
+            <div className="space-y-3">
+              <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-indigo-900 text-xs">Official Document Repository</h4>
+                  <p className="text-[10px] text-indigo-700 font-mono">Academic & Identity Certificates</p>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[10px] font-bold font-mono">
+                  {(student.documents && student.documents.length) || 5} Documents Verified
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {[
+                  { title: 'Aadhaar Government Identity Card', type: 'Identity', date: '2024-07-15', status: 'Verified' },
+                  { title: 'Class X Secondary Board Marksheet', type: 'Academic', date: '2024-07-15', status: 'Verified' },
+                  { title: 'Class XII Senior Secondary Certificate', type: 'Academic', date: '2024-07-16', status: 'Verified' },
+                  { title: 'Institutional Transfer Certificate (TC)', type: 'Transfer', date: '2024-07-18', status: 'Verified' },
+                  { title: 'Official Academic Passport Photo', type: 'Photo ID', date: '2024-07-15', status: 'Verified' }
+                ].map((doc, idx) => (
+                  <div key={idx} className="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between hover:border-blue-300 transition-all">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-2 bg-slate-50 border border-slate-200 text-blue-600 rounded-lg">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-slate-900 text-xs">{doc.title}</h5>
+                        <p className="text-[10px] text-slate-500 font-mono">{doc.type} • Uploaded {doc.date}</p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      ✓ {doc.status}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           )}

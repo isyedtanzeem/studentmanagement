@@ -6,6 +6,7 @@ import { StudentFormModal } from './StudentFormModal';
 import { StudentProfileDrawer } from './StudentProfileDrawer';
 import { StudentBulkImportModal } from './StudentBulkImportModal';
 import { StudentPDFReportModal } from './StudentPDFReportModal';
+import { StudentDocsModal } from './StudentDocsModal';
 import {
   Users,
   UserCheck,
@@ -73,6 +74,8 @@ export const StudentManagementView: React.FC = () => {
 
   const [isPDFOpen, setIsPDFOpen] = useState(false);
   const [pdfStudent, setPdfStudent] = useState<Student | null>(null);
+
+  const [docsStudent, setDocsStudent] = useState<Student | null>(null);
 
   const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -398,6 +401,7 @@ export const StudentManagementView: React.FC = () => {
           setViewingStudent(st);
           setIsDrawerOpen(true);
         }}
+        onViewDocs={(st) => setDocsStudent(st)}
         onEdit={(st) => {
           setEditingStudent(st);
           setIsFormOpen(true);
@@ -499,6 +503,12 @@ export const StudentManagementView: React.FC = () => {
           setIsPDFOpen(false);
           setPdfStudent(null);
         }}
+      />
+
+      <StudentDocsModal
+        student={docsStudent}
+        isOpen={!!docsStudent}
+        onClose={() => setDocsStudent(null)}
       />
 
       {/* Delete Confirmation Modal */}

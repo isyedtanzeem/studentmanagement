@@ -8,7 +8,6 @@ import studentRoutes from './server/routes/studentRoutes';
 import admissionRoutes from './server/routes/admissionRoutes';
 import departmentRoutes from './server/routes/departmentRoutes';
 import courseRoutes from './server/routes/courseRoutes';
-import documentRoutes from './server/routes/documentRoutes';
 import idCardRoutes from './server/routes/idCardRoutes';
 import promotionRoutes from './server/routes/promotionRoutes';
 import alumniRoutes from './server/routes/alumniRoutes';
@@ -74,7 +73,6 @@ async function startServer() {
   app.use('/api/v1/admissions', admissionRoutes);
   app.use('/api/v1/departments', departmentRoutes);
   app.use('/api/v1/courses', courseRoutes);
-  app.use('/api/v1/documents', documentRoutes);
   app.use('/api/v1/idcards', idCardRoutes);
   app.use('/api/v1/promotions', promotionRoutes);
   app.use('/api/v1/alumni', alumniRoutes);
