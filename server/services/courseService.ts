@@ -17,7 +17,7 @@ export class CourseService {
     DashboardModel.seedDataIfEmpty();
   }
 
-  public async getCourses(params: CourseQueryParams) {
+  public async getCourses(params: CourseQueryParams, user?: any) {
     DashboardModel.seedDataIfEmpty();
 
     const page = Math.max(1, Number(params.page) || 1);
@@ -31,6 +31,18 @@ export class CourseService {
 
     let list = Array.from(dbStore.courses.values());
     const studentsArr = Array.from(dbStore.students.values());
+
+    // Strict Student Scope Isolation: If request is from a Student, restrict to that student's department
+    if (user && user.role === 'Student') {
+      const userEmail = (user.email || '').toLowerCase().trim();
+      const student = studentsArr.find(
+        s => s.email.toLowerCase().trim() === userEmail ||
+             (user.studentId && s.studentId === user.studentId) ||
+             (user.employeeId && s.studentId === user.employeeId)
+      );
+      const studentDept = student?.department || user.department || 'Computer Science & Engineering';
+      list = list.filter(c => c.department === studentDept);
+    }
 
     // Dynamically update enrolled student counts based on active student records
     list = list.map(course => {

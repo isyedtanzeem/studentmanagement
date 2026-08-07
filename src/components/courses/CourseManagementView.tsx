@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
+import { useAuth } from '../../context/AuthContext';
 import {
   BookOpen,
   Plus,
@@ -23,6 +24,10 @@ import { CourseDeleteModal } from './CourseDeleteModal';
 import { CourseDetailDrawer } from './CourseDetailDrawer';
 
 export const CourseManagementView: React.FC = () => {
+  const { user } = useAuth();
+  const isStudent = user?.role === 'Student';
+  const studentDept = user?.department || 'Computer Science & Engineering';
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [stats, setStats] = useState<CourseStats>({
     total: 0,
@@ -149,14 +154,16 @@ export const CourseManagementView: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-                Course Management Module
+                {isStudent ? 'My Department Course Catalog' : 'Course Management Module'}
               </h1>
               <span className="bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold uppercase">
-                Curriculum '26
+                {isStudent ? 'Enrolled View' : "Curriculum '26"}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Academic Affairs • Degree Programs, Duration Specifications, Semester Fee Matrices & Department Mapping
+              {isStudent
+                ? `Showing course info strictly for your department: ${studentDept}`
+                : 'Academic Affairs • Degree Programs, Duration Specifications, Semester Fee Matrices & Department Mapping'}
             </p>
           </div>
         </div>
@@ -170,13 +177,15 @@ export const CourseManagementView: React.FC = () => {
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
 
-          <button
-            onClick={handleOpenAdd}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            Add New Course
-          </button>
+          {!isStudent && (
+            <button
+              onClick={handleOpenAdd}
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              Add New Course
+            </button>
+          )}
         </div>
       </div>
 
@@ -237,22 +246,29 @@ export const CourseManagementView: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-3">
             {/* Department Dropdown Filter */}
-            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-medium text-slate-700">
+            <div className={`flex items-center gap-1.5 border rounded-xl px-3 py-1.5 font-medium ${isStudent ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-300 text-slate-700'}`}>
               <Building2 className="w-3.5 h-3.5 text-blue-600" />
               <select
                 value={selectedDepartment}
+                disabled={isStudent}
                 onChange={(e) => {
                   setSelectedDepartment(e.target.value);
                   setPagination((prev) => ({ ...prev, currentPage: 1 }));
                 }}
-                className="bg-transparent text-slate-900 focus:outline-none cursor-pointer max-w-[160px] truncate"
+                className="bg-transparent text-slate-900 focus:outline-none cursor-pointer max-w-[180px] truncate font-semibold"
               >
-                <option value="ALL">All Departments</option>
-                {departmentOptions.map((d) => (
-                  <option key={d.id} value={d.name}>
-                    {d.code} - {d.name}
-                  </option>
-                ))}
+                {isStudent ? (
+                  <option value={studentDept}>{studentDept}</option>
+                ) : (
+                  <>
+                    <option value="ALL">All Departments</option>
+                    {departmentOptions.map((d) => (
+                      <option key={d.id} value={d.name}>
+                        {d.code} - {d.name}
+                      </option>
+                    ))}
+                  </>
+                )}
               </select>
             </div>
 
@@ -429,23 +445,29 @@ export const CourseManagementView: React.FC = () => {
                     Lead: <span className="text-slate-800 font-semibold">{crs.instructorName || 'Faculty Chair'}</span>
                   </span>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleOpenEdit(crs)}
-                      className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors cursor-pointer"
-                      title="Edit Course"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                    </button>
+                  {!isStudent ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleOpenEdit(crs)}
+                        className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors cursor-pointer"
+                        title="Edit Course"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
 
-                    <button
-                      onClick={() => handleOpenDelete(crs)}
-                      className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 transition-colors cursor-pointer"
-                      title="Delete Course"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                      <button
+                        onClick={() => handleOpenDelete(crs)}
+                        className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 transition-colors cursor-pointer"
+                        title="Delete Course"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg">
+                      View Syllabus →
+                    </span>
+                  )}
                 </div>
               </motion.div>
             );
@@ -527,23 +549,32 @@ export const CourseManagementView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5 font-medium">
-                          <button
-                            onClick={() => handleOpenEdit(crs)}
-                            className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 text-xs cursor-pointer"
-                            title="Edit"
-                          >
-                            Edit
-                          </button>
+                        {!isStudent ? (
+                          <div className="flex items-center justify-end gap-1.5 font-medium">
+                            <button
+                              onClick={() => handleOpenEdit(crs)}
+                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 text-xs cursor-pointer"
+                              title="Edit"
+                            >
+                              Edit
+                            </button>
 
+                            <button
+                              onClick={() => handleOpenDelete(crs)}
+                              className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 text-xs cursor-pointer"
+                              title="Delete"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ) : (
                           <button
-                            onClick={() => handleOpenDelete(crs)}
-                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 text-xs cursor-pointer"
-                            title="Delete"
+                            onClick={() => handleOpenDrawer(crs)}
+                            className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
                           >
-                            Delete
+                            Details →
                           </button>
-                        </div>
+                        )}
                       </td>
                     </tr>
                   );

@@ -435,7 +435,29 @@ export class StudentService {
       ]
     };
 
-    const enrolledCourses = deptCoursesMap[dept] || deptCoursesMap['Computer Science & Engineering'];
+    let enrolledCourses = deptCoursesMap[dept] || deptCoursesMap['Computer Science & Engineering'];
+
+    // Also include any active courses added to dbStore.courses for this student's department
+    const dbCoursesForDept = Array.from(dbStore.courses.values()).filter(
+      c => c.department === dept && c.status !== 'Inactive'
+    );
+    if (dbCoursesForDept.length > 0) {
+      const existingCodes = new Set(enrolledCourses.map(c => c.code.toUpperCase()));
+      const extraDbCourses = dbCoursesForDept
+        .filter(c => !existingCodes.has(c.code.toUpperCase()))
+        .map(c => ({
+          id: c.id,
+          code: c.code,
+          title: c.title,
+          instructorName: c.instructorName || 'Department Faculty',
+          credits: c.credits,
+          department: c.department,
+          status: c.status || 'Active',
+          description: c.description || '',
+          prerequisites: c.prerequisites || ''
+        }));
+      enrolledCourses = [...enrolledCourses, ...extraDbCourses];
+    }
 
     // Subject-wise attendance breakdown (Department Specific)
     const subjectAttendance = enrolledCourses.map((c, idx) => {

@@ -30,6 +30,8 @@ export interface CreateDepartmentDto {
   description?: string;
 }
 
+export type DepartmentFormData = CreateDepartmentDto;
+
 export interface UpdateDepartmentDto extends Partial<CreateDepartmentDto> {}
 
 export interface DepartmentQueryParams {

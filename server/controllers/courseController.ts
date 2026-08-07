@@ -4,7 +4,7 @@ import { courseService } from '../services/courseService';
 export class CourseController {
   public static async getCourses(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await courseService.getCourses(req.query);
+      const result = await courseService.getCourses(req.query, (req as any).user);
       res.json({
         success: true,
         data: result.courses,

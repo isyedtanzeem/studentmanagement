@@ -28,6 +28,7 @@ import {
   Search,
   ExternalLink,
   ChevronRight,
+  X,
   Layers,
   FileCheck,
   Percent
@@ -53,6 +54,10 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
 
   // Print ID Card Modal
   const [isPrintIdOpen, setIsPrintIdOpen] = useState(false);
+
+  // Course Search & Detail Modal State
+  const [courseSearch, setCourseSearch] = useState('');
+  const [selectedCourseDetail, setSelectedCourseDetail] = useState<any | null>(null);
 
   const loadPortalData = async () => {
     setLoading(true);
@@ -342,46 +347,91 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
       {/* TAB 1: Enrolled Courses & Schedule */}
       {(activeTab === 'overview' || activeTab === 'courses') && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Current Semester Enrolled Subjects</h2>
-              <p className="text-xs text-slate-500">Registered courses for Spring 2026 Semester {student.currentSemester || 1}</p>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-slate-900">Current Semester Enrolled Subjects</h2>
+                <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-mono font-semibold">
+                  Department Isolated
+                </span>
+              </div>
+              <p className="text-xs text-slate-500">
+                Displaying subjects strictly mapped to <span className="font-semibold text-slate-800">{student.department}</span> (Spring 2026 • Semester {student.currentSemester || 1})
+              </p>
             </div>
-            <span className="text-xs font-mono text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg font-semibold">
-              Batch {student.academicBatch || '2026-2030'} • {student.department}
-            </span>
+
+            <div className="flex items-center gap-3">
+              <div className="relative w-full md:w-64">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Filter my courses..."
+                  value={courseSearch}
+                  onChange={(e) => setCourseSearch(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-medium"
+                />
+              </div>
+
+              <span className="text-xs font-mono text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl font-semibold shrink-0">
+                Batch {student.academicBatch || '2026-2030'}
+              </span>
+            </div>
           </div>
 
+          {/* Courses Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {courses.map((course: any, idx: number) => (
-              <div key={idx} className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm space-y-3 hover:border-blue-300 transition-all">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-xs font-semibold">
-                    {course.code}
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
-                    {course.credits || 4} Credits
-                  </span>
-                </div>
+            {courses
+              .filter((course: any) => {
+                if (!courseSearch.trim()) return true;
+                const q = courseSearch.toLowerCase();
+                return (
+                  course.code?.toLowerCase().includes(q) ||
+                  course.title?.toLowerCase().includes(q) ||
+                  (course.instructorName || course.faculty || '').toLowerCase().includes(q)
+                );
+              })
+              .map((course: any, idx: number) => (
+                <div
+                  key={idx}
+                  onClick={() => setSelectedCourseDetail(course)}
+                  className="bg-white border border-slate-200 p-5 rounded-2xl shadow-xs space-y-3 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-xs font-semibold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        {course.code}
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+                        {course.credits || 4} Credits
+                      </span>
+                    </div>
 
-                <h3 className="text-sm font-semibold text-slate-900 leading-snug">{course.title}</h3>
+                    <h3 className="text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                      {course.title}
+                    </h3>
 
-                <div className="space-y-1.5 text-xs text-slate-600 pt-1 border-t border-slate-100 font-mono">
-                  <p className="flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                    <span>Faculty: {course.instructorName || course.faculty || 'Department Faculty'}</span>
-                  </p>
-                  <p className="flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Department: {course.department}</span>
-                  </p>
-                  <p className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Status: {course.status || 'Active'}</span>
-                  </p>
+                    <div className="space-y-1.5 text-xs text-slate-600 pt-2 border-t border-slate-100 font-mono">
+                      <p className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <span>Faculty: {course.instructorName || course.faculty || 'Department Faculty'}</span>
+                      </p>
+                      <p className="flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>Dept: {course.department}</span>
+                      </p>
+                      <p className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>Status: {course.status || 'Active'}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-blue-600">
+                    <span>View Syllabus & Details</span>
+                    <span>→</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* Weekly Timetable Grid */}
@@ -759,6 +809,76 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Course Detail Modal */}
+      {selectedCourseDetail && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-xs font-semibold">
+                  {selectedCourseDetail.code}
+                </span>
+                <h3 className="text-base font-bold text-slate-900 mt-2">
+                  {selectedCourseDetail.title}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedCourseDetail(null)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-50 border border-slate-200 p-3 rounded-xl">
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-semibold">Department</span>
+                <span className="text-slate-900 font-bold">{selectedCourseDetail.department}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-semibold">Credits</span>
+                <span className="text-purple-700 font-bold">{selectedCourseDetail.credits || 4} Credits</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-semibold">Faculty</span>
+                <span className="text-slate-900 font-bold">{selectedCourseDetail.instructorName || selectedCourseDetail.faculty || 'Department Faculty'}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-semibold">Status</span>
+                <span className="text-emerald-700 font-bold">{selectedCourseDetail.status || 'Active'}</span>
+              </div>
+            </div>
+
+            {selectedCourseDetail.description && (
+              <div className="space-y-1">
+                <h4 className="text-xs font-bold text-slate-800">Syllabus Overview</h4>
+                <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  {selectedCourseDetail.description}
+                </p>
+              </div>
+            )}
+
+            {selectedCourseDetail.prerequisites && (
+              <div className="space-y-1">
+                <h4 className="text-xs font-bold text-slate-800">Prerequisites</h4>
+                <p className="text-xs text-slate-600 bg-amber-50 text-amber-900 border border-amber-200/60 p-2.5 rounded-xl font-mono">
+                  {selectedCourseDetail.prerequisites}
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setSelectedCourseDetail(null)}
+                className="px-4 py-2 bg-slate-900 text-white font-semibold rounded-xl text-xs hover:bg-slate-800 cursor-pointer"
+              >
+                Close Course Details
+              </button>
+            </div>
           </div>
         </div>
       )}
