@@ -6,7 +6,7 @@ export interface SystemUser {
   email: string;
   passwordHash: string;
   fullName: string;
-  role: 'Super Admin' | 'Admin' | 'Admission Officer' | 'Faculty' | 'Student';
+  role: 'Super Admin' | 'Admin' | 'Admission Officer';
   department?: string;
   studentId?: string;
   employeeId?: string;

@@ -66,10 +66,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   const navItems: NavItem[] = [
     {
       id: 'executive',
-      label: userRole === 'Student' ? 'My Student Portal' : 'Executive Overview',
+      label: 'Executive Overview',
       icon: Sparkles,
-      description: userRole === 'Student' ? 'Personal Academic Hub & Attendance' : 'KPIs, Enrolment Trends & Health',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty', 'Student']
+      description: 'KPIs, Enrolment Trends & Health',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'admissions',
@@ -83,22 +83,22 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       id: 'students',
       label: 'Student Directory',
       icon: Users,
-      description: 'Profiles & Attendance',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty']
+      description: 'Profiles & Attendance Management',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'departments',
       label: 'Departments',
       icon: Building2,
       description: 'Faculties & HODs',
-      roles: ['Super Admin', 'Admin', 'Faculty']
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'courses',
-      label: userRole === 'Student' ? 'Course Catalog' : 'Course Catalog',
+      label: 'Course Catalog',
       icon: BookOpen,
-      description: userRole === 'Student' ? 'Enrolled Subjects & Credits' : 'Syllabus & Credits',
-      roles: ['Super Admin', 'Admin', 'Faculty', 'Student']
+      description: 'Syllabus, Credits & Departments',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'guardians',
@@ -109,47 +109,47 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
     },
     {
       id: 'documents',
-      label: userRole === 'Student' ? 'My Documents Vault' : 'Student Documents',
+      label: 'Student Documents',
       icon: FileText,
-      description: userRole === 'Student' ? 'Verified Marks & Certificates' : 'Certificates & Vault',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty', 'Student']
+      description: 'Certificates & Document Vault',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'idcards',
-      label: userRole === 'Student' ? 'My Digital ID Card' : 'Digital ID Cards',
+      label: 'Digital ID Cards',
       icon: CreditCard,
-      description: userRole === 'Student' ? 'Official QR Verified Student ID' : 'Issue & QR Scan',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty', 'Student']
+      description: 'Issue & QR Verification',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'promotion',
       label: 'Semester Promotion',
       icon: TrendingUp,
       description: 'Grading & Elevation',
-      roles: ['Super Admin', 'Admin', 'Faculty']
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'alumni',
       label: 'Alumni Network',
       icon: GraduationCap,
       badge: 'Global',
-      description: 'Placements & Reunion',
-      roles: ['Super Admin', 'Admin', 'Faculty', 'Student']
+      description: 'Placements & Directory',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'reports',
       label: 'Reports & Analytics',
       icon: FileText,
       description: 'PDF Export & Charts',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty']
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'notifications',
-      label: userRole === 'Student' ? 'My Notices & Alerts' : 'Alerts & Dispatch',
+      label: 'Alerts & Dispatch',
       icon: Bell,
       badge: unreadCount > 0 ? `${unreadCount}` : undefined,
-      description: userRole === 'Student' ? 'Academic Notices & Circulars' : 'Broadcasts & Logs',
-      roles: ['Super Admin', 'Admin', 'Admission Officer', 'Faculty', 'Student']
+      description: 'Broadcasts & Logs',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
       id: 'settings',

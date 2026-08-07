@@ -118,27 +118,6 @@ export class SettingsService {
         { module: 'Documents', view: true, create: true, edit: true, delete: false, export: true },
         { module: 'Notifications', view: true, create: true, edit: false, delete: false, export: false }
       ]
-    },
-    {
-      role: 'Faculty',
-      description: 'Course instruction, student attendance tracking, grading, and departmental activities.',
-      permissions: [
-        { module: 'Students', view: true, create: false, edit: true, delete: false, export: true },
-        { module: 'Courses', view: true, create: false, edit: true, delete: false, export: true },
-        { module: 'Departments', view: true, create: false, edit: false, delete: false, export: false },
-        { module: 'Notifications', view: true, create: true, edit: false, delete: false, export: false }
-      ]
-    },
-    {
-      role: 'Student',
-      description: 'Self-service portal access for course materials, profile, document requests, and notifications.',
-      permissions: [
-        { module: 'Students', view: true, create: false, edit: false, delete: false, export: false },
-        { module: 'Courses', view: true, create: false, edit: false, delete: false, export: false },
-        { module: 'Documents', view: true, create: true, edit: false, delete: false, export: false },
-        { module: 'ID Cards', view: true, create: false, edit: false, delete: false, export: false },
-        { module: 'Notifications', view: true, create: false, edit: false, delete: false, export: false }
-      ]
     }
   ];
 

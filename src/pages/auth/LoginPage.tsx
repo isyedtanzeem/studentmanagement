@@ -44,18 +44,6 @@ const DEMO_PRESETS: {
     email: 'admission@scholarcore.edu.in',
     name: 'Amit Vikram Singh',
     dept: 'Central Admissions Cell'
-  },
-  {
-    role: 'Faculty',
-    email: 'faculty@scholarcore.edu.in',
-    name: 'Prof. Ramesh Kulkarni',
-    dept: 'Computer Science & Engineering'
-  },
-  {
-    role: 'Student',
-    email: 'student@scholarcore.edu.in',
-    name: 'Aarav Sharma',
-    dept: 'B.Tech CSE (NEP 2020)'
   }
 ];
 
@@ -133,10 +121,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 <span>Demo Role Quick Switcher</span>
               </div>
               <h2 className="text-lg font-bold text-slate-900 tracking-tight mb-1">
-                Simulate Commercial RBAC Roles
+                Back-Office Administrative Roles
               </h2>
               <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                Select a pre-configured role below to populate authorized credentials and experience role-based permission routing.
+                Select an authorized staff credential below to access university operations, student management, and admissions.
               </p>
 
               <div className="space-y-2">

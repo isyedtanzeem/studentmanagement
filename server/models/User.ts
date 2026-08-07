@@ -79,30 +79,6 @@ export class UserModel {
         avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
         status: 'Active',
         createdAt: new Date().toISOString()
-      },
-      {
-        id: 'usr_faculty',
-        email: 'faculty@scholarcore.edu.in',
-        passwordHash: defaultPasswordHash,
-        fullName: 'Prof. Ramesh Kulkarni',
-        role: 'Faculty',
-        department: 'Computer Science & Engineering (CSE)',
-        employeeId: 'FAC-CSE-881',
-        avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=250',
-        status: 'Active',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'usr_student',
-        email: 'student@scholarcore.edu.in',
-        passwordHash: defaultPasswordHash,
-        fullName: 'Aarav Sharma',
-        role: 'Student',
-        department: 'B.Tech CSE',
-        employeeId: '2024CSE1001',
-        avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
-        status: 'Active',
-        createdAt: new Date().toISOString()
       }
     ];
 

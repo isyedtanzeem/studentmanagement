@@ -30,7 +30,6 @@ import { AlumniManagementView } from '../../components/alumni/AlumniManagementVi
 import { ReportsManagementView } from '../../components/reports/ReportsManagementView';
 import { NotificationManagementView } from '../../components/notifications/NotificationManagementView';
 import { SettingsManagementView } from '../../components/settings/SettingsManagementView';
-import { StudentPortalView } from '../../components/student/StudentPortalView';
 
 import {
   ShieldCheck,
@@ -303,9 +302,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
         {/* Main Workspace Body */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-        {user?.role === 'Student' && (activeModule === 'executive' || activeModule === 'students') ? (
-          <StudentPortalView />
-        ) : activeModule === 'admissions' ? (
+        {activeModule === 'admissions' ? (
           <AdmissionManagementView />
         ) : activeModule === 'students' ? (
           <StudentManagementView />
@@ -329,8 +326,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <NotificationManagementView />
         ) : activeModule === 'settings' ? (
           <SettingsManagementView />
-        ) : user?.role === 'Student' ? (
-          <StudentPortalView />
         ) : (
           <>
             {/* User Hero Banner */}

@@ -6,7 +6,7 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'scholarcore_sims_r
 export interface TokenPayload {
   userId: string;
   email: string;
-  role: 'Super Admin' | 'Admin' | 'Admission Officer' | 'Faculty' | 'Student';
+  role: 'Super Admin' | 'Admin' | 'Admission Officer';
   fullName: string;
 }
 

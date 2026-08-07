@@ -346,49 +346,11 @@ export class AdmissionService {
     dbStore.admissions.set(id, app);
     dbStore.students.set(newStudentId, newStudent);
 
-    // 4. Create or activate SystemUser account for student login
-    const normalizedEmail = app.email.toLowerCase().trim();
-    let existingUser: SystemUser | null = null;
-    for (const u of dbStore.users.values()) {
-      if (u.email.toLowerCase().trim() === normalizedEmail) {
-        existingUser = u;
-        break;
-      }
-    }
-
-    const defaultPasswordHash = await hashPassword('Password123!');
-
-    if (existingUser) {
-      existingUser.role = 'Student';
-      existingUser.department = app.department;
-      existingUser.studentId = rollNo;
-      existingUser.employeeId = rollNo;
-      existingUser.status = 'Active';
-      existingUser.fullName = app.applicantName;
-      dbStore.users.set(existingUser.id, existingUser);
-    } else {
-      const newUserId = `usr_std_${Date.now()}`;
-      const newUser: SystemUser = {
-        id: newUserId,
-        email: app.email,
-        passwordHash: defaultPasswordHash,
-        fullName: app.applicantName,
-        role: 'Student',
-        department: app.department,
-        studentId: rollNo,
-        employeeId: rollNo,
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
-        status: 'Active',
-        createdAt: new Date().toISOString()
-      };
-      dbStore.users.set(newUserId, newUser);
-    }
-
-    // Activity Log
+    // 4. Log Enrollment Activity (Note: System login disabled for students in pure back-office portal)
     dbStore.activities.unshift({
       id: `act-${Date.now()}`,
       title: 'Admission Approved & Student Enrolled',
-      description: `${app.applicantName} enrolled into ${app.department} with Roll No: ${rollNo}. Student login activated for ${app.email}.`,
+      description: `${app.applicantName} enrolled into ${app.department} with Roll No: ${rollNo}. Student record created in Back Office Directory.`,
       category: 'Admission',
       actorName: approvedBy || 'Academic Registrar Cell',
       actorRole: 'Registrar',

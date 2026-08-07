@@ -29,6 +29,10 @@ export class AuthService {
       throw new AppError('Your account has been suspended or is pending approval.', 403);
     }
 
+    if ((user.role as string) === 'Student' || (user.role as string) === 'Faculty') {
+      throw new AppError('Portal access is strictly restricted to back-office administrative staff. Student and Faculty portal logins are disabled.', 403);
+    }
+
     const isMatch = await comparePassword(password, user.passwordHash);
 
     if (!isMatch) {

@@ -21,7 +21,7 @@ router.patch('/notifications/:id/read', DashboardController.markNotificationRead
 // Quick Actions (RBAC: Staff, Admins, Faculty)
 router.post(
   '/quick-action',
-  authorizeRoles('Super Admin', 'Admin', 'Admission Officer', 'Faculty'),
+  authorizeRoles('Super Admin', 'Admin', 'Admission Officer'),
   DashboardController.quickAction
 );
 

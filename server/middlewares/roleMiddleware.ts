@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './authMiddleware';
 
-export type UserRole = 'Super Admin' | 'Admin' | 'Admission Officer' | 'Faculty' | 'Student';
+export type UserRole = 'Super Admin' | 'Admin' | 'Admission Officer';
 
 export function authorizeRoles(...allowedRoles: UserRole[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

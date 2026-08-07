@@ -1015,8 +1015,6 @@ export const SettingsManagementView: React.FC = () => {
                 <option value="Super Admin">Super Admin</option>
                 <option value="Admin">Admin</option>
                 <option value="Admission Officer">Admission Officer</option>
-                <option value="Faculty">Faculty</option>
-                <option value="Student">Student</option>
               </select>
 
               <select
@@ -1098,8 +1096,6 @@ export const SettingsManagementView: React.FC = () => {
                             <option value="Super Admin">Super Admin</option>
                             <option value="Admin">Admin</option>
                             <option value="Admission Officer">Admission Officer</option>
-                            <option value="Faculty">Faculty</option>
-                            <option value="Student">Student</option>
                           </select>
                         </td>
 
@@ -1198,8 +1194,6 @@ export const SettingsManagementView: React.FC = () => {
                         <option value="Super Admin">Super Admin</option>
                         <option value="Admin">Admin</option>
                         <option value="Admission Officer">Admission Officer</option>
-                        <option value="Faculty">Faculty</option>
-                        <option value="Student">Student</option>
                       </select>
                     </div>
 
