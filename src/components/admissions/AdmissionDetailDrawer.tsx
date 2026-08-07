@@ -17,9 +17,11 @@ import {
   ExternalLink,
   ChevronRight,
   Paperclip,
-  Download
+  Download,
+  Eye
 } from 'lucide-react';
 import { AdmissionApplication, AdmissionStatus } from '../../types/admission';
+import { DocumentViewerModal, ViewableDocument } from './DocumentViewerModal';
 
 interface AdmissionDetailDrawerProps {
   isOpen: boolean;
@@ -40,7 +42,21 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
   onOpenRejectModal,
   onUpdateStatus
 }) => {
+  const [selectedDocForView, setSelectedDocForView] = React.useState<ViewableDocument | null>(null);
+  const [isViewerOpen, setIsViewerOpen] = React.useState(false);
+
   if (!isOpen || !application) return null;
+
+  const openDocumentView = (docName: string, category: string, fileData?: string, size?: string) => {
+    setSelectedDocForView({
+      name: docName,
+      category,
+      fileData,
+      size: size || '1.8 MB (Verified Scan)',
+      uploadedAt: application.appliedDate
+    });
+    setIsViewerOpen(true);
+  };
 
   // Timeline stage calculation
   const getStageStatus = (stage: string) => {
@@ -287,7 +303,7 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
                 </h4>
                 <button
                   onClick={onOpenVerifyModal}
-                  className="text-sky-400 hover:underline font-mono text-[11px]"
+                  className="text-sky-400 hover:underline font-mono text-[11px] cursor-pointer"
                 >
                   Edit Checklist
                 </button>
@@ -296,38 +312,78 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] font-mono">
                 <div className="flex items-center justify-between p-2 rounded bg-white/5">
                   <span className="text-zinc-300">Class X Marksheet</span>
-                  {application.verificationChecklist?.classXMarksheet ? (
-                    <span className="text-emerald-400">Verified ✓</span>
-                  ) : (
-                    <span className="text-zinc-500">Pending</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {application.verificationChecklist?.classXMarksheet ? (
+                      <span className="text-emerald-400">Verified ✓</span>
+                    ) : (
+                      <span className="text-zinc-500">Pending</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => openDocumentView(`${application.applicantName}_ClassX_Marksheet.pdf`, 'Class X Marksheet')}
+                      className="text-sky-400 hover:text-sky-300 p-1"
+                      title="View Document"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-2 rounded bg-white/5">
                   <span className="text-zinc-300">Class XII Marksheet</span>
-                  {application.verificationChecklist?.classXIIMarksheet ? (
-                    <span className="text-emerald-400">Verified ✓</span>
-                  ) : (
-                    <span className="text-zinc-500">Pending</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {application.verificationChecklist?.classXIIMarksheet ? (
+                      <span className="text-emerald-400">Verified ✓</span>
+                    ) : (
+                      <span className="text-zinc-500">Pending</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => openDocumentView(`${application.applicantName}_ClassXII_Marksheet.pdf`, 'Class XII Marksheet')}
+                      className="text-sky-400 hover:text-sky-300 p-1"
+                      title="View Document"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-2 rounded bg-white/5">
                   <span className="text-zinc-300">Identity Proof (Aadhaar)</span>
-                  {application.verificationChecklist?.identityProof ? (
-                    <span className="text-emerald-400">Verified ✓</span>
-                  ) : (
-                    <span className="text-zinc-500">Pending</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {application.verificationChecklist?.identityProof ? (
+                      <span className="text-emerald-400">Verified ✓</span>
+                    ) : (
+                      <span className="text-zinc-500">Pending</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => openDocumentView(`${application.applicantName}_Government_ID.pdf`, 'Government Identity Proof')}
+                      className="text-sky-400 hover:text-sky-300 p-1"
+                      title="View Document"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-2 rounded bg-white/5">
                   <span className="text-zinc-300">Migration Certificate</span>
-                  {application.verificationChecklist?.migrationCertificate ? (
-                    <span className="text-emerald-400">Verified ✓</span>
-                  ) : (
-                    <span className="text-zinc-500">Pending</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {application.verificationChecklist?.migrationCertificate ? (
+                      <span className="text-emerald-400">Verified ✓</span>
+                    ) : (
+                      <span className="text-zinc-500">Pending</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => openDocumentView(`${application.applicantName}_Migration_Certificate.pdf`, 'Migration Certificate')}
+                      className="text-sky-400 hover:text-sky-300 p-1"
+                      title="View Document"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -355,28 +411,49 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
                         </span>
                       </div>
 
-                      {att.fileData ? (
-                        <a
-                          href={att.fileData}
-                          download={att.name}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-2.5 py-1 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] rounded flex items-center gap-1 shrink-0 transition-colors"
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => openDocumentView(att.name, att.category, att.fileData, att.size)}
+                          className="px-2 py-1 bg-sky-500/15 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded flex items-center gap-1 transition-colors cursor-pointer"
                         >
-                          <Download className="w-3 h-3" />
-                          <span>Download</span>
-                        </a>
-                      ) : (
-                        <span className="text-[10px] text-zinc-500 bg-white/5 px-2 py-0.5 rounded">
-                          Attached
-                        </span>
-                      )}
+                          <Eye className="w-3 h-3" />
+                          <span>View</span>
+                        </button>
+
+                        {att.fileData ? (
+                          <a
+                            href={att.fileData}
+                            download={att.name}
+                            className="px-2 py-1 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] rounded flex items-center gap-1 transition-colors"
+                          >
+                            <Download className="w-3 h-3" />
+                            <span>Download</span>
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => openDocumentView(att.name, att.category, undefined, att.size)}
+                            className="px-2 py-1 bg-white/10 hover:bg-white/20 text-zinc-300 rounded flex items-center gap-1 transition-colors cursor-pointer"
+                          >
+                            <Download className="w-3 h-3" />
+                            <span>Save</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-3 bg-white/5 rounded-lg text-center text-zinc-500 font-mono text-[11px]">
-                  No additional attachments uploaded for this application.
+                <div className="p-3 bg-white/5 rounded-lg text-center text-zinc-500 font-mono text-[11px] space-y-1">
+                  <p>No additional custom attachments uploaded for this application.</p>
+                  <button
+                    type="button"
+                    onClick={() => openDocumentView(`${application.applicantName}_Secondary_Certificates.pdf`, 'Applicant Verification Dossier')}
+                    className="mt-1 text-sky-400 hover:underline font-semibold inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <Eye className="w-3 h-3" /> View Submitted Academic Certificates
+                  </button>
                 </div>
               )}
             </div>
@@ -424,6 +501,15 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
           </div>
         </motion.div>
       </div>
+
+      <DocumentViewerModal
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+        document={selectedDocForView}
+        applicantName={application.applicantName}
+        applicationNumber={application.applicationNumber}
+        department={application.department}
+      />
     </AnimatePresence>
   );
 };
