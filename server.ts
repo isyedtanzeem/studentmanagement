@@ -16,6 +16,7 @@ import alumniRoutes from './server/routes/alumniRoutes';
 import reportRoutes from './server/routes/reportRoutes';
 import notificationRoutes from './server/routes/notificationRoutes';
 import settingsRoutes from './server/routes/settingsRoutes';
+import facultyRoutes from './server/routes/facultyRoutes';
 import { errorHandler } from './server/middlewares/errorMiddleware';
 import { UserModel } from './server/models/User';
 
@@ -82,6 +83,7 @@ async function startServer() {
   app.use('/api/v1/reports', reportRoutes);
   app.use('/api/v1/notifications', notificationRoutes);
   app.use('/api/v1/settings', settingsRoutes);
+  app.use('/api/v1/faculty', facultyRoutes);
 
   // Global Error Handler Middleware
   app.use(errorHandler);

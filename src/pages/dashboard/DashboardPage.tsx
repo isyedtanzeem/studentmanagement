@@ -19,6 +19,7 @@ import { QuickActionsModal } from '../../components/dashboard/QuickActionsModal'
 import { SidebarNavigation, ModuleType } from '../../components/dashboard/SidebarNavigation';
 import { GlobalSearchModal } from '../../components/dashboard/GlobalSearchModal';
 import { StudentManagementView } from '../../components/students/StudentManagementView';
+import { FacultyManagementView } from '../../components/faculty/FacultyManagementView';
 import { AdmissionManagementView } from '../../components/admissions/AdmissionManagementView';
 import { DepartmentManagementView } from '../../components/departments/DepartmentManagementView';
 import { CourseManagementView } from '../../components/courses/CourseManagementView';
@@ -306,6 +307,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <AdmissionManagementView />
         ) : activeModule === 'students' ? (
           <StudentManagementView />
+        ) : activeModule === 'faculty' ? (
+          <FacultyManagementView />
         ) : activeModule === 'departments' ? (
           <DepartmentManagementView />
         ) : activeModule === 'courses' ? (

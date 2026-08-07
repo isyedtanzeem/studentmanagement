@@ -236,27 +236,98 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
 
             {/* HOD Assignment Group */}
             <div className="space-y-3 pt-3 border-t border-slate-200">
-              <span className="text-xs uppercase tracking-wider text-blue-900 font-bold block">
-                2. Head of Department (HOD) Assignment
+              <span className="text-xs uppercase tracking-wider text-blue-900 font-bold block flex items-center justify-between">
+                <span>2. Head of Department (HOD) Assignment</span>
+                <span className="text-[10px] text-blue-600 font-mono font-normal uppercase">Select HOD from Registered Faculty</span>
               </span>
 
               {facultyOptions.length > 0 && (
-                <div className="space-y-1">
-                  <label className="text-slate-700 font-medium">Quick Select from Registered Faculty</label>
+                <div className="space-y-2">
+                  <label className="text-slate-700 font-medium flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-blue-600" />
+                    Select Head of Department (HOD) Details Dropdown *
+                  </label>
                   <select
                     value={selectedFacultyId}
                     onChange={handleFacultySelect}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 font-medium cursor-pointer"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 font-semibold cursor-pointer shadow-xs"
                   >
-                    <option value="custom">-- Custom HOD Name or External Appointment --</option>
-                    {facultyOptions.map((fac) => (
-                      <option key={fac.id} value={fac.id}>
-                        {fac.fullName} ({fac.designation} • {fac.department})
-                      </option>
-                    ))}
+                    <option value="custom">-- Custom HOD Entry / External Appointment --</option>
+                    
+                    {/* HOD Category */}
+                    {facultyOptions.filter(f => (f.designation || '').toLowerCase().includes('hod')).length > 0 && (
+                      <optgroup label="Registered Head of Departments (HOD)">
+                        {facultyOptions
+                          .filter(f => (f.designation || '').toLowerCase().includes('hod'))
+                          .map((fac) => (
+                            <option key={fac.id} value={fac.id}>
+                              {fac.fullName} ({fac.employeeId}) • {fac.designation} - {fac.department}
+                            </option>
+                          ))}
+                      </optgroup>
+                    )}
+
+                    {/* Professors Category */}
+                    {facultyOptions.filter(f => (f.designation || '').toLowerCase().includes('professor') && !(f.designation || '').toLowerCase().includes('asst') && !(f.designation || '').toLowerCase().includes('hod')).length > 0 && (
+                      <optgroup label="Professors">
+                        {facultyOptions
+                          .filter(f => (f.designation || '').toLowerCase().includes('professor') && !(f.designation || '').toLowerCase().includes('asst') && !(f.designation || '').toLowerCase().includes('hod'))
+                          .map((fac) => (
+                            <option key={fac.id} value={fac.id}>
+                              {fac.fullName} ({fac.employeeId}) • {fac.designation} - {fac.department}
+                            </option>
+                          ))}
+                      </optgroup>
+                    )}
+
+                    {/* Asst. Professors Category */}
+                    {facultyOptions.filter(f => (f.designation || '').toLowerCase().includes('asst') || (f.designation || '').toLowerCase().includes('assistant')).length > 0 && (
+                      <optgroup label="Asst. Professors">
+                        {facultyOptions
+                          .filter(f => (f.designation || '').toLowerCase().includes('asst') || (f.designation || '').toLowerCase().includes('assistant'))
+                          .map((fac) => (
+                            <option key={fac.id} value={fac.id}>
+                              {fac.fullName} ({fac.employeeId}) • {fac.designation} - {fac.department}
+                            </option>
+                          ))}
+                      </optgroup>
+                    )}
                   </select>
                 </div>
               )}
+
+              {/* Selected HOD Profile Summary Preview Card */}
+              {selectedFacultyId !== 'custom' && (() => {
+                const selectedFac = facultyOptions.find(f => f.id === selectedFacultyId);
+                if (!selectedFac) return null;
+                return (
+                  <div className="bg-blue-50/60 border border-blue-200 p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-blue-600 text-white font-bold font-mono flex items-center justify-center text-sm shadow-xs">
+                        {selectedFac.fullName.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <strong className="text-slate-900 font-bold">{selectedFac.fullName}</strong>
+                          <span className="text-[10px] font-mono text-slate-500">({selectedFac.employeeId})</span>
+                        </div>
+                        <div className="text-[11px] text-blue-700 font-medium">
+                          {selectedFac.designation} • {selectedFac.department}
+                        </div>
+                        {selectedFac.qualification && (
+                          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                            {selectedFac.qualification}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right font-mono text-[11px] text-slate-600 space-y-0.5 self-end sm:self-center">
+                      <div>{selectedFac.email}</div>
+                      <div>{selectedFac.phone || 'No phone provided'}</div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
@@ -278,7 +349,7 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
                   <label className="text-slate-700 font-medium">Designation / Title</label>
                   <input
                     type="text"
-                    placeholder="e.g. Professor & HOD"
+                    placeholder="e.g. HOD / Professor & HOD"
                     value={formData.hodDesignation}
                     onChange={(e) => setFormData({ ...formData, hodDesignation: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 font-medium"

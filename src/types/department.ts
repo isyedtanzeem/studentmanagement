@@ -57,8 +57,11 @@ export interface FacultyOption {
   employeeId: string;
   fullName: string;
   email: string;
+  phone?: string;
   designation: string;
   department: string;
+  qualification?: string;
+  status?: string;
 }
 
 export interface DepartmentListResponse {

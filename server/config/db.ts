@@ -192,9 +192,14 @@ export interface FacultyRecord {
   employeeId: string;
   fullName: string;
   email: string;
+  phone?: string;
   department: string;
-  designation: string;
-  status: 'Active' | 'On Leave';
+  designation: string; // 'HOD' | 'Professor' | 'Asst. Professor' | string
+  qualification?: string;
+  joiningDate?: string;
+  status: 'Active' | 'On Leave' | 'Inactive';
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface GuardianRecord {

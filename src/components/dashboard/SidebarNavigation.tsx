@@ -3,6 +3,7 @@ import {
   Sparkles,
   GraduationCap,
   Users,
+  UserCheck,
   Building2,
   BookOpen,
   ShieldCheck,
@@ -22,6 +23,7 @@ export type ModuleType =
   | 'executive'
   | 'admissions'
   | 'students'
+  | 'faculty'
   | 'departments'
   | 'courses'
   | 'guardians'
@@ -87,10 +89,17 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {
+      id: 'faculty',
+      label: 'Faculty & HODs',
+      icon: UserCheck,
+      description: 'Faculty Registration, HODs & Staff',
+      roles: ['Super Admin', 'Admin', 'Admission Officer']
+    },
+    {
       id: 'departments',
       label: 'Departments',
       icon: Building2,
-      description: 'Faculties & HODs',
+      description: 'Department HODs & Operations',
       roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {

@@ -45,13 +45,23 @@ export const ExecutiveDataSummary: React.FC<ExecutiveDataSummaryProps> = ({ onNa
           </div>
 
           {onNavigateToModule && (
-            <button
-              onClick={() => onNavigateToModule('departments')}
-              className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer font-mono shrink-0"
-            >
-              <span>Manage Departments</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => onNavigateToModule('faculty')}
+                className="text-xs font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1 cursor-pointer font-mono shrink-0 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200"
+              >
+                <span>Faculty & HOD Register</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => onNavigateToModule('departments')}
+                className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer font-mono shrink-0"
+              >
+                <span>Manage Departments</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           )}
         </div>
 

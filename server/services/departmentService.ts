@@ -285,8 +285,11 @@ export class DepartmentService {
       employeeId: f.employeeId,
       fullName: f.fullName,
       email: f.email,
+      phone: f.phone || '',
       designation: f.designation,
-      department: f.department
+      department: f.department,
+      qualification: f.qualification || '',
+      status: f.status
     }));
   }
 }
