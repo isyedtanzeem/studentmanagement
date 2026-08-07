@@ -23,7 +23,6 @@ import { FacultyManagementView } from '../../components/faculty/FacultyManagemen
 import { AdmissionManagementView } from '../../components/admissions/AdmissionManagementView';
 import { DepartmentManagementView } from '../../components/departments/DepartmentManagementView';
 import { CourseManagementView } from '../../components/courses/CourseManagementView';
-import { GuardianManagementView } from '../../components/guardians/GuardianManagementView';
 import { DocumentManagementView } from '../../components/documents/DocumentManagementView';
 import { IdCardManagementView } from '../../components/idcard/IdCardManagementView';
 import { PromotionManagementView } from '../../components/promotion/PromotionManagementView';
@@ -313,8 +312,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <DepartmentManagementView />
         ) : activeModule === 'courses' ? (
           <CourseManagementView />
-        ) : activeModule === 'guardians' ? (
-          <GuardianManagementView />
         ) : activeModule === 'documents' ? (
           <DocumentManagementView />
         ) : activeModule === 'idcards' ? (

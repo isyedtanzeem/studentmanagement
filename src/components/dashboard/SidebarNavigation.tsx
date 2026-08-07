@@ -26,7 +26,6 @@ export type ModuleType =
   | 'faculty'
   | 'departments'
   | 'courses'
-  | 'guardians'
   | 'documents'
   | 'idcards'
   | 'promotion'
@@ -107,13 +106,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       label: 'Course Catalog',
       icon: BookOpen,
       description: 'Syllabus, Credits & Departments',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
-    },
-    {
-      id: 'guardians',
-      label: 'Guardians & Contacts',
-      icon: ShieldCheck,
-      description: 'Emergency Info',
       roles: ['Super Admin', 'Admin', 'Admission Officer']
     },
     {

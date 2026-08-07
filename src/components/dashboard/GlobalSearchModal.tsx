@@ -8,7 +8,7 @@ import { admissionApi } from '../../api/admissionApi';
 interface GlobalSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectModule: (module: 'admissions' | 'students' | 'departments' | 'courses' | 'guardians' | 'documents' | 'idcards' | 'promotion' | 'alumni' | 'reports' | 'notifications' | 'settings' | 'executive') => void;
+  onSelectModule: (module: 'admissions' | 'students' | 'departments' | 'courses' | 'documents' | 'idcards' | 'promotion' | 'alumni' | 'reports' | 'notifications' | 'settings' | 'executive') => void;
 }
 
 export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({

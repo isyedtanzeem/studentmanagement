@@ -202,44 +202,6 @@ export interface FacultyRecord {
   updatedAt?: string;
 }
 
-export interface GuardianRecord {
-  id: string;
-  guardianId: string;
-  // Parent Details
-  fatherName: string;
-  fatherOccupation?: string;
-  fatherPhone?: string;
-  fatherEmail?: string;
-  motherName: string;
-  motherOccupation?: string;
-  motherPhone?: string;
-  motherEmail?: string;
-  // Primary Guardian / Contact
-  guardianName: string;
-  relationship: 'Father' | 'Mother' | 'Legal Guardian' | 'Local Guardian' | 'Relative' | 'Other';
-  occupation?: string;
-  primaryPhone: string;
-  email?: string;
-  annualIncome?: number;
-  // Emergency Contacts
-  emergencyContactName: string;
-  emergencyContactPhone: string;
-  emergencyContactAltPhone?: string;
-  emergencyRelationship: string;
-  emergencyAddress?: string;
-  // Residential Address
-  residentialAddress: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-  // Student Mapping
-  mappedStudentIds: string[];
-  status: 'Active' | 'Inactive';
-  createdAt: string;
-  updatedAt?: string;
-}
-
 export interface DocumentRecord {
   id: string;
   documentId: string;
@@ -391,7 +353,6 @@ export class DatabaseStore {
   public departments: Map<string, DepartmentRecord> = new Map();
   public courses: Map<string, CourseRecord> = new Map();
   public faculty: Map<string, FacultyRecord> = new Map();
-  public guardians: Map<string, GuardianRecord> = new Map();
   public documents: Map<string, DocumentRecord> = new Map();
   public idCards: Map<string, IdCardRecord> = new Map();
   public promotionHistory: Map<string, PromotionRecord> = new Map();
