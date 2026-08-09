@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Student, SemesterRecord, CourseGradeItem } from '../../types/student';
+import { Student, SemesterRecord, CourseGradeItem, AttendanceLogEntry } from '../../types/student';
 import {
   X,
   GraduationCap,
@@ -157,13 +157,17 @@ export const StudentSemesterModal: React.FC<StudentSemesterModalProps> = ({
 
   // Save updated semester record
   const handleSaveSemesterUpdate = () => {
+    const oldRec = semesterRecords.find(r => r.semester === selectedSemester);
+    const oldAttendance = oldRec ? oldRec.attendancePercentage : 0;
+    const newAttendance = Number(editAttendance);
+
     const updatedRecords = semesterRecords.map(r => {
       if (r.semester === selectedSemester) {
         return {
           ...r,
           sgpa: Number(editSgpa),
           cgpa: Number(editCgpa),
-          attendancePercentage: Number(editAttendance),
+          attendancePercentage: newAttendance,
           backlogsCount: Number(editBacklogs),
           status: editStatus,
           remarks: editRemarks,
@@ -175,17 +179,40 @@ export const StudentSemesterModal: React.FC<StudentSemesterModalProps> = ({
 
     setSemesterRecords(updatedRecords);
 
-    // Calculate overall student CGPA from completed semesters
+    // Calculate overall student CGPA & Attendance from active semesters
     const activeSemRecords = updatedRecords.filter(r => r.sgpa > 0);
     const avgCgpa = activeSemRecords.length > 0
       ? Number((activeSemRecords.reduce((acc, curr) => acc + curr.sgpa, 0) / activeSemRecords.length).toFixed(2))
       : student.gpa;
 
+    const activeAttRecords = updatedRecords.filter(r => r.attendancePercentage > 0);
+    const avgAtt = activeAttRecords.length > 0
+      ? Number((activeAttRecords.reduce((acc, curr) => acc + curr.attendancePercentage, 0) / activeAttRecords.length).toFixed(1))
+      : newAttendance;
+
+    // Build edit log if attendance changed
+    let updatedLogs = student.attendanceLogs || [];
+    if (oldAttendance !== newAttendance) {
+      const logEntry: AttendanceLogEntry = {
+        id: `att-log-${Date.now()}`,
+        studentId: student.studentId || student.id,
+        semester: selectedSemester,
+        oldPercentage: oldAttendance,
+        newPercentage: newAttendance,
+        editedBy: 'Faculty / Academic Coordinator',
+        editedAt: new Date().toISOString(),
+        reason: editRemarks || `Semester ${selectedSemester} result & attendance record update.`
+      };
+      updatedLogs = [logEntry, ...updatedLogs];
+    }
+
     const updatedStudent: Student = {
       ...student,
       gpa: avgCgpa,
       cgpa: avgCgpa,
-      semesterRecords: updatedRecords
+      attendance: avgAtt,
+      semesterRecords: updatedRecords,
+      attendanceLogs: updatedLogs
     };
 
     if (onUpdateStudent) {

@@ -9,6 +9,7 @@ import { StudentPDFReportModal } from './StudentPDFReportModal';
 import { StudentDocsModal } from './StudentDocsModal';
 import { StudentSemesterModal } from './StudentSemesterModal';
 import { StudentFeesModal } from './StudentFeesModal';
+import { StudentAttendanceModal } from './StudentAttendanceModal';
 import {
   Users,
   UserCheck,
@@ -80,6 +81,7 @@ export const StudentManagementView: React.FC = () => {
   const [docsStudent, setDocsStudent] = useState<Student | null>(null);
   const [semesterStudent, setSemesterStudent] = useState<Student | null>(null);
   const [feesStudent, setFeesStudent] = useState<Student | null>(null);
+  const [attendanceStudent, setAttendanceStudent] = useState<Student | null>(null);
 
   const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
@@ -92,6 +94,7 @@ export const StudentManagementView: React.FC = () => {
       if (viewingStudent?.id === updatedStudent.id) setViewingStudent(updatedStudent);
       if (semesterStudent?.id === updatedStudent.id) setSemesterStudent(updatedStudent);
       if (feesStudent?.id === updatedStudent.id) setFeesStudent(updatedStudent);
+      if (attendanceStudent?.id === updatedStudent.id) setAttendanceStudent(updatedStudent);
     } catch (err) {
       console.error("Failed to update student record:", err);
     }
@@ -421,6 +424,7 @@ export const StudentManagementView: React.FC = () => {
         onViewDocs={(st) => setDocsStudent(st)}
         onViewSemesters={(st) => setSemesterStudent(st)}
         onViewFees={(st) => setFeesStudent(st)}
+        onViewAttendance={(st) => setAttendanceStudent(st)}
         onEdit={(st) => {
           setEditingStudent(st);
           setIsFormOpen(true);
@@ -509,12 +513,20 @@ export const StudentManagementView: React.FC = () => {
         }}
         onOpenSemestersModal={(st) => setSemesterStudent(st)}
         onOpenFeesModal={(st) => setFeesStudent(st)}
+        onOpenAttendanceModal={(st) => setAttendanceStudent(st)}
       />
 
       <StudentSemesterModal
         student={semesterStudent}
         isOpen={!!semesterStudent}
         onClose={() => setSemesterStudent(null)}
+        onUpdateStudent={handleStudentUpdate}
+      />
+
+      <StudentAttendanceModal
+        student={attendanceStudent}
+        isOpen={!!attendanceStudent}
+        onClose={() => setAttendanceStudent(null)}
         onUpdateStudent={handleStudentUpdate}
       />
 

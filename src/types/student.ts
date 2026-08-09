@@ -72,6 +72,19 @@ export interface FeePaymentTransaction {
   remarks?: string;
 }
 
+export interface AttendanceLogEntry {
+  id: string;
+  studentId: string;
+  semester: number;
+  oldPercentage: number;
+  newPercentage: number;
+  classesAttended?: number;
+  totalClasses?: number;
+  editedBy: string;
+  editedAt: string;
+  reason: string;
+}
+
 export interface Student {
   id: string;
   studentId: string; // Roll No / Enrollment No e.g. 2024CSE1042
@@ -88,6 +101,8 @@ export interface Student {
   enrollmentYear: number;
   gpa: number; // Represents 10-point CGPA scale (e.g. 8.75)
   cgpa?: number; // Explicit 10-point scale CGPA
+  attendance?: number; // Overall Attendance Percentage e.g. 88.5
+  attendanceLogs?: AttendanceLogEntry[];
   category?: 'General' | 'OBC' | 'SC' | 'ST' | 'EWS';
   fatherName?: string;
   motherName?: string;

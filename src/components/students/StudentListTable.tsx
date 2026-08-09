@@ -12,7 +12,8 @@ import {
   GraduationCap,
   FileText,
   CreditCard,
-  BookOpen
+  BookOpen,
+  CalendarCheck
 } from 'lucide-react';
 
 interface StudentListTableProps {
@@ -24,6 +25,7 @@ interface StudentListTableProps {
   onViewDocs?: (student: Student) => void;
   onViewSemesters?: (student: Student) => void;
   onViewFees?: (student: Student) => void;
+  onViewAttendance?: (student: Student) => void;
   onEdit: (student: Student) => void;
   onDelete: (student: Student) => void;
   onOpenPDF: (student: Student) => void;
@@ -41,6 +43,7 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
   onViewDocs,
   onViewSemesters,
   onViewFees,
+  onViewAttendance,
   onEdit,
   onDelete,
   onOpenPDF,
@@ -107,6 +110,12 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                 className="p-3.5 cursor-pointer hover:text-blue-600 transition-colors"
               >
                 CGPA (10.0) {renderSortIndicator('gpa')}
+              </th>
+              <th
+                onClick={() => onSortChange('attendance')}
+                className="p-3.5 cursor-pointer hover:text-blue-600 transition-colors"
+              >
+                Attendance % {renderSortIndicator('attendance')}
               </th>
               <th
                 onClick={() => onSortChange('status')}
@@ -190,6 +199,28 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                       <span className="font-bold text-blue-700">{student.gpa.toFixed(2)}</span>
                     </td>
 
+                    <td className="p-3.5 font-mono">
+                      {(() => {
+                        const att = student.attendance !== undefined ? student.attendance : 88.5;
+                        const isLow = att < 75;
+                        return (
+                          <button
+                            onClick={() => onViewAttendance && onViewAttendance(student)}
+                            title="View/Edit Semester Attendance & Logs"
+                            className={`px-2.5 py-1 rounded-lg border font-bold text-[11px] flex items-center gap-1.5 transition-all hover:scale-105 cursor-pointer ${
+                              isLow
+                                ? 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
+                                : 'bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100'
+                            }`}
+                          >
+                            <CalendarCheck className="w-3.5 h-3.5" />
+                            <span>{att.toFixed(1)}%</span>
+                            {isLow && <span className="text-[9px] font-sans bg-rose-200 text-rose-900 px-1 rounded font-black">!</span>}
+                          </button>
+                        );
+                      })()}
+                    </td>
+
                     <td className="p-3.5">
                       <span
                         className={`px-2.5 py-0.5 rounded-full border text-[10px] font-semibold uppercase font-mono ${getStatusBadgeClass(
@@ -233,6 +264,17 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                           >
                             <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
                             <span>Fees</span>
+                          </button>
+                        )}
+
+                        {onViewAttendance && (
+                          <button
+                            onClick={() => onViewAttendance(student)}
+                            title="Manage Semester Attendance & Edit Audit Logs"
+                            className="px-2 py-1 rounded-lg text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-all flex items-center gap-1 text-[10px] font-bold font-mono"
+                          >
+                            <CalendarCheck className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Attendance</span>
                           </button>
                         )}
 

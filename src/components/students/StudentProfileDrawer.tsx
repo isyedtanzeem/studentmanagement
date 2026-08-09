@@ -22,7 +22,8 @@ import {
   CreditCard,
   TrendingUp,
   Receipt,
-  ExternalLink
+  ExternalLink,
+  CalendarCheck
 } from 'lucide-react';
 
 interface StudentProfileDrawerProps {
@@ -34,6 +35,7 @@ interface StudentProfileDrawerProps {
   onOpenPDF: (student: Student) => void;
   onOpenSemestersModal?: (student: Student) => void;
   onOpenFeesModal?: (student: Student) => void;
+  onOpenAttendanceModal?: (student: Student) => void;
 }
 
 export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
@@ -44,7 +46,8 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
   onDelete,
   onOpenPDF,
   onOpenSemestersModal,
-  onOpenFeesModal
+  onOpenFeesModal,
+  onOpenAttendanceModal
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'academic' | 'fees' | 'documents' | 'guardian'>('overview');
 
@@ -185,17 +188,29 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
         <div className="flex-1 p-6 overflow-y-auto space-y-6">
           {activeTab === 'overview' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   onClick={() => onOpenSemestersModal && onOpenSemestersModal(student)}
                   className="p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-all cursor-pointer group"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase font-bold text-blue-700 tracking-wider">Semester Progress</span>
+                    <span className="text-[10px] uppercase font-bold text-blue-700 tracking-wider">Semester Results</span>
                     <ExternalLink className="w-3.5 h-3.5 text-blue-600 group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                  <span className="text-sm font-bold text-slate-900 block mt-1">Manage Sem 1 to 8 Results</span>
-                  <span className="text-[10px] text-slate-500 font-mono">Update SGPA, Grades & Promote</span>
+                  <span className="text-xs font-bold text-slate-900 block mt-1">Sem 1-8 Progress</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Grades & SGPA</span>
+                </button>
+
+                <button
+                  onClick={() => onOpenAttendanceModal && onOpenAttendanceModal(student)}
+                  className="p-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl text-left transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider">Attendance Ledger</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-amber-600 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 block mt-1">{student.attendance !== undefined ? student.attendance : 88.5}% Attendance</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Edit & Audit Logs</span>
                 </button>
 
                 <button
@@ -206,8 +221,8 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
                     <span className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider">Fee Management</span>
                     <ExternalLink className="w-3.5 h-3.5 text-emerald-600 group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                  <span className="text-sm font-bold text-slate-900 block mt-1">Fee Ledger & Collect Payment</span>
-                  <span className="text-[10px] text-slate-500 font-mono">Record Payment & Print Receipt</span>
+                  <span className="text-xs font-bold text-slate-900 block mt-1">Collect Fee</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Ledger & Receipts</span>
                 </button>
               </div>
 
