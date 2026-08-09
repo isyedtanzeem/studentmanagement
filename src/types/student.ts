@@ -12,6 +12,66 @@ export interface StudentDocument {
   fileUrl?: string;
 }
 
+export interface CourseGradeItem {
+  code: string;
+  title: string;
+  credits: number;
+  grade: 'O' | 'A+' | 'A' | 'B+' | 'B' | 'C' | 'P' | 'F';
+  marksObtained: number;
+  maxMarks: number;
+}
+
+export interface SemesterRecord {
+  id: string;
+  semester: number; // 1 to 8
+  academicTerm: string; // e.g. "2024-2025 Autumn"
+  sgpa: number; // e.g. 8.75
+  cgpa: number; // e.g. 8.68
+  creditsRegistered: number;
+  creditsEarned: number;
+  attendancePercentage: number;
+  backlogsCount: number;
+  status: 'Passed' | 'Promoted' | 'In Progress' | 'Withheld' | 'Backlog';
+  remarks?: string;
+  updatedAt?: string;
+  courses?: CourseGradeItem[];
+}
+
+export interface FeeComponent {
+  name: string;
+  amount: number;
+}
+
+export interface StudentFeeStructure {
+  id: string;
+  semester: number;
+  academicYear: string; // e.g. "2024-2025"
+  tuitionFee: number;
+  examFee: number;
+  libraryLabFee: number;
+  hostelFee?: number;
+  otherCharges?: number;
+  totalFee: number;
+  paidAmount: number;
+  dueAmount: number;
+  dueDate: string;
+  status: 'Paid' | 'Partially Paid' | 'Overdue' | 'Unpaid';
+}
+
+export interface FeePaymentTransaction {
+  id: string;
+  receiptNo: string;
+  paymentDate: string;
+  amountPaid: number;
+  paymentMode: 'UPI' | 'NetBanking' | 'Credit/Debit Card' | 'Demand Draft' | 'Cash';
+  transactionRef: string;
+  feeType: string; // e.g. "Semester 4 Tuition & Exam Fee"
+  semester: number;
+  status: 'Completed' | 'Pending Verification' | 'Failed';
+  collectedBy: string;
+  remarks?: string;
+}
+
 export interface Student {
   id: string;
   studentId: string; // Roll No / Enrollment No e.g. 2024CSE1042
@@ -22,6 +82,7 @@ export interface Student {
   department: string; // e.g. Computer Science & Engineering
   degree?: string; // B.Tech, M.Tech, MBA, MCA, B.Sc
   semester?: number; // 1 to 8
+  currentSemester?: number; // 1 to 8
   gender: 'Male' | 'Female' | 'Other';
   status: 'Active' | 'Inactive' | 'Graduated' | 'Suspended';
   enrollmentYear: number;
@@ -41,6 +102,13 @@ export interface Student {
   guardianName?: string;
   guardianPhone?: string;
   documents?: StudentDocument[];
+  semesterRecords?: SemesterRecord[];
+  feeStructures?: StudentFeeStructure[];
+  feePayments?: FeePaymentTransaction[];
+  totalFeeAmount?: number;
+  totalPaidAmount?: number;
+  totalDueAmount?: number;
+  feeStatus?: 'Paid' | 'Partially Paid' | 'Overdue' | 'Unpaid';
 }
 
 export interface StudentQueryParams {

@@ -7,6 +7,8 @@ import { StudentProfileDrawer } from './StudentProfileDrawer';
 import { StudentBulkImportModal } from './StudentBulkImportModal';
 import { StudentPDFReportModal } from './StudentPDFReportModal';
 import { StudentDocsModal } from './StudentDocsModal';
+import { StudentSemesterModal } from './StudentSemesterModal';
+import { StudentFeesModal } from './StudentFeesModal';
 import {
   Users,
   UserCheck,
@@ -76,9 +78,24 @@ export const StudentManagementView: React.FC = () => {
   const [pdfStudent, setPdfStudent] = useState<Student | null>(null);
 
   const [docsStudent, setDocsStudent] = useState<Student | null>(null);
+  const [semesterStudent, setSemesterStudent] = useState<Student | null>(null);
+  const [feesStudent, setFeesStudent] = useState<Student | null>(null);
 
   const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+
+  // Student update handler for nested modals
+  const handleStudentUpdate = async (updatedStudent: Student) => {
+    try {
+      await studentApi.updateStudent(updatedStudent.id, updatedStudent);
+      setStudents(prev => prev.map(s => s.id === updatedStudent.id ? updatedStudent : s));
+      if (viewingStudent?.id === updatedStudent.id) setViewingStudent(updatedStudent);
+      if (semesterStudent?.id === updatedStudent.id) setSemesterStudent(updatedStudent);
+      if (feesStudent?.id === updatedStudent.id) setFeesStudent(updatedStudent);
+    } catch (err) {
+      console.error("Failed to update student record:", err);
+    }
+  };
 
   // Load students data
   const loadData = async () => {
@@ -402,6 +419,8 @@ export const StudentManagementView: React.FC = () => {
           setIsDrawerOpen(true);
         }}
         onViewDocs={(st) => setDocsStudent(st)}
+        onViewSemesters={(st) => setSemesterStudent(st)}
+        onViewFees={(st) => setFeesStudent(st)}
         onEdit={(st) => {
           setEditingStudent(st);
           setIsFormOpen(true);
@@ -488,6 +507,22 @@ export const StudentManagementView: React.FC = () => {
           setPdfStudent(st);
           setIsPDFOpen(true);
         }}
+        onOpenSemestersModal={(st) => setSemesterStudent(st)}
+        onOpenFeesModal={(st) => setFeesStudent(st)}
+      />
+
+      <StudentSemesterModal
+        student={semesterStudent}
+        isOpen={!!semesterStudent}
+        onClose={() => setSemesterStudent(null)}
+        onUpdateStudent={handleStudentUpdate}
+      />
+
+      <StudentFeesModal
+        student={feesStudent}
+        isOpen={!!feesStudent}
+        onClose={() => setFeesStudent(null)}
+        onUpdateStudent={handleStudentUpdate}
       />
 
       <StudentBulkImportModal

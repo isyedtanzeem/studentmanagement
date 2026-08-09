@@ -10,7 +10,9 @@ import {
   Building2,
   Mail,
   GraduationCap,
-  FileText
+  FileText,
+  CreditCard,
+  BookOpen
 } from 'lucide-react';
 
 interface StudentListTableProps {
@@ -20,6 +22,8 @@ interface StudentListTableProps {
   onSelectAllToggle: () => void;
   onView: (student: Student) => void;
   onViewDocs?: (student: Student) => void;
+  onViewSemesters?: (student: Student) => void;
+  onViewFees?: (student: Student) => void;
   onEdit: (student: Student) => void;
   onDelete: (student: Student) => void;
   onOpenPDF: (student: Student) => void;
@@ -35,6 +39,8 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
   onSelectAllToggle,
   onView,
   onViewDocs,
+  onViewSemesters,
+  onViewFees,
   onEdit,
   onDelete,
   onOpenPDF,
@@ -207,6 +213,28 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                         >
                           <Eye className="w-4 h-4 text-blue-600" />
                         </button>
+
+                        {onViewSemesters && (
+                          <button
+                            onClick={() => onViewSemesters(student)}
+                            title="Manage Semester Results & Academic Progress"
+                            className="px-2 py-1 rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-all flex items-center gap-1 text-[10px] font-bold font-mono"
+                          >
+                            <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+                            <span>Sem {student.semester || student.currentSemester || 4}</span>
+                          </button>
+                        )}
+
+                        {onViewFees && (
+                          <button
+                            onClick={() => onViewFees(student)}
+                            title="Manage Student Fees & Ledger"
+                            className="px-2 py-1 rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all flex items-center gap-1 text-[10px] font-bold font-mono"
+                          >
+                            <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Fees</span>
+                          </button>
+                        )}
 
                         {onViewDocs && (
                           <button

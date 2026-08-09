@@ -18,7 +18,11 @@ import {
   CheckCircle2,
   AlertCircle,
   QrCode,
-  BookOpen
+  BookOpen,
+  CreditCard,
+  TrendingUp,
+  Receipt,
+  ExternalLink
 } from 'lucide-react';
 
 interface StudentProfileDrawerProps {
@@ -28,6 +32,8 @@ interface StudentProfileDrawerProps {
   onEdit: (student: Student) => void;
   onDelete: (student: Student) => void;
   onOpenPDF: (student: Student) => void;
+  onOpenSemestersModal?: (student: Student) => void;
+  onOpenFeesModal?: (student: Student) => void;
 }
 
 export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
@@ -36,9 +42,11 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
   onClose,
   onEdit,
   onDelete,
-  onOpenPDF
+  onOpenPDF,
+  onOpenSemestersModal,
+  onOpenFeesModal
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'academic' | 'documents' | 'guardian'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'academic' | 'fees' | 'documents' | 'guardian'>('overview');
 
   if (!isOpen || !student) return null;
 
@@ -120,46 +128,56 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center border-b border-slate-200 bg-slate-50 px-6 font-mono text-[11px]">
+        <div className="flex items-center border-b border-slate-200 bg-slate-50 px-4 font-mono text-[11px] overflow-x-auto">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-3 px-4 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'overview'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
-            Overview & Contact
+            Overview
           </button>
           <button
             onClick={() => setActiveTab('academic')}
-            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'academic'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
-            Academic Performance
+            Semester Progress
+          </button>
+          <button
+            onClick={() => setActiveTab('fees')}
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'fees'
+                ? 'border-emerald-600 text-emerald-600 font-bold'
+                : 'border-transparent text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            Fees & Ledger
           </button>
           <button
             onClick={() => setActiveTab('documents')}
-            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'documents'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
-            Documents & Certificates
+            Documents
           </button>
           <button
             onClick={() => setActiveTab('guardian')}
-            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer ${
+            className={`py-3 px-3 border-b-2 font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'guardian'
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
-            Guardian & Address
+            Guardian
           </button>
         </div>
 
@@ -167,6 +185,32 @@ export const StudentProfileDrawer: React.FC<StudentProfileDrawerProps> = ({
         <div className="flex-1 p-6 overflow-y-auto space-y-6">
           {activeTab === 'overview' && (
             <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => onOpenSemestersModal && onOpenSemestersModal(student)}
+                  className="p-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-bold text-blue-700 tracking-wider">Semester Progress</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-blue-600 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                  <span className="text-sm font-bold text-slate-900 block mt-1">Manage Sem 1 to 8 Results</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Update SGPA, Grades & Promote</span>
+                </button>
+
+                <button
+                  onClick={() => onOpenFeesModal && onOpenFeesModal(student)}
+                  className="p-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-left transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider">Fee Management</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-emerald-600 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                  <span className="text-sm font-bold text-slate-900 block mt-1">Fee Ledger & Collect Payment</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Record Payment & Print Receipt</span>
+                </button>
+              </div>
+
               <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-xs">
                 <h4 className="font-semibold text-slate-500 uppercase text-[10px] tracking-wider border-b border-slate-100 pb-2">
                   Contact Information
