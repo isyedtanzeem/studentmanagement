@@ -47,7 +47,7 @@ const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6'
 
 export const ReportsManagementView: React.FC = () => {
   const [reportType, setReportType] = useState<
-    'student' | 'admission' | 'department' | 'gender' | 'alumni'
+    'student' | 'admission' | 'department' | 'gender' | 'alumni' | 'synopsis'
   >('student');
 
   const [departmentFilter, setDepartmentFilter] = useState<string>('ALL');
@@ -55,6 +55,44 @@ export const ReportsManagementView: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [downloadingDocx, setDownloadingDocx] = useState<boolean>(false);
+
+  // Direct DOCX Synopsis Download Handler
+  const handleDownloadSynopsisDocx = async () => {
+    setDownloadingDocx(true);
+    try {
+      // First attempt: fetch from server endpoint
+      const response = await fetch('/api/v1/reports/synopsis-docx');
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ScholarCore_Project_Synopsis.docx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        showBanner('success', 'ScholarCore Project Synopsis (.docx) downloaded successfully!');
+      } else {
+        // Fallback: direct link to static generated file
+        const a = document.createElement('a');
+        a.href = '/ScholarCore_Project_Synopsis.docx';
+        a.download = 'ScholarCore_Project_Synopsis.docx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showBanner('success', 'ScholarCore Project Synopsis (.docx) downloaded successfully!');
+      }
+    } catch (err: any) {
+      console.error('Error downloading DOCX:', err);
+      // Fallback
+      window.open('/ScholarCore_Project_Synopsis.docx', '_blank');
+      showBanner('info', 'Opening ScholarCore Project Synopsis (.docx) download link.');
+    } finally {
+      setDownloadingDocx(false);
+    }
+  };
 
   // Report States
   const [studentReport, setStudentReport] = useState<StudentReportData | null>(null);
@@ -454,10 +492,19 @@ export const ReportsManagementView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={handleDownloadSynopsisDocx}
+              disabled={downloadingDocx}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white text-xs font-bold rounded-xl transition shadow-md hover:shadow-lg cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>{downloadingDocx ? 'Generating DOCX...' : 'Download Project Synopsis (.DOCX)'}</span>
+            </button>
+
             <button
               onClick={handleExportExcel}
-              className="inline-flex items-center space-x-2 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-xl transition shadow-sm"
+              className="inline-flex items-center space-x-2 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-xl transition shadow-sm cursor-pointer"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               <span>Export Excel (CSV)</span>
@@ -465,7 +512,7 @@ export const ReportsManagementView: React.FC = () => {
 
             <button
               onClick={handleExportPDF}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-sm"
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition shadow-sm cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>Print / Export PDF</span>
@@ -474,11 +521,11 @@ export const ReportsManagementView: React.FC = () => {
         </div>
       </div>
 
-      {/* Sub Navigation Bar for 5 Required Reports */}
+      {/* Sub Navigation Bar for Reports */}
       <div className="flex border-b border-slate-200 space-x-6 text-sm font-medium overflow-x-auto pb-1">
         <button
           onClick={() => setReportType('student')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap ${
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
             reportType === 'student'
               ? 'border-indigo-600 text-indigo-600 font-semibold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -490,7 +537,7 @@ export const ReportsManagementView: React.FC = () => {
 
         <button
           onClick={() => setReportType('admission')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap ${
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
             reportType === 'admission'
               ? 'border-indigo-600 text-indigo-600 font-semibold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -502,7 +549,7 @@ export const ReportsManagementView: React.FC = () => {
 
         <button
           onClick={() => setReportType('department')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap ${
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
             reportType === 'department'
               ? 'border-indigo-600 text-indigo-600 font-semibold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -514,7 +561,7 @@ export const ReportsManagementView: React.FC = () => {
 
         <button
           onClick={() => setReportType('gender')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap ${
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
             reportType === 'gender'
               ? 'border-indigo-600 text-indigo-600 font-semibold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -526,7 +573,7 @@ export const ReportsManagementView: React.FC = () => {
 
         <button
           onClick={() => setReportType('alumni')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap ${
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
             reportType === 'alumni'
               ? 'border-indigo-600 text-indigo-600 font-semibold'
               : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -534,6 +581,20 @@ export const ReportsManagementView: React.FC = () => {
         >
           <GraduationCap className="w-4 h-4" />
           <span>Alumni Report</span>
+        </button>
+
+        <button
+          onClick={() => setReportType('synopsis')}
+          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
+            reportType === 'synopsis'
+              ? 'border-blue-600 text-blue-700 font-bold'
+              : 'border-transparent text-blue-600 hover:text-blue-800 font-semibold'
+          }`}
+        >
+          <Award className="w-4 h-4 text-blue-600" />
+          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-200">
+            Project Synopsis (.DOCX)
+          </span>
         </button>
       </div>
 
@@ -1005,6 +1066,122 @@ export const ReportsManagementView: React.FC = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SYNOPSIS TAB VIEW */}
+          {reportType === 'synopsis' && (
+            <div className="space-y-6">
+              {/* Hero Banner with Download Trigger */}
+              <div className="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                <div className="relative z-10 max-w-3xl space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wider uppercase">
+                    <Award className="w-3.5 h-3.5" />
+                    <span>Official Project Documentation & Technical Synopsis</span>
+                  </div>
+
+                  <h2 className="text-3xl font-black tracking-tight text-white">
+                    ScholarCore SIMS — Project Synopsis (DOCX)
+                  </h2>
+
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    A comprehensive, publication-ready project synopsis document formatted in Microsoft Word (.docx) format. Encompasses Executive Abstract, Problem Statement, System Objectives, Multi-Tier Architecture, 11 Detailed Functional Modules, TypeScript Data Schemas, RBAC Security Protocols, Hardware/Software Environment Specifications, and Future Scope.
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-4 pt-2">
+                    <button
+                      onClick={handleDownloadSynopsisDocx}
+                      disabled={downloadingDocx}
+                      className="px-6 py-3.5 bg-blue-500 hover:bg-blue-400 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-lg hover:scale-105 flex items-center gap-2 cursor-pointer"
+                    >
+                      <Download className="w-5 h-5" />
+                      <span>{downloadingDocx ? 'Generating DOCX...' : 'Download Complete Synopsis (.docx)'}</span>
+                    </button>
+
+                    <div className="text-xs text-slate-400 font-mono flex items-center gap-2">
+                      <span>• File Size: ~19 KB</span>
+                      <span>• Format: Office Open XML (.docx)</span>
+                      <span>• Ver: 2.4</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Decorative background visual */}
+                <div className="absolute right-4 bottom-4 opacity-10 pointer-events-none">
+                  <FileText className="w-72 h-72 text-white" />
+                </div>
+              </div>
+
+              {/* Synopsis Outline Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm">
+                    01
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm">Executive Abstract & Problem Scope</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Explores institutional data fragmentation, multi-semester evaluation bottlenecks, unrecorded attendance changes, and manual billing reconciliation.
+                  </p>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm">
+                    02
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm">11 Functional Modules Specification</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Details Student Management, 8-Semester Results (SGPA/CGPA), Fee Billing Ledgers, Attendance Engine with Audit Trail, Admissions, Faculty, ID Card Studio, and Promotions.
+                  </p>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-sm">
+                    03
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm">Architecture & Data Schemas</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Documents React 19 + TypeScript + Express.js multi-tier architecture, JWT role-based access control, schema structures, and future AI enhancements.
+                  </p>
+                </div>
+              </div>
+
+              {/* Synopsis Table of Contents Preview */}
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-base">Synopsis Table of Contents & Structure</h3>
+                    <p className="text-xs text-slate-500">As formatted inside the generated Word (.docx) document</p>
+                  </div>
+
+                  <button
+                    onClick={handleDownloadSynopsisDocx}
+                    className="px-3.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download .DOCX</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
+                    <div className="font-bold text-blue-900 font-sans">Section 1 to 5: Core Conceptual Framework</div>
+                    <div className="text-slate-700">1. Executive Summary & Abstract</div>
+                    <div className="text-slate-700">2. Problem Statement & Institutional Motivation</div>
+                    <div className="text-slate-700">3. Project Objectives & Key Technical Goals</div>
+                    <div className="text-slate-700">4. System Architecture (Frontend & Backend Tiers)</div>
+                    <div className="text-slate-700">5. 11 Detailed Functional Modules Specification</div>
+                  </div>
+
+                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
+                    <div className="font-bold text-indigo-900 font-sans">Section 6 to 10: Technical Specifications</div>
+                    <div className="text-slate-700">6. Data Modeling & TypeScript Entity Schemas</div>
+                    <div className="text-slate-700">7. Security, RBAC & Immutable Audit Trails</div>
+                    <div className="text-slate-700">8. Hardware, Software & Deployment Specs</div>
+                    <div className="text-slate-700">9. Future Scope & Predictive AI Capabilities</div>
+                    <div className="text-slate-700">10. Conclusion & Formal Verification Signoff</div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -69,4 +69,18 @@ router.get('/alumni', (req: Request, res: Response) => {
   }
 });
 
+// GET /api/v1/reports/synopsis-docx
+router.get('/synopsis-docx', async (req: Request, res: Response) => {
+  try {
+    const { generateProjectSynopsisDocx } = await import('../../src/utils/synopsisDocxGenerator');
+    const buffer = await generateProjectSynopsisDocx();
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    res.setHeader('Content-Disposition', 'attachment; filename="ScholarCore_Project_Synopsis.docx"');
+    res.setHeader('Content-Length', buffer.length.toString());
+    res.send(buffer);
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message || 'Failed to generate synopsis docx.' });
+  }
+});
+
 export default router;
