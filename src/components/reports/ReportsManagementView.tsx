@@ -494,15 +494,6 @@ export const ReportsManagementView: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={handleDownloadSynopsisDocx}
-              disabled={downloadingDocx}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white text-xs font-bold rounded-xl transition shadow-md hover:shadow-lg cursor-pointer"
-            >
-              <Download className="w-4 h-4" />
-              <span>{downloadingDocx ? 'Generating DOCX...' : 'Download Project Synopsis (.DOCX)'}</span>
-            </button>
-
-            <button
               onClick={handleExportExcel}
               className="inline-flex items-center space-x-2 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-xl transition shadow-sm cursor-pointer"
             >
