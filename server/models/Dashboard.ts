@@ -8,7 +8,7 @@ export class DashboardModel {
         {
           id: 'dept-1',
           code: 'CSE',
-          name: 'Computer Science & Engineering',
+          name: 'BCA',
           headOfDepartment: 'Prof. Ramesh Kulkarni',
           hodEmail: 'ramesh.kulkarni@scholarcore.edu.in',
           hodPhone: '+91 98765 11001',
@@ -25,7 +25,7 @@ export class DashboardModel {
         {
           id: 'dept-2',
           code: 'ECE',
-          name: 'Electronics & Communication',
+          name: 'BBA',
           headOfDepartment: 'Dr. Sunita Deshmukh',
           hodEmail: 'sunita.deshmukh@scholarcore.edu.in',
           hodPhone: '+91 98765 22002',
@@ -42,7 +42,7 @@ export class DashboardModel {
         {
           id: 'dept-3',
           code: 'EEE',
-          name: 'Electrical & Electronics',
+          name: 'B.COM',
           headOfDepartment: 'Dr. K. Sivan',
           hodEmail: 'k.sivan@scholarcore.edu.in',
           hodPhone: '+91 98765 33003',
@@ -59,7 +59,7 @@ export class DashboardModel {
         {
           id: 'dept-4',
           code: 'ME',
-          name: 'Mechanical Engineering',
+          name: 'B.SC',
           headOfDepartment: 'Prof. S. N. Bose Chair',
           hodEmail: 'me.hod@scholarcore.edu.in',
           hodPhone: '+91 98765 44004',

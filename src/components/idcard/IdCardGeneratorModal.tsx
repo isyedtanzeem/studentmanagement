@@ -37,7 +37,7 @@ export const IdCardGeneratorModal: React.FC<IdCardGeneratorModalProps> = ({
   const [selectedStudent, setSelectedStudent] = useState<StudentOption | null>(null);
 
   // Form Fields
-  const [layoutTemplate, setLayoutTemplate] = useState<IdCardLayout>('portrait-modern');
+  const [layoutTemplate, setLayoutTemplate] = useState<IdCardLayout>('compact-badge');
   const [bloodGroup, setBloodGroup] = useState('O+');
   const [emergencyPhone, setEmergencyPhone] = useState('');
   const [validUntil, setValidUntil] = useState('30 JUN 2028');
@@ -56,7 +56,7 @@ export const IdCardGeneratorModal: React.FC<IdCardGeneratorModalProps> = ({
   useEffect(() => {
     if (cardToEdit) {
       setSelectedStudentId(cardToEdit.studentDbId);
-      setLayoutTemplate(cardToEdit.layoutTemplate || 'portrait-modern');
+      setLayoutTemplate(cardToEdit.layoutTemplate || 'compact-badge');
       setBloodGroup(cardToEdit.bloodGroup || 'O+');
       setEmergencyPhone(cardToEdit.emergencyPhone || '');
       setValidUntil(cardToEdit.validUntil || '30 JUN 2028');
@@ -95,6 +95,25 @@ export const IdCardGeneratorModal: React.FC<IdCardGeneratorModalProps> = ({
     setSelectedStudentId(id);
     const stu = students.find(s => s.id === id) || null;
     setSelectedStudent(stu);
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/png', 'image/jpeg'].includes(file.type)) {
+      setError('Please upload a PNG or JPEG image.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be 5 MB or smaller.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => setPhotoUrl(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -239,11 +258,8 @@ export const IdCardGeneratorModal: React.FC<IdCardGeneratorModalProps> = ({
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {[
-                    { id: 'portrait-modern', name: 'Portrait Modern', desc: 'Standard Vertical' },
-                    { id: 'portrait-classic', name: 'Portrait Classic', desc: 'Formal Crest' },
-                    { id: 'landscape-modern', name: 'Landscape Modern', desc: 'Horizontal Badge' },
                     { id: 'compact-badge', name: 'Compact Badge', desc: 'Clean Minimal' },
-                    { id: 'executive-chip', name: 'Executive Gold', desc: 'Smart Chip Dark' }
+                    { id: 'compact-badge-blue', name: 'Compact Badge Blue', desc: 'Blue Accent' }
                   ].map(tmpl => (
                     <button
                       key={tmpl.id}
@@ -316,18 +332,17 @@ export const IdCardGeneratorModal: React.FC<IdCardGeneratorModalProps> = ({
                   />
                 </div>
 
-                {/* Student Photo URL */}
+                {/* Student Photo Upload */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
                     <ImageIcon className="w-3.5 h-3.5 text-purple-500" />
-                    Photo URL (Optional)
+                    Student Photo (PNG/JPEG)
                   </label>
                   <input
-                    type="url"
-                    value={photoUrl}
-                    onChange={e => setPhotoUrl(e.target.value)}
-                    placeholder="https://..."
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl"
+                    type="file"
+                    accept="image/png,image/jpeg"
+                    onChange={handlePhotoUpload}
+                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl file:mr-3 file:border-0 file:bg-indigo-600 file:px-3 file:py-1 file:text-white file:rounded-lg file:cursor-pointer"
                   />
                 </div>
               </div>

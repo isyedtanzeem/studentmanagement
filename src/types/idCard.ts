@@ -3,6 +3,7 @@ export type IdCardLayout =
   | 'portrait-classic' 
   | 'landscape-modern' 
   | 'compact-badge' 
+  | 'compact-badge-blue'
   | 'executive-chip';
 
 export type IdCardStatus = 'Active' | 'Revoked' | 'Expired' | 'Reissued';

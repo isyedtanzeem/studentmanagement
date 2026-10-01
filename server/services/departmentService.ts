@@ -17,6 +17,7 @@ export class DepartmentService {
 
   public async getDepartments(params: DepartmentQueryParams) {
     DashboardModel.seedDataIfEmpty();
+    this.reconcileHodAssignments();
 
     const page = Math.max(1, Number(params.page) || 1);
     const limit = Math.max(1, Math.min(100, Number(params.limit) || 10));
@@ -175,6 +176,8 @@ export class DepartmentService {
       updatedAt: now
     };
 
+    this.syncDepartmentHod(nameTrimmed, data);
+
     dbStore.departments.set(newId, newDepartment);
 
     // Audit Activity
@@ -212,7 +215,10 @@ export class DepartmentService {
     }
 
     if (data.name) existing.name = data.name.trim();
-    if (data.headOfDepartment) existing.headOfDepartment = data.headOfDepartment.trim();
+    if (data.headOfDepartment) {
+      existing.headOfDepartment = data.headOfDepartment.trim();
+      this.syncDepartmentHod(existing.name, data, id);
+    }
     if (data.hodEmail !== undefined) existing.hodEmail = data.hodEmail.trim();
     if (data.hodPhone !== undefined) existing.hodPhone = data.hodPhone.trim();
     if (data.hodDesignation !== undefined) existing.hodDesignation = data.hodDesignation.trim();
@@ -238,6 +244,83 @@ export class DepartmentService {
     });
 
     return existing;
+  }
+
+  private syncDepartmentHod(
+    departmentName: string,
+    data: Partial<DepartmentRecord> & { facultyId?: string },
+    departmentId?: string
+  ) {
+    const selectedFaculty = data.facultyId
+      ? dbStore.faculty.get(data.facultyId)
+      : Array.from(dbStore.faculty.values()).find(f =>
+          f.department === departmentName && f.fullName === data.headOfDepartment?.trim()
+        );
+
+    if (!selectedFaculty) return;
+
+    dbStore.faculty.set(selectedFaculty.id, {
+      ...selectedFaculty,
+      department: departmentName,
+      designation: 'HOD',
+      updatedAt: new Date().toISOString()
+    });
+
+    for (const department of dbStore.departments.values()) {
+      if (
+        department.id === departmentId ||
+        department.headOfDepartment !== selectedFaculty.fullName
+      ) continue;
+
+      dbStore.departments.set(department.id, {
+        ...department,
+        headOfDepartment: 'Not Assigned',
+        hodEmail: '',
+        hodPhone: '',
+        hodDesignation: 'Vacant',
+        updatedAt: new Date().toISOString()
+      });
+    }
+
+    for (const faculty of dbStore.faculty.values()) {
+      if (faculty.id === selectedFaculty.id || faculty.department !== departmentName) continue;
+
+      const isCurrentHod = faculty.designation.toUpperCase().includes('HOD');
+
+      if (isCurrentHod) {
+        dbStore.faculty.set(faculty.id, {
+          ...faculty,
+          designation: 'Professor',
+          updatedAt: new Date().toISOString()
+        });
+      }
+    }
+  }
+
+  private reconcileHodAssignments() {
+    for (const faculty of dbStore.faculty.values()) {
+      if (!faculty.designation.toUpperCase().includes('HOD')) continue;
+
+      const matchingDepartments = Array.from(dbStore.departments.values()).filter(
+        department => department.headOfDepartment === faculty.fullName
+      );
+      const departmentForFaculty = matchingDepartments.find(
+        department => department.name === faculty.department
+      );
+
+      for (const department of matchingDepartments) {
+        if (department === departmentForFaculty) continue;
+
+        dbStore.departments.set(department.id, {
+          ...department,
+          headOfDepartment: 'Not Assigned',
+          hodEmail: '',
+          hodPhone: '',
+          hodDesignation: 'Vacant',
+          updatedAt: new Date().toISOString()
+        });
+      }
+    }
   }
 
   public async deleteDepartment(id: string, actorName = 'System Admin') {

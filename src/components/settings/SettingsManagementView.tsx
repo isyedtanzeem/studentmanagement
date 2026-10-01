@@ -30,6 +30,7 @@ import {
   Users,
   ShieldCheck,
   Camera,
+  Upload,
   CheckCircle2,
   AlertCircle,
   Save,
@@ -62,16 +63,6 @@ export const SettingsManagementView: React.FC = () => {
   const [editDept, setEditDept] = useState('');
   const [editAvatarUrl, setEditAvatarUrl] = useState('');
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
-
-  // Preset Avatars
-  const presetAvatars = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
-    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
-    'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=250',
-    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250'
-  ];
 
   // --- 2. Change Password State ---
   const [currentPassword, setCurrentPassword] = useState('');
@@ -183,6 +174,25 @@ export const SettingsManagementView: React.FC = () => {
     } catch (err: any) {
       setMessage({ type: 'error', text: 'Failed to update avatar image' });
     }
+  };
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/png', 'image/jpeg'].includes(file.type)) {
+      setMessage({ type: 'error', text: 'Please upload a PNG or JPEG image.' });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'Image must be 5 MB or smaller.' });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => handleSelectAvatar(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
   // Password Submit
@@ -549,38 +559,14 @@ export const SettingsManagementView: React.FC = () => {
             {/* Avatar Picker Modal Popup */}
             {showAvatarPicker && (
               <div className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 mt-4 text-left shadow-sm">
-                <p className="text-xs font-semibold text-blue-600">Select Preset Avatar:</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {presetAvatars.map((url, idx) => (
-                    <img
-                      key={idx}
-                      src={url}
-                      alt={`Avatar option ${idx + 1}`}
-                      onClick={() => handleSelectAvatar(url)}
-                      className="w-14 h-14 rounded-full object-cover cursor-pointer hover:scale-105 border-2 border-transparent hover:border-blue-500 transition-all"
-                    />
-                  ))}
-                </div>
-                <div className="pt-2">
-                  <label className="text-[11px] text-slate-500 block mb-1">
-                    Or enter Custom Image URL:
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={editAvatarUrl}
-                      onChange={e => setEditAvatarUrl(e.target.value)}
-                      placeholder="https://example.com/avatar.jpg"
-                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
-                    />
-                    <button
-                      onClick={() => handleSelectAvatar(editAvatarUrl)}
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-xs cursor-pointer hover:bg-blue-700"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
+                <label className="text-xs font-semibold text-blue-600 block">Upload Avatar (PNG/JPEG)</label>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onChange={handleAvatarUpload}
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-xs file:mr-3 file:border-0 file:bg-blue-600 file:px-3 file:py-1 file:text-white file:rounded-lg file:cursor-pointer"
+                />
+                <p className="text-[11px] text-slate-500">PNG or JPEG only, up to 5 MB.</p>
               </div>
             )}
           </div>
@@ -648,19 +634,6 @@ export const SettingsManagementView: React.FC = () => {
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-sm text-slate-500 cursor-not-allowed font-medium"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1.5">
-                  Avatar Image URL
-                </label>
-                <input
-                  type="text"
-                  value={editAvatarUrl}
-                  onChange={e => setEditAvatarUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 transition-all font-mono text-xs"
-                />
               </div>
 
               <div className="pt-4 flex justify-end">

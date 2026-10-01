@@ -1,19 +1,15 @@
 import { dbStore, AdmissionRecord, StudentRecord, DepartmentRecord, CourseRecord, NotificationRecord, RecentActivityRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { getMongoCollection } from '../config/mongo';
 
 export class DashboardService {
-  constructor() {
-    DashboardModel.seedDataIfEmpty();
-  }
-
-  public getStats() {
-    DashboardModel.seedDataIfEmpty();
-
-    const studentsList = Array.from(dbStore.students.values());
-    const admissionsList = Array.from(dbStore.admissions.values());
-    const deptsList = Array.from(dbStore.departments.values());
-    const coursesList = Array.from(dbStore.courses.values());
-    const facultyList = Array.from(dbStore.faculty.values());
+  public async getStats() {
+    const [studentsList, admissionsList, deptsList, coursesList, facultyList] = await Promise.all([
+      this.readCollection<StudentRecord>('students'),
+      this.readCollection<AdmissionRecord>('admissions'),
+      this.readCollection<DepartmentRecord>('departments'),
+      this.readCollection<CourseRecord>('courses'),
+      this.readCollection('faculty')
+    ]);
 
     const totalStudentsCount = studentsList.length;
     const activeStudentsCount = studentsList.filter(s => s.status === 'Active').length;
@@ -91,46 +87,59 @@ export class DashboardService {
     };
   }
 
-  public getChartData(timeframe: 'year' | 'semester' | 'month' = 'year') {
-    DashboardModel.seedDataIfEmpty();
+  public async getChartData(timeframe: 'year' | 'semester' | 'month' = 'year') {
+    const [students, admissions, depts, faculty, courses] = await Promise.all([
+      this.readCollection<StudentRecord>('students'),
+      this.readCollection<AdmissionRecord>('admissions'),
+      this.readCollection<DepartmentRecord>('departments'),
+      this.readCollection('faculty'),
+      this.readCollection<CourseRecord>('courses')
+    ]);
 
-    // Student Growth Data
-    const studentGrowth = [
-      { label: '2022', total: 1850, active: 1720, newAdmissions: 280 },
-      { label: '2023', total: 2120, active: 1980, newAdmissions: 310 },
-      { label: '2024', total: 2450, active: 2310, newAdmissions: 360 },
-      { label: '2025', total: 2680, active: 2520, newAdmissions: 320 },
-      { label: '2026', total: 2845, active: 2680, newAdmissions: 340 }
-    ];
+    const currentYear = new Date().getFullYear();
+    const years = timeframe === 'year' ? [currentYear - 4, currentYear - 3, currentYear - 2, currentYear - 1, currentYear] : [currentYear];
+    const studentGrowth = years.map(year => {
+      const yearStudents = students.filter(student => student.enrollmentYear === year);
+      const yearAdmissions = admissions.filter(admission => new Date(admission.appliedDate).getFullYear() === year);
+      return {
+        label: String(year),
+        total: students.filter(student => student.enrollmentYear <= year).length,
+        active: students.filter(student => student.enrollmentYear <= year && student.status === 'Active').length,
+        newAdmissions: yearAdmissions.length || yearStudents.length
+      };
+    });
 
-    // Department Wise Students Data
-    const depts = Array.from(dbStore.departments.values());
     const departmentWiseStudents = depts.map(d => ({
       name: d.code,
       fullName: d.name,
-      students: d.studentCount,
-      faculty: d.facultyCount,
-      courses: d.coursesCount
+      students: students.filter(student => student.department === d.name).length,
+      faculty: faculty.filter((member: any) => member.department === d.name).length,
+      courses: courses.filter(course => course.department === d.name).length
     }));
 
-    // Gender Ratio
-    const genderRatio = [
-      { name: 'Male', value: 1480, percentage: '52%' },
-      { name: 'Female', value: 1310, percentage: '46%' },
-      { name: 'Other', value: 55, percentage: '2%' }
-    ];
+    const genderCounts = students.reduce<Record<string, number>>((counts, student) => {
+      counts[student.gender] = (counts[student.gender] || 0) + 1;
+      return counts;
+    }, {});
+    const genderRatio = Object.entries(genderCounts).map(([name, value]) => ({
+      name,
+      value,
+      percentage: students.length ? `${Math.round((value / students.length) * 100)}%` : '0%'
+    }));
 
-    // Admission Trends (Monthly breakdown)
-    const admissionTrends = [
-      { month: 'Jan', applications: 120, accepted: 85, pending: 25, rejected: 10 },
-      { month: 'Feb', applications: 180, accepted: 130, pending: 35, rejected: 15 },
-      { month: 'Mar', applications: 240, accepted: 175, pending: 45, rejected: 20 },
-      { month: 'Apr', applications: 310, accepted: 220, pending: 65, rejected: 25 },
-      { month: 'May', applications: 450, accepted: 320, pending: 95, rejected: 35 },
-      { month: 'Jun', applications: 520, accepted: 380, pending: 105, rejected: 35 },
-      { month: 'Jul', applications: 380, accepted: 290, pending: 60, rejected: 30 },
-      { month: 'Aug', applications: 340, accepted: 280, pending: 48, rejected: 12 }
-    ];
+    const admissionTrends = Array.from({ length: 12 }, (_, monthIndex) => {
+      const monthlyAdmissions = admissions.filter(admission => {
+        const date = new Date(admission.appliedDate);
+        return date.getFullYear() === currentYear && date.getMonth() === monthIndex;
+      });
+      return {
+        month: new Date(currentYear, monthIndex, 1).toLocaleString('en-US', { month: 'short' }),
+        applications: monthlyAdmissions.length,
+        accepted: monthlyAdmissions.filter(admission => admission.status === 'Approved').length,
+        pending: monthlyAdmissions.filter(admission => admission.status === 'Pending').length,
+        rejected: monthlyAdmissions.filter(admission => admission.status === 'Rejected').length
+      };
+    });
 
     return {
       studentGrowth,
@@ -141,33 +150,33 @@ export class DashboardService {
     };
   }
 
-  public getRecentActivities(limit: number = 10) {
-    DashboardModel.seedDataIfEmpty();
-    return dbStore.activities.slice(0, limit);
+  public async getRecentActivities(limit: number = 10) {
+    const activities = await this.readCollection<RecentActivityRecord>('activities');
+    return activities.sort((a, b) => b.timestamp.localeCompare(a.timestamp)).slice(0, limit);
   }
 
-  public getNotifications() {
-    DashboardModel.seedDataIfEmpty();
-    const unreadCount = dbStore.notifications.filter(n => !n.read).length;
+  public async getNotifications() {
+    const notifications = await this.readCollection<NotificationRecord>('notifications');
+    const unreadCount = notifications.filter(n => !n.read).length;
     return {
-      notifications: dbStore.notifications,
+      notifications,
       unreadCount
     };
   }
 
-  public markNotificationRead(id: string) {
-    const notif = dbStore.notifications.find(n => n.id === id);
-    if (notif) {
-      notif.read = true;
-    }
+  public async markNotificationRead(id: string) {
+    await (await getMongoCollection<NotificationRecord>('notifications')).updateOne({ id }, { $set: { read: true } });
     return this.getNotifications();
   }
 
-  public markAllNotificationsRead() {
-    dbStore.notifications.forEach(n => {
-      n.read = true;
-    });
+  public async markAllNotificationsRead() {
+    await (await getMongoCollection<NotificationRecord>('notifications')).updateMany({ read: false }, { $set: { read: true } });
     return this.getNotifications();
+  }
+
+  private async readCollection<T extends object>(name: string): Promise<T[]> {
+    const collection = await getMongoCollection<T>(name);
+    return (await collection.find({}).toArray()) as T[];
   }
 
   public quickAddAdmission(data: { applicantName: string; email: string; department: string; gender: 'Male' | 'Female' | 'Other'; academicTerm: string }, user: any) {

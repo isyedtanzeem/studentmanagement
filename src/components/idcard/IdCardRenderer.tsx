@@ -134,29 +134,30 @@ export const IdCardRenderer: React.FC<IdCardRendererProps> = ({
         );
 
       case 'compact-badge':
+      case 'compact-badge-blue':
         return (
           <div
             className="w-[270px] h-[380px] rounded-2xl shadow-xl border border-slate-300 overflow-hidden relative flex flex-col justify-between text-slate-800 select-none bg-white font-sans"
             style={{ transform: scale !== 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left' }}
           >
             {/* Header Badge Strip */}
-            <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 text-white p-3 text-center relative">
-              <div className="w-10 h-10 mx-auto mb-1 bg-white p-1 rounded-xl shadow-md border border-emerald-400">
+            <div className={layout === 'compact-badge-blue' ? 'bg-gradient-to-r from-blue-800 via-blue-900 to-slate-900 text-white p-3 text-center relative' : 'bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 text-white p-3 text-center relative'}>
+              <div className={layout === 'compact-badge-blue' ? 'w-10 h-10 mx-auto mb-1 bg-white p-1 rounded-xl shadow-md border border-blue-400' : 'w-10 h-10 mx-auto mb-1 bg-white p-1 rounded-xl shadow-md border border-emerald-400'}>
                 <img src={branding.logoUrl} alt="Logo" className="w-full h-full object-contain" />
               </div>
               <h4 className="text-xs font-black tracking-wide uppercase">{branding.collegeName}</h4>
-              <p className="text-[8px] text-emerald-300 font-mono mt-0.5">{branding.tagline}</p>
+              <p className={layout === 'compact-badge-blue' ? 'text-[8px] text-blue-300 font-mono mt-0.5' : 'text-[8px] text-emerald-300 font-mono mt-0.5'}>{branding.tagline}</p>
             </div>
 
             {/* Photo & Details */}
             <div className="p-3 text-center flex-1 flex flex-col items-center justify-between bg-slate-50">
-              <div className="w-24 h-28 rounded-2xl border-2 border-emerald-600 p-0.5 bg-white shadow-md overflow-hidden relative">
+              <div className={layout === 'compact-badge-blue' ? 'w-24 h-28 rounded-2xl border-2 border-blue-600 p-0.5 bg-white shadow-md overflow-hidden relative' : 'w-24 h-28 rounded-2xl border-2 border-emerald-600 p-0.5 bg-white shadow-md overflow-hidden relative'}>
                 <img src={card.photoUrl} alt={card.studentName} className="w-full h-full object-cover rounded-xl" />
               </div>
 
               <div>
                 <h3 className="text-xs font-black text-slate-900 uppercase leading-tight line-clamp-1">{card.studentName}</h3>
-                <p className="text-[10px] font-mono font-bold text-emerald-700 mt-0.5">{card.studentRollNo}</p>
+                <p className={layout === 'compact-badge-blue' ? 'text-[10px] font-mono font-bold text-blue-700 mt-0.5' : 'text-[10px] font-mono font-bold text-emerald-700 mt-0.5'}>{card.studentRollNo}</p>
                 <p className="text-[9px] font-semibold text-slate-500 line-clamp-1">{card.department}</p>
               </div>
 

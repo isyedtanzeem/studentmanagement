@@ -240,7 +240,7 @@ export interface IdCardRecord {
   qrCodeData: string;
   barcodeValue: string;
   status: 'Active' | 'Revoked' | 'Expired' | 'Reissued';
-  layoutTemplate: 'portrait-modern' | 'portrait-classic' | 'landscape-modern' | 'compact-badge' | 'executive-chip';
+  layoutTemplate: 'portrait-modern' | 'portrait-classic' | 'landscape-modern' | 'compact-badge' | 'compact-badge-blue' | 'executive-chip';
   printCount: number;
   createdAt: string;
 }

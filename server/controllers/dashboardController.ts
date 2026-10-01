@@ -4,9 +4,9 @@ import { DashboardService } from '../services/dashboardService';
 const dashboardService = new DashboardService();
 
 export class DashboardController {
-  public static getStats(req: Request, res: Response): void {
+  public static async getStats(req: Request, res: Response): Promise<void> {
     try {
-      const stats = dashboardService.getStats();
+      const stats = await dashboardService.getStats();
       res.status(200).json({
         success: true,
         data: stats
@@ -20,10 +20,10 @@ export class DashboardController {
     }
   }
 
-  public static getChartData(req: Request, res: Response): void {
+  public static async getChartData(req: Request, res: Response): Promise<void> {
     try {
       const timeframe = (req.query.timeframe as 'year' | 'semester' | 'month') || 'year';
-      const chartData = dashboardService.getChartData(timeframe);
+      const chartData = await dashboardService.getChartData(timeframe);
       res.status(200).json({
         success: true,
         data: chartData
@@ -37,10 +37,10 @@ export class DashboardController {
     }
   }
 
-  public static getActivities(req: Request, res: Response): void {
+  public static async getActivities(req: Request, res: Response): Promise<void> {
     try {
       const limit = Number(req.query.limit) || 10;
-      const activities = dashboardService.getRecentActivities(limit);
+      const activities = await dashboardService.getRecentActivities(limit);
       res.status(200).json({
         success: true,
         data: activities
@@ -54,9 +54,9 @@ export class DashboardController {
     }
   }
 
-  public static getNotifications(req: Request, res: Response): void {
+  public static async getNotifications(req: Request, res: Response): Promise<void> {
     try {
-      const notifications = dashboardService.getNotifications();
+      const notifications = await dashboardService.getNotifications();
       res.status(200).json({
         success: true,
         data: notifications
@@ -70,10 +70,10 @@ export class DashboardController {
     }
   }
 
-  public static markNotificationRead(req: Request, res: Response): void {
+  public static async markNotificationRead(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const result = dashboardService.markNotificationRead(id);
+      const result = await dashboardService.markNotificationRead(id);
       res.status(200).json({
         success: true,
         message: 'Notification marked as read',
@@ -88,9 +88,9 @@ export class DashboardController {
     }
   }
 
-  public static markAllNotificationsRead(req: Request, res: Response): void {
+  public static async markAllNotificationsRead(req: Request, res: Response): Promise<void> {
     try {
-      const result = dashboardService.markAllNotificationsRead();
+      const result = await dashboardService.markAllNotificationsRead();
       res.status(200).json({
         success: true,
         message: 'All notifications marked as read',

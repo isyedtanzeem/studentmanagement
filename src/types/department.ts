@@ -21,6 +21,7 @@ export interface CreateDepartmentDto {
   code: string;
   name: string;
   headOfDepartment: string;
+  facultyId?: string;
   hodEmail?: string;
   hodPhone?: string;
   hodDesignation?: string;

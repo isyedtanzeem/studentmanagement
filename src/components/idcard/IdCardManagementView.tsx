@@ -343,11 +343,8 @@ export const IdCardManagementView: React.FC = () => {
                 className="bg-transparent text-xs font-medium text-slate-700 focus:outline-none"
               >
                 <option value="ALL">All Layout Styles</option>
-                <option value="portrait-modern">Portrait Modern</option>
-                <option value="portrait-classic">Portrait Classic</option>
-                <option value="landscape-modern">Landscape Modern</option>
                 <option value="compact-badge">Compact Badge</option>
-                <option value="executive-chip">Executive Gold</option>
+                <option value="compact-badge-blue">Compact Badge Blue</option>
               </select>
             </div>
 

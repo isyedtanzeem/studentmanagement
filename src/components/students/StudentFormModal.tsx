@@ -20,16 +20,6 @@ const DEPARTMENTS = [
   'Civil Engineering'
 ];
 
-const PRESET_AVATARS = [
-  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=250',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=250'
-];
-
 export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   isOpen,
   onClose,
@@ -46,7 +36,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
     status: 'Active',
     enrollmentYear: new Date().getFullYear(),
     gpa: 3.5,
-    photoUrl: PRESET_AVATARS[0],
+    photoUrl: '',
     dateOfBirth: '2004-01-01',
     address: '',
     guardianName: '',
@@ -55,17 +45,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [photoMode, setPhotoMode] = useState<'preset' | 'custom'>('preset');
-  const [customPhotoUrl, setCustomPhotoUrl] = useState('');
-
   useEffect(() => {
     if (initialData) {
       setFormData({
         ...initialData
       });
-      if (initialData.photoUrl) {
-        setCustomPhotoUrl(initialData.photoUrl);
-      }
     } else {
       setFormData({
         fullName: '',
@@ -76,7 +60,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         status: 'Active',
         enrollmentYear: new Date().getFullYear(),
         gpa: 3.5,
-        photoUrl: PRESET_AVATARS[0],
+        photoUrl: '',
         dateOfBirth: '2004-01-01',
         address: '',
         guardianName: '',
@@ -99,12 +83,16 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!['image/png', 'image/jpeg'].includes(file.type)) {
+        setError('Please upload a PNG or JPEG image.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be 5 MB or smaller.');
+        return;
+      }
       const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setCustomPhotoUrl(result);
-        setFormData(prev => ({ ...prev, photoUrl: result }));
-      };
+      reader.onloadend = () => setFormData(prev => ({ ...prev, photoUrl: reader.result as string }));
       reader.readAsDataURL(file);
     }
   };
@@ -168,47 +156,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             <label className="text-slate-800 font-semibold flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <Camera className="w-4 h-4 text-blue-600" />
-                Student Profile Photo
+                Student Profile Photo (PNG/JPEG)
               </span>
-              <div className="flex items-center gap-2 font-normal text-[11px]">
-                <button
-                  type="button"
-                  onClick={() => setPhotoMode('preset')}
-                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                    photoMode === 'preset' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200'
-                  }`}
-                >
-                  Presets
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPhotoMode('custom')}
-                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                    photoMode === 'custom' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200'
-                  }`}
-                >
-                  Custom Upload
-                </button>
-              </div>
             </label>
 
-            {photoMode === 'preset' ? (
-              <div className="flex items-center gap-3 overflow-x-auto py-1">
-                {PRESET_AVATARS.map((url, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, photoUrl: url }))}
-                    className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
-                      formData.photoUrl === url ? 'border-blue-600 scale-105 shadow-sm' : 'border-transparent opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={url} alt="preset avatar" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-xl border border-slate-300 overflow-hidden flex-shrink-0 bg-slate-100">
                   {formData.photoUrl ? (
                     <img src={formData.photoUrl} alt="preview" className="w-full h-full object-cover" />
@@ -218,13 +170,6 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 </div>
 
                 <div className="flex-1 space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Enter Image URL (e.g. https://...)"
-                    value={formData.photoUrl || ''}
-                    onChange={(e) => setFormData(prev => ({ ...prev, photoUrl: e.target.value }))}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500"
-                  />
                   <div className="relative">
                     <input
                       type="file"
@@ -243,7 +188,6 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   </div>
                 </div>
               </div>
-            )}
           </div>
 
           {/* Basic Personal Details */}

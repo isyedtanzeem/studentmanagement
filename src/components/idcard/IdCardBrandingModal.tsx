@@ -40,6 +40,28 @@ export const IdCardBrandingModal: React.FC<IdCardBrandingModalProps> = ({
     }
   };
 
+  const handleImageUpload = (
+    field: 'logoUrl' | 'principalSignatureUrl',
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/png', 'image/jpeg'].includes(file.type)) {
+      setError('Please upload a PNG or JPEG image.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be 5 MB or smaller.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => setForm(current => ({ ...current, [field]: reader.result as string }));
+    reader.readAsDataURL(file);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -123,7 +145,7 @@ export const IdCardBrandingModal: React.FC<IdCardBrandingModalProps> = ({
             </div>
           </div>
 
-          {/* Media URLs */}
+          {/* Image Assets */}
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 border-b pb-1">
               <ImageIcon className="w-3.5 h-3.5 text-indigo-500" />
@@ -132,24 +154,22 @@ export const IdCardBrandingModal: React.FC<IdCardBrandingModalProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">College Logo URL</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">College Logo (PNG/JPEG)</label>
                 <input
-                  type="url"
-                  value={form.logoUrl}
-                  onChange={e => setForm({ ...form, logoUrl: e.target.value })}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl font-mono"
-                  required
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onChange={e => handleImageUpload('logoUrl', e)}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl file:mr-3 file:border-0 file:bg-indigo-600 file:px-3 file:py-1 file:text-white file:rounded-lg file:cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Principal Signature URL</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Principal Signature (PNG/JPEG)</label>
                 <input
-                  type="url"
-                  value={form.principalSignatureUrl}
-                  onChange={e => setForm({ ...form, principalSignatureUrl: e.target.value })}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl font-mono"
-                  required
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onChange={e => handleImageUpload('principalSignatureUrl', e)}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl file:mr-3 file:border-0 file:bg-indigo-600 file:px-3 file:py-1 file:text-white file:rounded-lg file:cursor-pointer"
                 />
               </div>
             </div>

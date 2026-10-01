@@ -17,6 +17,7 @@ import settingsRoutes from './server/routes/settingsRoutes';
 import facultyRoutes from './server/routes/facultyRoutes';
 import { errorHandler } from './server/middlewares/errorMiddleware';
 import { UserModel } from './server/models/User';
+import { connectMongo } from './server/config/mongo';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ declare global {
 }
 
 async function startServer() {
+  await connectMongo();
   const app = express();
   const PORT = 3000;
 

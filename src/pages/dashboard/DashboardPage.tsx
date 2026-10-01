@@ -7,15 +7,13 @@ import {
   DashboardKPICards,
   DashboardChartsData,
   RecentActivity,
-  NotificationItem,
-  QuickActionType
+  NotificationItem
 } from '../../types/dashboard';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
 import { KPIStatsCards } from '../../components/dashboard/KPIStatsCards';
 import { ExecutiveDataSummary } from '../../components/dashboard/ExecutiveDataSummary';
 import { RecentActivitiesFeed } from '../../components/dashboard/RecentActivitiesFeed';
 import { NotificationsPanel } from '../../components/dashboard/NotificationsPanel';
-import { QuickActionsModal } from '../../components/dashboard/QuickActionsModal';
 import { SidebarNavigation, ModuleType } from '../../components/dashboard/SidebarNavigation';
 import { GlobalSearchModal } from '../../components/dashboard/GlobalSearchModal';
 import { StudentManagementView } from '../../components/students/StudentManagementView';
@@ -44,7 +42,6 @@ import {
   RefreshCw,
   Terminal,
   Layers,
-  Zap,
   Sparkles,
   Users,
   LayoutDashboard,
@@ -70,7 +67,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
   // Modals State
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  const [isQuickActionsOpen, setIsQuickActionsOpen] = useState(false);
 
   // Dashboard Data States
   const [stats, setStats] = useState<DashboardKPICards | null>(null);
@@ -150,16 +146,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
     }
   };
 
-  // Quick Action execution handler
-  const handleExecuteQuickAction = async (type: QuickActionType, payload: any) => {
-    await dashboardApi.executeQuickAction(type, payload);
-    // Refresh dashboard view to reflect updated stats and activities immediately
-    await loadDashboardData();
-    if (user?.role === 'Super Admin' || user?.role === 'Admin') {
-      fetchAuditLogs();
-    }
-  };
-
   // Fetch security audit logs for Admin / Super Admin
   const fetchAuditLogs = async () => {
     if (user?.role === 'Super Admin' || user?.role === 'Admin') {
@@ -188,14 +174,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
         onClose={() => setIsChangePasswordOpen(false)}
-      />
-
-      {/* Executive Quick Actions Modal */}
-      <QuickActionsModal
-        isOpen={isQuickActionsOpen}
-        onClose={() => setIsQuickActionsOpen(false)}
-        onExecute={handleExecuteQuickAction}
-        userRole={user?.role}
       />
 
       {/* Global Search Command Palette Modal */}
@@ -265,18 +243,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
           {/* User Quick Actions Toolbar */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Quick Action Button for privileged roles */}
-            {['Super Admin', 'Admin', 'Admission Officer', 'Faculty'].includes(user?.role || '') && (
-              <button
-                id="btn-quick-actions"
-                onClick={() => setIsQuickActionsOpen(true)}
-                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-xs font-semibold text-blue-700 transition-all flex items-center gap-1.5 font-mono shadow-xs"
-              >
-                <Zap className="w-3.5 h-3.5 text-blue-600" />
-                <span className="hidden md:inline">Quick Actions</span>
-              </button>
-            )}
-
             <button
               onClick={() => setIsChangePasswordOpen(true)}
               className="p-2 sm:px-3 sm:py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-zinc-300 transition-all flex items-center gap-2"

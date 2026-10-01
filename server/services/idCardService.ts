@@ -16,6 +16,18 @@ export class IdCardService {
   constructor() {
     DashboardModel.seedDataIfEmpty();
     this.seedInitialCardsIfEmpty();
+    this.migrateLegacyLayouts();
+  }
+
+  private migrateLegacyLayouts() {
+    for (const card of dbStore.idCards.values()) {
+      if (card.layoutTemplate === 'compact-badge' || card.layoutTemplate === 'compact-badge-blue') continue;
+
+      dbStore.idCards.set(card.id, {
+        ...card,
+        layoutTemplate: 'compact-badge'
+      });
+    }
   }
 
   public async seedInitialCardsIfEmpty() {
@@ -24,11 +36,8 @@ export class IdCardService {
     const students = Array.from(dbStore.students.values());
     const bloodGroups = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-'];
     const layouts: IdCardRecord['layoutTemplate'][] = [
-      'portrait-modern',
-      'portrait-classic',
-      'landscape-modern',
       'compact-badge',
-      'executive-chip'
+      'compact-badge-blue'
     ];
 
     for (let i = 0; i < Math.min(students.length, 12); i++) {
@@ -184,7 +193,7 @@ export class IdCardService {
     const validUntil = payload.validUntil || `30 JUN ${student.enrollmentYear + 4}`;
     const bloodGroup = payload.bloodGroup || 'O+';
     const emergencyPhone = payload.emergencyPhone || student.guardianPhone || '+91 98765 43210';
-    const layoutTemplate = payload.layoutTemplate || 'portrait-modern';
+    const layoutTemplate = payload.layoutTemplate || 'compact-badge';
     const photoUrl = payload.photoUrl || student.photoUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(student.fullName)}`;
 
     const qrContent = JSON.stringify({

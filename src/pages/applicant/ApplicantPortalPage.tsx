@@ -41,6 +41,7 @@ const SAMPLE_PHONES = [
   { label: 'Sample Applicant 2', phone: '+91 98765 22002' },
   { label: 'Sample Approved', phone: '+91 98765 33003' }
 ];
+const MOBILE_NUMBER_REGEX = /^(?:\+?91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}$/;
 
 export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBackToStaffLogin }) => {
   // Navigation / Login state
@@ -187,6 +188,10 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     const targetPhone = phoneOverride || mobileNumber;
     if (!targetPhone.trim()) {
       setError('Please enter a valid mobile number.');
+      return;
+    }
+    if (!MOBILE_NUMBER_REGEX.test(targetPhone.trim())) {
+      setError('Enter a valid 10-digit Indian mobile number.');
       return;
     }
 
@@ -363,6 +368,8 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       value={mobileNumber}
                       onChange={(e) => setMobileNumber(e.target.value)}
                       placeholder="98765 00000"
+                      pattern={MOBILE_NUMBER_REGEX.source}
+                      title="Enter a valid 10-digit Indian mobile number."
                       className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm font-mono placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       required
                     />

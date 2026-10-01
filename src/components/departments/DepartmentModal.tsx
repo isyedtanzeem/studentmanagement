@@ -52,6 +52,7 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       fetchFacultyOptions();
+      setSelectedFacultyId('custom');
       if (departmentToEdit) {
         setFormData({
           name: departmentToEdit.name || '',
@@ -112,9 +113,15 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
       }
 
       if (isEditMode && departmentToEdit) {
-        await departmentApi.updateDepartment(departmentToEdit.id, formData);
+        await departmentApi.updateDepartment(departmentToEdit.id, {
+          ...formData,
+          facultyId: selectedFacultyId !== 'custom' ? selectedFacultyId : undefined
+        });
       } else {
-        await departmentApi.createDepartment(formData);
+        await departmentApi.createDepartment({
+          ...formData,
+          facultyId: selectedFacultyId !== 'custom' ? selectedFacultyId : undefined
+        });
       }
 
       onSuccess();
