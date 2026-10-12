@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   PieChart,
   Pie,
   Cell,
@@ -14,7 +12,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { TrendingUp, PieChart as PieIcon, BarChart2, Layers } from 'lucide-react';
+import { TrendingUp, PieChart as PieIcon } from 'lucide-react';
 import { DashboardChartsData } from '../../types/dashboard';
 
 interface AnalyticsChartsProps {
@@ -24,7 +22,15 @@ interface AnalyticsChartsProps {
   loading?: boolean;
 }
 
-const GENDER_COLORS = ['#3b82f6', '#ec4899', '#a855f7'];
+// 2015 Flat Design 2.0 Color Palette
+const FLAT_PALETTE = [
+  '#00B5AD', // Vibrant Flat Teal
+  '#2ECC71', // Vibrant Emerald Green
+  '#3498DB', // Flat Dodger Blue
+  '#E67E22', // Flat Orange
+  '#9B59B6', // Flat Purple
+  '#E74C3C'  // Flat Red
+];
 
 export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
   data,
@@ -32,262 +38,259 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
   onTimeframeChange,
   loading
 }) => {
-  const [activeTab, setActiveTab] = useState<'growth' | 'departments' | 'gender' | 'admissions'>('growth');
+  const [activeDonutView, setActiveDonutView] = useState<'departments' | 'gender'>('departments');
 
   if (loading) {
     return (
-      <div className="h-96 rounded-xl bg-white/5 border border-white/10 animate-pulse p-6" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 h-96 bg-white border border-[#E4E7EB] rounded-[4px] p-5 shadow-[0_2px_4px_rgba(0,0,0,0.06)] animate-pulse" />
+        <div className="lg:col-span-1 h-96 bg-white border border-[#E4E7EB] rounded-[4px] p-5 shadow-[0_2px_4px_rgba(0,0,0,0.06)] animate-pulse" />
+      </div>
     );
   }
 
+  // Format donut data
+  const donutData =
+    activeDonutView === 'departments'
+      ? data.departmentWiseStudents.map((dept, idx) => ({
+          name: dept.name,
+          fullName: dept.fullName,
+          value: dept.students,
+          color: FLAT_PALETTE[idx % FLAT_PALETTE.length]
+        }))
+      : data.genderRatio.map((g, idx) => ({
+          name: g.name,
+          fullName: `${g.name} Ratio`,
+          value: g.value,
+          color: FLAT_PALETTE[idx % FLAT_PALETTE.length]
+        }));
+
+  const totalDonutValue = donutData.reduce((acc, curr) => acc + curr.value, 0);
+
   return (
-    <div className="space-y-4">
-      {/* Chart Navigation Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <button
-            id="tab-growth"
-            onClick={() => setActiveTab('growth')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
-              activeTab === 'growth'
-                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
-            Student Growth
-          </button>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 font-roboto">
+      {/* 1. Left Card: Vibrant Flat Teal and Emerald Green Line Chart (Spans 2 columns) */}
+      <div className="lg:col-span-2 bg-white border border-[#E4E7EB] rounded-[4px] p-5 shadow-[0_2px_4px_rgba(0,0,0,0.06)] flex flex-col justify-between">
+        {/* Card Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#ECEFF1]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[4px] bg-[#00B5AD] flex items-center justify-center text-white shadow-xs">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-[#263238] tracking-tight uppercase">
+                Student Enrollment & Retention Trajectory
+              </h3>
+              <p className="text-[11px] text-[#78909C]">
+                Comparative metrics in vibrant flat teal & emerald green
+              </p>
+            </div>
+          </div>
 
-          <button
-            id="tab-departments"
-            onClick={() => setActiveTab('departments')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
-              activeTab === 'departments'
-                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <BarChart2 className="w-3.5 h-3.5 text-blue-600" />
-            Dept Wise Students
-          </button>
-
-          <button
-            id="tab-gender"
-            onClick={() => setActiveTab('gender')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
-              activeTab === 'gender'
-                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <PieIcon className="w-3.5 h-3.5 text-blue-600" />
-            Gender Ratio
-          </button>
-
-          <button
-            id="tab-admissions"
-            onClick={() => setActiveTab('admissions')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium font-mono transition-all whitespace-nowrap ${
-              activeTab === 'admissions'
-                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5 text-blue-600" />
-            Admission Trends
-          </button>
-        </div>
-
-        {/* Timeframe Filter Buttons */}
-        <div className="flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-lg p-1 self-end sm:self-auto">
-          {(['year', 'semester', 'month'] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => onTimeframeChange(t)}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-all capitalize ${
-                timeframe === t
-                  ? 'bg-white text-blue-700 font-semibold shadow-2xs border border-slate-200'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Chart Container */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs relative overflow-hidden">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 font-sans flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-              {activeTab === 'growth' && 'Student Enrollment & Active Growth Trajectory'}
-              {activeTab === 'departments' && 'Department-Wise Student Distribution & Capacity'}
-              {activeTab === 'gender' && 'Institutional Diversity & Gender Balance Ratio'}
-              {activeTab === 'admissions' && 'Monthly Admission Application vs Acceptance Trends'}
-            </h3>
-            <p className="text-xs text-slate-500 font-mono mt-0.5">
-              Verified SIMS institutional metrics database
-            </p>
+          {/* Timeframe Selector (Flat 2.0 Buttons with 4px corners) */}
+          <div className="flex items-center gap-1 bg-[#F4F6F9] border border-[#E4E7EB] rounded-[4px] p-1 self-start sm:self-auto">
+            {(['year', 'semester', 'month'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => onTimeframeChange(t)}
+                className={`px-3 py-1 rounded-[4px] text-xs font-medium transition-colors capitalize ${
+                  timeframe === t
+                    ? 'bg-[#00B5AD] text-white shadow-xs font-bold'
+                    : 'text-[#546E7A] hover:text-[#263238] hover:bg-white'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="h-80 w-full pt-2">
-          {/* 1. Student Growth Area Chart */}
-          {activeTab === 'growth' && (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data.studentGrowth} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#d4af37" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#d4af37" stopOpacity={0.0} />
-                  </linearGradient>
-                  <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.5} />
-                <XAxis dataKey="label" stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <YAxis stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#18181b',
-                    borderColor: '#3f3f46',
-                    borderRadius: '8px',
-                    color: '#f4f4f5',
-                    fontSize: '12px',
-                    fontFamily: 'sans-serif'
-                  }}
-                />
-                <Legend wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
-                <Area
-                  type="monotone"
-                  dataKey="total"
-                  name="Total Enrolled"
-                  stroke="#d4af37"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorTotal)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="active"
-                  name="Active Students"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorActive)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
+        {/* Line Chart Area */}
+        <div className="h-72 w-full pt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={data.studentGrowth}
+              margin={{ top: 10, right: 20, left: -10, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#ECEFF1" vertical={false} />
+              <XAxis
+                dataKey="label"
+                stroke="#78909C"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#CFD8DC' }}
+                fontFamily="Roboto, sans-serif"
+              />
+              <YAxis
+                stroke="#78909C"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#CFD8DC' }}
+                fontFamily="Roboto, sans-serif"
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#263238',
+                  border: 'none',
+                  borderRadius: '4px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.15)',
+                  color: '#FFFFFF',
+                  fontSize: '12px',
+                  fontFamily: 'Roboto, sans-serif',
+                  padding: '8px 12px'
+                }}
+                itemStyle={{ color: '#ECEFF1' }}
+              />
+              <Legend
+                wrapperStyle={{
+                  fontSize: '12px',
+                  fontFamily: 'Roboto, sans-serif',
+                  paddingTop: '8px'
+                }}
+              />
+              {/* Vibrant Flat Teal Line */}
+              <Line
+                type="monotone"
+                dataKey="total"
+                name="Total Enrolled"
+                stroke="#00B5AD"
+                strokeWidth={3}
+                dot={{ r: 4, fill: '#00B5AD', strokeWidth: 2, stroke: '#FFFFFF' }}
+                activeDot={{ r: 6, fill: '#00B5AD', stroke: '#FFFFFF', strokeWidth: 2 }}
+              />
+              {/* Vibrant Emerald Green Line */}
+              <Line
+                type="monotone"
+                dataKey="active"
+                name="Active Students"
+                stroke="#2ECC71"
+                strokeWidth={3}
+                dot={{ r: 4, fill: '#2ECC71', strokeWidth: 2, stroke: '#FFFFFF' }}
+                activeDot={{ r: 6, fill: '#2ECC71', stroke: '#FFFFFF', strokeWidth: 2 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-          {/* 2. Department Wise Bar Chart */}
-          {activeTab === 'departments' && (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.departmentWiseStudents} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.5} />
-                <XAxis dataKey="name" stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <YAxis stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#18181b',
-                    borderColor: '#3f3f46',
-                    borderRadius: '8px',
-                    color: '#f4f4f5',
-                    fontSize: '12px'
-                  }}
-                />
-                <Legend wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
-                <Bar dataKey="students" name="Students Count" fill="#d4af37" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="faculty" name="Faculty Members" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
+        {/* Card Footer Legend / Summary */}
+        <div className="mt-2 pt-3 border-t border-[#ECEFF1] flex items-center justify-between text-xs text-[#546E7A]">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-[2px] bg-[#00B5AD]" />
+              <strong className="text-[#263238]">Flat Teal:</strong> Total Registrations
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-[2px] bg-[#2ECC71]" />
+              <strong className="text-[#263238]">Emerald Green:</strong> Active Attendance
+            </span>
+          </div>
+          <span className="text-[11px] text-[#78909C] font-mono">
+            {timeframe.toUpperCase()} VIEW
+          </span>
+        </div>
+      </div>
 
-          {/* 3. Gender Ratio Donut Pie Chart */}
-          {activeTab === 'gender' && (
-            <div className="flex flex-col md:flex-row items-center justify-center h-full gap-6">
-              <div className="w-full md:w-1/2 h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={data.genderRatio}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={85}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {data.genderRatio.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={GENDER_COLORS[index % GENDER_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#18181b',
-                        borderColor: '#3f3f46',
-                        borderRadius: '8px',
-                        color: '#f4f4f5',
-                        fontSize: '12px'
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Legend Summary Cards */}
-              <div className="w-full md:w-1/2 space-y-2">
-                {data.genderRatio.map((item, idx) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center justify-between p-3 rounded-lg border border-white/5 bg-white/[0.02]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: GENDER_COLORS[idx % GENDER_COLORS.length] }}
-                      />
-                      <span className="text-xs font-medium text-zinc-200">{item.name}</span>
-                    </div>
-                    <div className="flex items-center gap-3 font-mono text-xs">
-                      <span className="text-zinc-400">{item.value.toLocaleString()}</span>
-                      <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-semibold border border-amber-500/20">
-                        {item.percentage}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+      {/* 2. Right Card: Circular Donut Graph (Spans 1 column) */}
+      <div className="lg:col-span-1 bg-white border border-[#E4E7EB] rounded-[4px] p-5 shadow-[0_2px_4px_rgba(0,0,0,0.06)] flex flex-col justify-between">
+        {/* Card Header */}
+        <div className="flex items-center justify-between pb-3 border-b border-[#ECEFF1]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[4px] bg-[#2ECC71] flex items-center justify-center text-white shadow-xs">
+              <PieIcon className="w-4 h-4" />
             </div>
-          )}
+            <div>
+              <h3 className="text-sm font-bold text-[#263238] tracking-tight uppercase">
+                {activeDonutView === 'departments' ? 'Department Ratio' : 'Gender Diversity'}
+              </h3>
+              <p className="text-[11px] text-[#78909C]">
+                Distribution by academic wings
+              </p>
+            </div>
+          </div>
 
-          {/* 4. Admission Trends Bar Chart */}
-          {activeTab === 'admissions' && (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.admissionTrends} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.5} />
-                <XAxis dataKey="month" stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <YAxis stroke="#a1a1aa" fontSize={11} fontFamily="monospace" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#18181b',
-                    borderColor: '#3f3f46',
-                    borderRadius: '8px',
-                    color: '#f4f4f5',
-                    fontSize: '12px'
-                  }}
-                />
-                <Legend wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
-                <Bar dataKey="applications" name="Total Applications" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="accepted" name="Approved Admissions" fill="#10b981" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="pending" name="Pending Review" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
+          {/* Toggle between Department / Diversity */}
+          <button
+            onClick={() =>
+              setActiveDonutView(activeDonutView === 'departments' ? 'gender' : 'departments')
+            }
+            className="text-[11px] px-2 py-0.5 rounded-[4px] bg-[#F4F6F9] hover:bg-[#E4E7EB] text-[#546E7A] border border-[#E4E7EB] transition-colors"
+          >
+            {activeDonutView === 'departments' ? 'By Gender' : 'By Dept'}
+          </button>
+        </div>
+
+        {/* Circular Donut Graph */}
+        <div className="relative h-48 w-full my-2 flex items-center justify-center">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={donutData}
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={80}
+                paddingAngle={3}
+                dataKey="value"
+              >
+                {donutData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={2} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#263238',
+                  border: 'none',
+                  borderRadius: '4px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.15)',
+                  color: '#FFFFFF',
+                  fontSize: '12px',
+                  fontFamily: 'Roboto, sans-serif'
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+
+          {/* Center Donut Label */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span className="text-[10px] font-bold text-[#78909C] uppercase tracking-wider">
+              Total
+            </span>
+            <span className="text-xl font-bold text-[#263238] tabular-nums font-roboto">
+              {totalDonutValue.toLocaleString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Donut Breakdown Legend Table */}
+        <div className="mt-1 space-y-1.5 max-h-32 overflow-y-auto custom-scrollbar pr-1">
+          {donutData.map((item) => {
+            const pct =
+              totalDonutValue > 0
+                ? ((item.value / totalDonutValue) * 100).toFixed(1)
+                : '0';
+
+            return (
+              <div
+                key={item.name}
+                className="flex items-center justify-between text-xs py-1 border-b border-[#F4F6F9]"
+              >
+                <div className="flex items-center gap-2 min-w-0 pr-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-[2px] shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-[#263238] font-medium truncate" title={item.fullName}>
+                    {item.name}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 font-mono text-[11px] shrink-0">
+                  <span className="text-[#78909C] tabular-nums">{item.value}</span>
+                  <span className="font-bold text-[#263238] tabular-nums">{pct}%</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

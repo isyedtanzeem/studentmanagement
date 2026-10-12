@@ -1,73 +1,58 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   SCHOLARCORE UNIFIED WHITE & BLUE THEME SYSTEM
+   SCHOLARCORE 2015 FLAT DESIGN 2.0 & MATERIAL DESIGN SYSTEM
    ========================================================================== */
 
 :root {
-  --app-bg: #f8fafc;
+  --app-bg: #F4F6F9;
   --surface-bg: #ffffff;
-  --surface-hover: #f1f5f9;
-  --header-bg: #ffffff;
-  --border-subtle: #e2e8f0;
-  --border-hover: #93c5fd;
-  --text-main: #0f172a;       /* Dark slate font for headings */
-  --text-sub: #1e293b;        /* Readable dark font for body text */
-  --text-muted: #64748b;      /* Slate font for captions and subtext */
-  --brand-accent: #2563eb;    /* Royal Blue 600 */
-  --brand-accent-subtle: #1d4ed8; /* Blue 700 */
-  --brand-bg: #eff6ff;        /* Soft Blue 50 tint */
-  --brand-border: #93c5fd;    /* Blue 300 border */
-  --card-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  --sidebar-bg: #222D32;
+  --sidebar-hover: #1E282C;
+  --sidebar-active: #1A2226;
+  --border-card: #E4E7EB;
+  --text-main: #263238;
+  --text-muted: #546E7A;
+  --teal-accent: #00B5AD;
+  --emerald-accent: #2ECC71;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 @layer base {
   body {
-    background-color: #f8fafc;
-    color: #1e293b;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #F4F6F9;
+    color: #263238;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
   }
 }
 
-.serif-font {
-  font-family: 'Georgia', 'Playfair Display', serif;
+.font-roboto {
+  font-family: 'Roboto', sans-serif;
 }
 
-.border-glass {
-  border: 1px solid #e2e8f0;
+.card-flat-2015 {
+  background-color: #ffffff;
+  border: 1px solid #E4E7EB;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.bg-card-dark {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.06);
-}
-
-.text-gold {
-  color: #2563eb;
-}
-
-.accent-line {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #2563eb, transparent);
-}
-
-/* Custom scrollbar in White & Blue */
+/* Custom scrollbar in 2015 Flat Dark Charcoal */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: #1A2226;
 }
 ::-webkit-scrollbar-thumb {
-  background: #93c5fd;
+  background: #37474F;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: #00B5AD;
 }
 

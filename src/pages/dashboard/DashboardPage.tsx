@@ -11,6 +11,7 @@ import {
 } from '../../types/dashboard';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
 import { KPIStatsCards } from '../../components/dashboard/KPIStatsCards';
+import { AnalyticsCharts } from '../../components/dashboard/AnalyticsCharts';
 import { ExecutiveDataSummary } from '../../components/dashboard/ExecutiveDataSummary';
 import { RecentActivitiesFeed } from '../../components/dashboard/RecentActivitiesFeed';
 import { NotificationsPanel } from '../../components/dashboard/NotificationsPanel';
@@ -29,25 +30,13 @@ import { NotificationManagementView } from '../../components/notifications/Notif
 import { SettingsManagementView } from '../../components/settings/SettingsManagementView';
 
 import {
-  ShieldCheck,
-  CreditCard,
-  TrendingUp,
-  FileText,
   LogOut,
   KeyRound,
   UserCheck,
   Building2,
-  BookOpen,
   Clock,
   RefreshCw,
   Terminal,
-  Layers,
-  Sparkles,
-  Users,
-  LayoutDashboard,
-  GraduationCap,
-  Bell,
-  Settings,
   Search,
   Menu
 } from 'lucide-react';
@@ -187,7 +176,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   }, [user?.role, accessToken]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex font-sans selection:bg-blue-100 selection:text-blue-700">
+    <div className="min-h-screen bg-[#F4F6F9] text-[#263238] flex font-roboto selection:bg-[#00B5AD]/20 selection:text-[#00B5AD]">
       {/* Change Password Modal */}
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
@@ -204,7 +193,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         }}
       />
 
-      {/* Collapsible Desktop Sidebar & Mobile Drawer Navigation */}
+      {/* Left-side Navigation Bar in Deep Charcoal Slate Gray */}
       <SidebarNavigation
         activeModule={activeModule}
         onSelectModule={setActiveModule}
@@ -216,27 +205,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      {/* Main App Container */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-slate-50">
-        {/* Navigation Header */}
-        <header className="h-16 border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 shadow-xs">
+      {/* Main Content Area in Light Cool Gray Background (#F4F6F9) */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-[#F4F6F9]">
+        {/* Navigation Header (Google Material Design & 2015 Flat 2.0) */}
+        <header className="h-14 border-b border-[#E4E7EB] bg-white sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <div className="flex items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="md:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg bg-slate-100 border border-slate-200"
+              className="md:hidden p-1.5 text-[#546E7A] hover:text-[#263238] rounded-[4px] bg-[#F4F6F9] border border-[#E4E7EB]"
               title="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* University Portal Title */}
+            {/* University Portal Title & Breadcrumbs */}
             <div className="hidden sm:block">
-              <div className="flex items-center gap-2">
-                <h1 className="text-base font-semibold tracking-tight serif-font text-slate-900">
-                  ScholarCore <span className="text-blue-700 italic font-light">SIMS</span>
-                </h1>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 font-mono font-semibold">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-bold text-[#263238] tracking-tight">
+                  ScholarCore SIMS
+                </span>
+                <span className="text-[#90A4AE]">/</span>
+                <span className="text-[#546E7A] font-medium capitalize">
+                  {activeModule === 'executive' ? 'Executive Overview' : activeModule}
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-[4px] bg-[#ECEFF1] text-[#455A64] border border-[#CFD8DC] font-mono font-bold ml-1">
                   {user?.role}
                 </span>
               </div>
@@ -247,14 +240,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <div className="flex-1 max-w-md mx-4">
             <button
               onClick={() => setIsGlobalSearchOpen(true)}
-              className="w-full bg-slate-100 hover:bg-slate-200/70 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs text-slate-600 flex items-center justify-between transition-all group shadow-xs"
+              className="w-full bg-[#F4F6F9] hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[4px] px-3 py-1.5 text-xs text-[#546E7A] flex items-center justify-between transition-colors shadow-2xs"
             >
               <div className="flex items-center gap-2">
-                <Search className="w-3.5 h-3.5 text-blue-600 group-hover:scale-110 transition-transform" />
-                <span className="truncate">Search students, courses, applications...</span>
+                <Search className="w-3.5 h-3.5 text-[#00B5AD]" />
+                <span className="truncate">Quick search students, courses, applications...</span>
               </div>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px] text-slate-500 font-mono shadow-2xs">
-                ⌘K / Ctrl+K
+              <kbd className="hidden sm:inline-block px-1.5 py-0.2 rounded-[2px] bg-white border border-[#CFD8DC] text-[10px] text-[#78909C] font-mono">
+                ⌘K
               </kbd>
             </button>
           </div>
@@ -263,16 +256,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setIsChangePasswordOpen(true)}
-              className="p-2 sm:px-3 sm:py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-zinc-300 transition-all flex items-center gap-2"
+              className="px-3 py-1.5 bg-white hover:bg-[#F4F6F9] border border-[#CFD8DC] rounded-[4px] text-xs text-[#546E7A] hover:text-[#263238] transition-colors flex items-center gap-1.5"
               title="Change Password"
             >
-              <KeyRound className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <KeyRound className="w-3.5 h-3.5 text-[#F39C12]" />
               <span className="hidden lg:inline">Password</span>
             </button>
 
             <button
               onClick={logout}
-              className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded-lg text-xs text-rose-400 transition-all flex items-center gap-1.5 font-medium"
+              className="px-3 py-1.5 bg-[#FDEDEC] hover:bg-[#FADBD8] border border-[#F5B7B1] rounded-[4px] text-xs text-[#C0392B] transition-colors flex items-center gap-1.5 font-medium"
               title="Sign Out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -281,191 +274,194 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           </div>
         </header>
 
-        <div className="accent-line w-full" />
-
         {/* Main Workspace Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-        {activeModule === 'admissions' ? (
-          <AdmissionManagementView />
-        ) : activeModule === 'students' ? (
-          <StudentManagementView />
-        ) : activeModule === 'faculty' ? (
-          <FacultyManagementView />
-        ) : activeModule === 'departments' ? (
-          <DepartmentManagementView />
-        ) : activeModule === 'courses' ? (
-          <CourseManagementView />
-        ) : activeModule === 'idcards' ? (
-          <IdCardManagementView />
-        ) : activeModule === 'promotion' ? (
-          <PromotionManagementView />
-        ) : activeModule === 'alumni' ? (
-          <AlumniManagementView />
-        ) : activeModule === 'reports' ? (
-          <ReportsManagementView />
-        ) : activeModule === 'notifications' ? (
-          <NotificationManagementView />
-        ) : activeModule === 'settings' ? (
-          <SettingsManagementView />
-        ) : (
-          <>
-            {/* User Hero Banner */}
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-xs relative overflow-hidden">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="relative">
-                <img
-                  src={
-                    user?.avatarUrl ||
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'
-                  }
-                  alt={user?.fullName}
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-blue-200 shadow-sm"
-                />
-                <span
-                  className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"
-                  title="Active Session"
-                />
-              </div>
+        <main className="flex-1 p-4 sm:p-6 lg:p-6 space-y-5 max-w-[1600px] mx-auto w-full">
+          {activeModule === 'admissions' ? (
+            <AdmissionManagementView />
+          ) : activeModule === 'students' ? (
+            <StudentManagementView />
+          ) : activeModule === 'faculty' ? (
+            <FacultyManagementView />
+          ) : activeModule === 'departments' ? (
+            <DepartmentManagementView />
+          ) : activeModule === 'courses' ? (
+            <CourseManagementView />
+          ) : activeModule === 'idcards' ? (
+            <IdCardManagementView />
+          ) : activeModule === 'promotion' ? (
+            <PromotionManagementView />
+          ) : activeModule === 'alumni' ? (
+            <AlumniManagementView />
+          ) : activeModule === 'reports' ? (
+            <ReportsManagementView />
+          ) : activeModule === 'notifications' ? (
+            <NotificationManagementView />
+          ) : activeModule === 'settings' ? (
+            <SettingsManagementView />
+          ) : (
+            <>
+              {/* Executive Welcome Bar (2015 Flat Design 2.0 Card) */}
+              <div className="bg-white border border-[#E4E7EB] p-4 sm:p-5 rounded-[4px] shadow-[0_2px_4px_rgba(0,0,0,0.06)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  {/* Clean Flat Avatar with 4px rounded corners */}
+                  <div className="w-12 h-12 rounded-[4px] bg-[#00B5AD] text-white flex items-center justify-center font-bold text-lg shadow-xs shrink-0">
+                    {user?.fullName?.charAt(0) || 'U'}
+                  </div>
 
-              <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-semibold text-slate-900 serif-font">{user?.fullName}</h2>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
-                    {user?.status}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mt-1 font-mono">{user?.email}</p>
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 mt-2">
-                  <span className="flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
-                    {user?.department || 'Academic Affairs Board'}
-                  </span>
-                  {(user?.employeeId || user?.studentId) && (
-                    <span className="flex items-center gap-1.5 font-mono">
-                      <UserCheck className="w-3.5 h-3.5 text-blue-600" />
-                      ID: {user?.employeeId || user?.studentId}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    Auth Sync: {user?.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Just now'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 self-end md:self-auto">
-              <button
-                onClick={loadDashboardData}
-                disabled={loading}
-                className="px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:text-blue-700 hover:border-blue-300 text-xs font-mono transition-all flex items-center gap-2 shadow-2xs"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-600' : ''}`} />
-                <span>Sync Metrics</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-mono">
-            {error}
-          </div>
-        )}
-
-        {/* 1. Dashboard KPI Cards Module */}
-        {stats && <KPIStatsCards cards={stats} loading={loading} />}
-
-        {/* 2. Executive Minimal Data Summary (No Graphs) */}
-        <ExecutiveDataSummary onNavigateToModule={(mod) => setActiveModule(mod as ModuleType)} />
-
-        {/* 3. Grid Row: Recent Activities & Notifications */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <RecentActivitiesFeed
-            activities={activities}
-            loading={loading}
-            onRefresh={loadDashboardData}
-          />
-
-          <NotificationsPanel
-            notifications={notifications}
-            unreadCount={unreadNotifCount}
-            onMarkRead={handleMarkNotifRead}
-            onMarkAllRead={handleMarkAllNotifsRead}
-            loading={loading}
-          />
-        </div>
-
-        {/* 4. Security Audit Stream (Admins) */}
-        {(user?.role === 'Super Admin' || user?.role === 'Admin') && (
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-2">
-                <Terminal className="w-5 h-5 text-blue-600" />
-                <h3 className="text-base font-semibold text-slate-900 serif-font">
-                  System Audit Stream & Security Ledger
-                </h3>
-              </div>
-
-              <button
-                onClick={fetchAuditLogs}
-                disabled={logsLoading}
-                className="px-3 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs text-slate-700 transition-all flex items-center gap-1.5 font-mono shadow-2xs"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-blue-600 ${logsLoading ? 'animate-spin' : ''}`} />
-                <span>Refresh Audit Stream</span>
-              </button>
-            </div>
-
-            <div className="font-mono text-xs overflow-x-auto">
-              {auditLogs.length === 0 ? (
-                <p className="text-slate-400 py-4 text-center">
-                  No audit logs recorded in current runtime session.
-                </p>
-              ) : (
-                <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] border-b border-slate-200">
-                    <tr>
-                      <th className="p-2.5">Timestamp</th>
-                      <th className="p-2.5">User / Role</th>
-                      <th className="p-2.5">Action Event</th>
-                      <th className="p-2.5">IP Address</th>
-                      <th className="p-2.5">Details</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700 text-[11px]">
-                    {auditLogs.map((log) => (
-                      <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="p-2.5 text-slate-500">{new Date(log.timestamp).toLocaleTimeString()}</td>
-                        <td className="p-2.5">
-                          <span className="text-slate-900 font-medium">{log.userEmail}</span>
-                          <span className="text-slate-500 text-[10px] block">{log.userRole}</span>
-                        </td>
-                        <td className="p-2.5">
-                          <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-semibold">
-                            {log.action}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-bold text-[#263238] font-roboto tracking-tight">
+                        {user?.fullName}
+                      </h2>
+                      <span className="text-[11px] px-2 py-0.5 rounded-[4px] bg-[#E8F8F5] text-[#27AE60] border border-[#A3E4D7] font-bold">
+                        {user?.status || 'Active'}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#546E7A] mt-1 font-roboto">
+                      <span className="font-mono text-[#78909C]">{user?.email}</span>
+                      <span aria-hidden="true" className="text-[#CFD8DC]">·</span>
+                      <span className="flex items-center gap-1">
+                        <Building2 className="w-3.5 h-3.5 text-[#00B5AD]" />
+                        {user?.department || 'Academic Affairs Board'}
+                      </span>
+                      {(user?.employeeId || user?.studentId) && (
+                        <>
+                          <span aria-hidden="true" className="text-[#CFD8DC]">·</span>
+                          <span className="flex items-center gap-1 font-mono">
+                            <UserCheck className="w-3.5 h-3.5 text-[#3498DB]" />
+                            ID: {user?.employeeId || user?.studentId}
                           </span>
-                        </td>
-                        <td className="p-2.5 text-slate-500">{log.ipAddress}</td>
-                        <td className="p-2.5 text-slate-500">{log.details}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
-        )}
-        </>
-        )}
-      </main>
+                        </>
+                      )}
+                      <span aria-hidden="true" className="text-[#CFD8DC]">·</span>
+                      <span className="flex items-center gap-1 text-[#78909C]">
+                        <Clock className="w-3.5 h-3.5" />
+                        Sync: {user?.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Current session'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-      {/* Footer */}
-      <footer className="h-10 border-t border-slate-200 px-8 bg-white flex items-center justify-between text-[10px] text-slate-500 font-mono shadow-2xs">
-        <div>ScholarCore SIMS • Executive Dashboard Module</div>
-        <div>Real-time Analytics Engine Active</div>
-      </footer>
+                <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
+                  <button
+                    onClick={loadDashboardData}
+                    disabled={loading}
+                    className="px-3.5 py-1.5 rounded-[4px] border border-[#CFD8DC] bg-[#F4F6F9] hover:bg-[#ECEFF1] text-[#263238] text-xs font-medium transition-colors flex items-center gap-2 shadow-2xs"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#00B5AD] ${loading ? 'animate-spin' : ''}`} />
+                    <span>Sync Metrics</span>
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-[4px] bg-[#FDEDEC] border border-[#F5B7B1] text-[#C0392B] text-xs font-mono">
+                  {error}
+                </div>
+              )}
+
+              {/* 1. TOP ROW: Three KPI Metric Blocks with Large Bold Typography Numbers */}
+              {stats && <KPIStatsCards cards={stats} loading={loading} />}
+
+              {/* 2. CENTER AREA: Vibrant Flat Teal and Emerald Green Line Chart + Circular Donut Graph */}
+              {chartsData && (
+                <AnalyticsCharts
+                  data={chartsData}
+                  timeframe={timeframe}
+                  onTimeframeChange={handleTimeframeChange}
+                  loading={loading}
+                />
+              )}
+
+              {/* 3. BOTTOM AREA: Crisp White Rectangular Data Cards */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <RecentActivitiesFeed
+                  activities={activities}
+                  loading={loading}
+                  onRefresh={loadDashboardData}
+                />
+
+                <NotificationsPanel
+                  notifications={notifications}
+                  unreadCount={unreadNotifCount}
+                  onMarkRead={handleMarkNotifRead}
+                  onMarkAllRead={handleMarkAllNotifsRead}
+                  loading={loading}
+                />
+              </div>
+
+              {/* Department Overview Strip */}
+              <ExecutiveDataSummary onNavigateToModule={(mod) => setActiveModule(mod as ModuleType)} />
+
+              {/* 4. Security Audit Stream (Admins) */}
+              {(user?.role === 'Super Admin' || user?.role === 'Admin') && (
+                <div className="bg-white border border-[#E4E7EB] p-5 rounded-[4px] shadow-[0_2px_4px_rgba(0,0,0,0.06)] space-y-3 font-roboto">
+                  <div className="flex items-center justify-between border-b border-[#ECEFF1] pb-3">
+                    <div className="flex items-center gap-2">
+                      <Terminal className="w-4 h-4 text-[#00B5AD]" />
+                      <h3 className="text-sm font-bold text-[#263238] uppercase tracking-tight">
+                        System Audit Stream & Security Ledger
+                      </h3>
+                    </div>
+
+                    <button
+                      onClick={fetchAuditLogs}
+                      disabled={logsLoading}
+                      className="px-2.5 py-1 bg-[#F4F6F9] hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[4px] text-xs text-[#546E7A] transition-colors flex items-center gap-1.5 font-mono shadow-2xs"
+                    >
+                      <RefreshCw className={`w-3 h-3 text-[#00B5AD] ${logsLoading ? 'animate-spin' : ''}`} />
+                      <span>Refresh</span>
+                    </button>
+                  </div>
+
+                  <div className="font-mono text-xs overflow-x-auto">
+                    {auditLogs.length === 0 ? (
+                      <p className="text-[#90A4AE] py-4 text-center">
+                        No audit logs recorded in current runtime session.
+                      </p>
+                    ) : (
+                      <table className="w-full text-left">
+                        <thead className="bg-[#F4F6F9] text-[#546E7A] uppercase text-[10px] border-b border-[#E4E7EB]">
+                          <tr>
+                            <th className="p-2.5 font-bold">Timestamp</th>
+                            <th className="p-2.5 font-bold">User / Role</th>
+                            <th className="p-2.5 font-bold">Action Event</th>
+                            <th className="p-2.5 font-bold">IP Address</th>
+                            <th className="p-2.5 font-bold">Details</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#ECEFF1] text-[#263238] text-[11px]">
+                          {auditLogs.map((log) => (
+                            <tr key={log.id} className="hover:bg-[#F4F6F9] transition-colors">
+                              <td className="p-2.5 text-[#78909C]">{new Date(log.timestamp).toLocaleTimeString()}</td>
+                              <td className="p-2.5">
+                                <span className="text-[#263238] font-bold">{log.userEmail}</span>
+                                <span className="text-[#78909C] text-[10px] block">{log.userRole}</span>
+                              </td>
+                              <td className="p-2.5">
+                                <span className="px-1.5 py-0.5 rounded-[2px] bg-[#E8F8F5] text-[#27AE60] border border-[#A3E4D7] text-[10px] font-bold">
+                                  {log.action}
+                                </span>
+                              </td>
+                              <td className="p-2.5 text-[#78909C]">{log.ipAddress}</td>
+                              <td className="p-2.5 text-[#546E7A]">{log.details}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </main>
+
+        {/* 2015 Flat Footer */}
+        <footer className="h-10 border-t border-[#E4E7EB] px-6 bg-white flex items-center justify-between text-[11px] text-[#78909C] font-roboto shadow-2xs">
+          <div>ScholarCore SIMS • Flat 2.0 & Material Design Dashboard</div>
+          <div className="font-mono text-[10px]">Real-time Academic Analytics Engine</div>
+        </footer>
       </div>
     </div>
   );
