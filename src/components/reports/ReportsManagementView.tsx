@@ -42,6 +42,7 @@ import {
   AlumniReportData,
 } from '../../types/report';
 import { reportApi } from '../../api/reportApi';
+import { SynopsisReaderView } from './SynopsisReaderView';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#14b8a6'];
 
@@ -733,7 +734,7 @@ export const ReportsManagementView: React.FC = () => {
                           cx="50%"
                           cy="50%"
                           outerRadius={80}
-                          label={entry => `${entry.year}: ${entry.count}`}
+                          label={(entry: any) => `${entry.year || entry.name}: ${entry.count || entry.value}`}
                         >
                           {studentReport.byAcademicYear.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -1064,118 +1065,10 @@ export const ReportsManagementView: React.FC = () => {
 
           {/* SYNOPSIS TAB VIEW */}
           {reportType === 'synopsis' && (
-            <div className="space-y-6">
-              {/* Hero Banner with Download Trigger */}
-              <div className="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
-                <div className="relative z-10 max-w-3xl space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wider uppercase">
-                    <Award className="w-3.5 h-3.5" />
-                    <span>Official Project Documentation & Technical Synopsis</span>
-                  </div>
-
-                  <h2 className="text-3xl font-black tracking-tight text-white">
-                    ScholarCore SIMS — Project Synopsis (DOCX)
-                  </h2>
-
-                  <p className="text-slate-300 text-sm leading-relaxed">
-                    A comprehensive, publication-ready project synopsis document formatted in Microsoft Word (.docx) format. Encompasses Executive Abstract, Problem Statement, System Objectives, Multi-Tier Architecture, 11 Detailed Functional Modules, TypeScript Data Schemas, RBAC Security Protocols, Hardware/Software Environment Specifications, and Future Scope.
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-4 pt-2">
-                    <button
-                      onClick={handleDownloadSynopsisDocx}
-                      disabled={downloadingDocx}
-                      className="px-6 py-3.5 bg-blue-500 hover:bg-blue-400 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-lg hover:scale-105 flex items-center gap-2 cursor-pointer"
-                    >
-                      <Download className="w-5 h-5" />
-                      <span>{downloadingDocx ? 'Generating DOCX...' : 'Download Complete Synopsis (.docx)'}</span>
-                    </button>
-
-                    <div className="text-xs text-slate-400 font-mono flex items-center gap-2">
-                      <span>• File Size: ~19 KB</span>
-                      <span>• Format: Office Open XML (.docx)</span>
-                      <span>• Ver: 2.4</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Decorative background visual */}
-                <div className="absolute right-4 bottom-4 opacity-10 pointer-events-none">
-                  <FileText className="w-72 h-72 text-white" />
-                </div>
-              </div>
-
-              {/* Synopsis Outline Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm">
-                    01
-                  </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Executive Abstract & Problem Scope</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    Explores institutional data fragmentation, multi-semester evaluation bottlenecks, unrecorded attendance changes, and manual billing reconciliation.
-                  </p>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm">
-                    02
-                  </div>
-                  <h4 className="font-bold text-slate-900 text-sm">11 Functional Modules Specification</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    Details Student Management, 8-Semester Results (SGPA/CGPA), Fee Billing Ledgers, Attendance Engine with Audit Trail, Admissions, Faculty, ID Card Studio, and Promotions.
-                  </p>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
-                  <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-sm">
-                    03
-                  </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Architecture & Data Schemas</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    Documents React 19 + TypeScript + Express.js multi-tier architecture, JWT role-based access control, schema structures, and future AI enhancements.
-                  </p>
-                </div>
-              </div>
-
-              {/* Synopsis Table of Contents Preview */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-base">Synopsis Table of Contents & Structure</h3>
-                    <p className="text-xs text-slate-500">As formatted inside the generated Word (.docx) document</p>
-                  </div>
-
-                  <button
-                    onClick={handleDownloadSynopsisDocx}
-                    className="px-3.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download .DOCX</span>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
-                    <div className="font-bold text-blue-900 font-sans">Section 1 to 5: Core Conceptual Framework</div>
-                    <div className="text-slate-700">1. Executive Summary & Abstract</div>
-                    <div className="text-slate-700">2. Problem Statement & Institutional Motivation</div>
-                    <div className="text-slate-700">3. Project Objectives & Key Technical Goals</div>
-                    <div className="text-slate-700">4. System Architecture (Frontend & Backend Tiers)</div>
-                    <div className="text-slate-700">5. 11 Detailed Functional Modules Specification</div>
-                  </div>
-
-                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
-                    <div className="font-bold text-indigo-900 font-sans">Section 6 to 10: Technical Specifications</div>
-                    <div className="text-slate-700">6. Data Modeling & TypeScript Entity Schemas</div>
-                    <div className="text-slate-700">7. Security, RBAC & Immutable Audit Trails</div>
-                    <div className="text-slate-700">8. Hardware, Software & Deployment Specs</div>
-                    <div className="text-slate-700">9. Future Scope & Predictive AI Capabilities</div>
-                    <div className="text-slate-700">10. Conclusion & Formal Verification Signoff</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SynopsisReaderView
+              onDownloadDocx={handleDownloadSynopsisDocx}
+              isDownloading={downloadingDocx}
+            />
           )}
         </>
       )}

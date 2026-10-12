@@ -256,4 +256,16 @@ export class AdmissionController {
       next(error);
     }
   }
+
+  public static async publicGetAcademicOptions(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const options = AdmissionService.getAcademicOptions();
+      res.status(200).json({
+        success: true,
+        data: options
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

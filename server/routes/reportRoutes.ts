@@ -1,7 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { ReportService } from '../services/reportService';
+import { protect } from '../middlewares/authMiddleware';
+import { authorizeRoles } from '../middlewares/roleMiddleware';
 
 const router = Router();
+
+// Protect all report routes and restrict to Super Admin and Admin
+router.use(protect as any);
+router.use(authorizeRoles('Super Admin', 'Admin') as any);
 
 // GET /api/v1/reports/student
 router.get('/student', (req: Request, res: Response) => {

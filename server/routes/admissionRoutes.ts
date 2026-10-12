@@ -5,6 +5,7 @@ import { protect } from '../middlewares/authMiddleware';
 const router = Router();
 
 // Public unauthenticated routes for applicant admission portal
+router.get('/public/academic-options', AdmissionController.publicGetAcademicOptions);
 router.post('/public/lookup', AdmissionController.publicLookupByPhone);
 router.post('/public/apply', AdmissionController.publicCreateApplication);
 

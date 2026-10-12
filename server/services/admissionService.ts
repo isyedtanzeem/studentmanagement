@@ -50,7 +50,11 @@ export class AdmissionService {
   }
 
   public static generateAdmissionRollNumber(departmentName: string, year: number = 2026): string {
-    const code = this.deptCodeMap[departmentName] || 'GEN';
+    DashboardModel.seedDataIfEmpty();
+    const dept = Array.from(dbStore.departments.values()).find(
+      (d) => d.name.toLowerCase() === departmentName.toLowerCase() || d.code.toLowerCase() === departmentName.toLowerCase()
+    );
+    const code = dept?.code || this.deptCodeMap[departmentName] || 'GEN';
     
     // Find highest index among existing students and admissions
     let count = 1000;
@@ -73,6 +77,39 @@ export class AdmissionService {
     });
 
     return `${year}${code}${count + 1}`;
+  }
+
+  public static getAcademicOptions() {
+    DashboardModel.seedDataIfEmpty();
+    const depts = Array.from(dbStore.departments.values());
+    const courses = Array.from(dbStore.courses.values());
+
+    const departments = depts.map(d => d.name);
+    const departmentDegrees: Record<string, string[]> = {};
+
+    depts.forEach(d => {
+      const deptCourses = courses.filter(c => c.department.toLowerCase() === d.name.toLowerCase());
+      const degreeSet = new Set<string>();
+      deptCourses.forEach(c => {
+        if (c.degreeProgram) degreeSet.add(c.degreeProgram);
+      });
+
+      if (degreeSet.size > 0) {
+        departmentDegrees[d.name] = Array.from(degreeSet);
+      } else {
+        // Fallback default degrees if no courses registered yet
+        departmentDegrees[d.name] = [
+          `B.Tech (${d.name})`,
+          `M.Tech (${d.name})`,
+          `Diploma in ${d.name}`
+        ];
+      }
+    });
+
+    return {
+      departments,
+      departmentDegrees
+    };
   }
 
   public static getAllApplications(params: AdmissionQueryParams) {

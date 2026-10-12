@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { SettingsController } from '../controllers/settingsController';
 import { protect } from '../middlewares/authMiddleware';
+import { authorizeRoles } from '../middlewares/roleMiddleware';
 
 const router = Router();
 
@@ -16,19 +17,19 @@ router.put('/change-password', SettingsController.changePassword);
 router.get('/preferences', SettingsController.getPreferences);
 router.put('/preferences', SettingsController.updatePreferences);
 
-// Organization Settings
+// Organization Settings (Restricted to Super Admin & Admin)
 router.get('/org-settings', SettingsController.getOrgSettings);
-router.put('/org-settings', SettingsController.updateOrgSettings);
+router.put('/org-settings', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.updateOrgSettings);
 
-// User Management
-router.get('/users', SettingsController.getUsers);
-router.post('/users', SettingsController.createUser);
-router.put('/users/:userId/status', SettingsController.updateUserStatus);
-router.put('/users/:userId/role', SettingsController.updateUserRole);
-router.post('/users/:userId/reset-password', SettingsController.adminResetPassword);
+// User Management (Restricted to Super Admin & Admin)
+router.get('/users', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.getUsers);
+router.post('/users', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.createUser);
+router.put('/users/:userId/status', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.updateUserStatus);
+router.put('/users/:userId/role', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.updateUserRole);
+router.post('/users/:userId/reset-password', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.adminResetPassword);
 
-// Role Permissions
-router.get('/role-permissions', SettingsController.getRolePermissions);
-router.put('/role-permissions/:roleName', SettingsController.updateRolePermissions);
+// Role Permissions (Restricted to Super Admin & Admin)
+router.get('/role-permissions', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.getRolePermissions);
+router.put('/role-permissions/:roleName', authorizeRoles('Super Admin', 'Admin') as any, SettingsController.updateRolePermissions);
 
 export default router;

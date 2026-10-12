@@ -1,7 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { PromotionService } from '../services/promotionService';
+import { protect } from '../middlewares/authMiddleware';
+import { authorizeRoles } from '../middlewares/roleMiddleware';
 
 const router = Router();
+
+// Apply authentication and restrict promotion operations to Super Admin & Admin
+router.use(protect as any);
+router.use(authorizeRoles('Super Admin', 'Admin') as any);
 
 // GET /api/v1/promotions/students - Get students eligible for promotion with validation status
 router.get('/students', (req: Request, res: Response) => {

@@ -1,8 +1,14 @@
 import { dbStore, AdmissionRecord, StudentRecord, DepartmentRecord, CourseRecord, NotificationRecord, RecentActivityRecord } from '../config/db';
-import { getMongoCollection } from '../config/mongo';
+import { getMongoCollection, isMongoConnected } from '../config/mongo';
+import { DashboardModel } from '../models/Dashboard';
 
 export class DashboardService {
+  constructor() {
+    DashboardModel.seedDataIfEmpty();
+  }
+
   public async getStats() {
+    DashboardModel.seedDataIfEmpty();
     const [studentsList, admissionsList, deptsList, coursesList, facultyList] = await Promise.all([
       this.readCollection<StudentRecord>('students'),
       this.readCollection<AdmissionRecord>('admissions'),
@@ -88,6 +94,7 @@ export class DashboardService {
   }
 
   public async getChartData(timeframe: 'year' | 'semester' | 'month' = 'year') {
+    DashboardModel.seedDataIfEmpty();
     const [students, admissions, depts, faculty, courses] = await Promise.all([
       this.readCollection<StudentRecord>('students'),
       this.readCollection<AdmissionRecord>('admissions'),
@@ -151,11 +158,13 @@ export class DashboardService {
   }
 
   public async getRecentActivities(limit: number = 10) {
+    DashboardModel.seedDataIfEmpty();
     const activities = await this.readCollection<RecentActivityRecord>('activities');
     return activities.sort((a, b) => b.timestamp.localeCompare(a.timestamp)).slice(0, limit);
   }
 
   public async getNotifications() {
+    DashboardModel.seedDataIfEmpty();
     const notifications = await this.readCollection<NotificationRecord>('notifications');
     const unreadCount = notifications.filter(n => !n.read).length;
     return {
@@ -165,18 +174,75 @@ export class DashboardService {
   }
 
   public async markNotificationRead(id: string) {
-    await (await getMongoCollection<NotificationRecord>('notifications')).updateOne({ id }, { $set: { read: true } });
+    const notif = dbStore.notifications.find(n => n.id === id);
+    if (notif) notif.read = true;
+
+    if (isMongoConnected()) {
+      try {
+        const col = await getMongoCollection<NotificationRecord>('notifications');
+        if (col) {
+          await col.updateOne({ id }, { $set: { read: true } });
+        }
+      } catch (err) {
+        console.warn('[DashboardService] Error updating notification in MongoDB:', err);
+      }
+    }
     return this.getNotifications();
   }
 
   public async markAllNotificationsRead() {
-    await (await getMongoCollection<NotificationRecord>('notifications')).updateMany({ read: false }, { $set: { read: true } });
+    dbStore.notifications.forEach(n => { n.read = true; });
+
+    if (isMongoConnected()) {
+      try {
+        const col = await getMongoCollection<NotificationRecord>('notifications');
+        if (col) {
+          await col.updateMany({ read: false }, { $set: { read: true } });
+        }
+      } catch (err) {
+        console.warn('[DashboardService] Error updating all notifications in MongoDB:', err);
+      }
+    }
     return this.getNotifications();
   }
 
   private async readCollection<T extends object>(name: string): Promise<T[]> {
-    const collection = await getMongoCollection<T>(name);
-    return (await collection.find({}).toArray()) as T[];
+    if (isMongoConnected()) {
+      try {
+        const collection = await getMongoCollection<T>(name);
+        if (collection) {
+          const docs = (await collection.find({}).toArray()) as T[];
+          if (docs.length > 0) {
+            return docs;
+          }
+        }
+      } catch (err) {
+        console.warn(`[DashboardService] Error reading collection ${name} from MongoDB:`, err);
+      }
+    }
+
+    switch (name) {
+      case 'students':
+        return Array.from(dbStore.students.values()) as unknown as T[];
+      case 'admissions':
+        return Array.from(dbStore.admissions.values()) as unknown as T[];
+      case 'departments':
+        return Array.from(dbStore.departments.values()) as unknown as T[];
+      case 'courses':
+        return Array.from(dbStore.courses.values()) as unknown as T[];
+      case 'faculty':
+        return Array.from(dbStore.faculty.values()) as unknown as T[];
+      case 'activities':
+        return dbStore.activities as unknown as T[];
+      case 'notifications':
+        return dbStore.notifications as unknown as T[];
+      case 'alumni':
+        return Array.from(dbStore.alumni.values()) as unknown as T[];
+      case 'idCards':
+        return Array.from(dbStore.idCards.values()) as unknown as T[];
+      default:
+        return [];
+    }
   }
 
   public quickAddAdmission(data: { applicantName: string; email: string; department: string; gender: 'Male' | 'Female' | 'Other'; academicTerm: string }, user: any) {

@@ -60,6 +60,24 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   // Active Workspace Module state
   const [activeModule, setActiveModule] = useState<ModuleType>('executive');
 
+  // Enforce RBAC guard on activeModule
+  const isOfficer = user?.role === 'Admission Officer';
+  useEffect(() => {
+    const adminModules: ModuleType[] = [
+      'faculty',
+      'departments',
+      'courses',
+      'idcards',
+      'promotion',
+      'alumni',
+      'reports',
+      'settings'
+    ];
+    if (isOfficer && adminModules.includes(activeModule)) {
+      setActiveModule('admissions');
+    }
+  }, [isOfficer, activeModule]);
+
   // Sidebar & Navigation States
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
@@ -360,7 +378,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         {stats && <KPIStatsCards cards={stats} loading={loading} />}
 
         {/* 2. Executive Minimal Data Summary (No Graphs) */}
-        <ExecutiveDataSummary onNavigateToModule={setActiveModule} />
+        <ExecutiveDataSummary onNavigateToModule={(mod) => setActiveModule(mod as ModuleType)} />
 
         {/* 3. Grid Row: Recent Activities & Notifications */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

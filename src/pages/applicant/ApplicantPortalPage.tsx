@@ -58,6 +58,9 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccessApp, setSubmitSuccessApp] = useState<AdmissionApplication | null>(null);
 
+  const [departmentsList, setDepartmentsList] = useState<string[]>(DEPARTMENTS);
+  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>(DEPARTMENT_DEGREES);
+
   // Application Form state
   const [formData, setFormData] = useState<CreateAdmissionInput>({
     applicantName: '',
@@ -71,7 +74,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     state: INDIAN_STATES[0],
     address: '',
     department: DEPARTMENTS[0],
-    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]][0],
+    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]]?.[0] || 'B.Tech',
     academicTerm: '2026-2027 Session',
     classXPercentage: 88.5,
     classXIIPercentage: 89.2,
@@ -79,11 +82,32 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     attachments: []
   });
 
+  // Load dynamic department & degree options from database
+  React.useEffect(() => {
+    admissionApi.getAcademicOptions()
+      .then(res => {
+        if (res.success && res.data) {
+          if (res.data.departments && res.data.departments.length > 0) {
+            setDepartmentsList(res.data.departments);
+            setDeptDegreesMap(res.data.departmentDegrees);
+            setFormData(prev => ({
+              ...prev,
+              department: res.data.departments.includes(prev.department) ? prev.department : res.data.departments[0],
+              degree: res.data.departmentDegrees[prev.department]?.[0] || res.data.departmentDegrees[res.data.departments[0]]?.[0] || prev.degree
+            }));
+          }
+        }
+      })
+      .catch(err => {
+        console.warn('Could not load dynamic academic options, using standard defaults:', err);
+      });
+  }, []);
+
   const [customDocTitle, setCustomDocTitle] = useState('');
 
   // Handle department change & auto sync degree
   const handleDepartmentChange = (newDept: string) => {
-    const availableDegrees = DEPARTMENT_DEGREES[newDept] || ['B.Tech'];
+    const availableDegrees = deptDegreesMap[newDept] || DEPARTMENT_DEGREES[newDept] || ['B.Tech'];
     setFormData((prev) => ({
       ...prev,
       department: newDept,
@@ -705,7 +729,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                           required
                         >
-                          {DEPARTMENTS.map((dept) => (
+                          {departmentsList.map((dept) => (
                             <option key={dept} value={dept}>
                               {dept}
                             </option>
@@ -722,7 +746,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                         >
-                          {(DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
+                          {(deptDegreesMap[formData.department] || DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
                             <option key={deg} value={deg}>
                               {deg}
                             </option>

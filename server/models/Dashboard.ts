@@ -2,13 +2,13 @@ import { dbStore, StudentRecord, AdmissionRecord, DepartmentRecord, CourseRecord
 
 export class DashboardModel {
   public static seedDataIfEmpty(): void {
-    // Seed Departments if empty
+    // Seed Departments if empty or fix mismatched names
     if (dbStore.departments.size === 0) {
       const depts: DepartmentRecord[] = [
         {
           id: 'dept-1',
           code: 'CSE',
-          name: 'BCA',
+          name: 'Computer Science & Engineering',
           headOfDepartment: 'Prof. Ramesh Kulkarni',
           hodEmail: 'ramesh.kulkarni@scholarcore.edu.in',
           hodPhone: '+91 98765 11001',
@@ -25,7 +25,7 @@ export class DashboardModel {
         {
           id: 'dept-2',
           code: 'ECE',
-          name: 'BBA',
+          name: 'Electronics & Communication',
           headOfDepartment: 'Dr. Sunita Deshmukh',
           hodEmail: 'sunita.deshmukh@scholarcore.edu.in',
           hodPhone: '+91 98765 22002',
@@ -42,7 +42,7 @@ export class DashboardModel {
         {
           id: 'dept-3',
           code: 'EEE',
-          name: 'B.COM',
+          name: 'Electrical & Electronics',
           headOfDepartment: 'Dr. K. Sivan',
           hodEmail: 'k.sivan@scholarcore.edu.in',
           hodPhone: '+91 98765 33003',
@@ -59,7 +59,7 @@ export class DashboardModel {
         {
           id: 'dept-4',
           code: 'ME',
-          name: 'B.SC',
+          name: 'Mechanical Engineering',
           headOfDepartment: 'Prof. S. N. Bose Chair',
           hodEmail: 'me.hod@scholarcore.edu.in',
           hodPhone: '+91 98765 44004',
@@ -106,9 +106,58 @@ export class DashboardModel {
           status: 'Active',
           description: 'Nurturing innovative business leaders with emphasis on FinTech, Strategic Analytics, and Global Supply Chains.',
           createdAt: new Date('2020-08-15').toISOString()
+        },
+        {
+          id: 'dept-7',
+          code: 'CE',
+          name: 'Civil Engineering',
+          headOfDepartment: 'Dr. M. Visvesvaraya Chair',
+          hodEmail: 'ce.hod@scholarcore.edu.in',
+          hodPhone: '+91 98765 77007',
+          hodDesignation: 'Professor & HOD',
+          studentCount: 490,
+          facultyCount: 26,
+          coursesCount: 18,
+          establishedYear: 1986,
+          buildingLocation: 'Smeaton Structural Labs, Block F',
+          status: 'Active',
+          description: 'Advanced studies in Structural Analysis, Earthquake Engineering, Smart City Transportation, and Geotechnical Design.',
+          createdAt: new Date('2020-04-18').toISOString()
         }
       ];
       depts.forEach(d => dbStore.departments.set(d.id, d));
+    } else {
+      // Correct any mismatched legacy placeholder department names in existing runtime memory
+      const nameFixMap: Record<string, string> = {
+        'BCA': 'Computer Science & Engineering',
+        'BBA': 'Electronics & Communication',
+        'B.COM': 'Electrical & Electronics',
+        'B.SC': 'Mechanical Engineering'
+      };
+      dbStore.departments.forEach((dept) => {
+        if (nameFixMap[dept.name]) {
+          dept.name = nameFixMap[dept.name];
+        }
+      });
+      if (!Array.from(dbStore.departments.values()).some(d => d.code === 'CE')) {
+        dbStore.departments.set('dept-7', {
+          id: 'dept-7',
+          code: 'CE',
+          name: 'Civil Engineering',
+          headOfDepartment: 'Dr. M. Visvesvaraya Chair',
+          hodEmail: 'ce.hod@scholarcore.edu.in',
+          hodPhone: '+91 98765 77007',
+          hodDesignation: 'Professor & HOD',
+          studentCount: 490,
+          facultyCount: 26,
+          coursesCount: 18,
+          establishedYear: 1986,
+          buildingLocation: 'Smeaton Structural Labs, Block F',
+          status: 'Active',
+          description: 'Advanced studies in Structural Analysis, Earthquake Engineering, Smart City Transportation, and Geotechnical Design.',
+          createdAt: new Date('2020-04-18').toISOString()
+        });
+      }
     }
 
     // Seed Courses if empty

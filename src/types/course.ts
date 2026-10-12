@@ -16,6 +16,8 @@ export interface Course {
   instructorName?: string;
   maxCapacity?: number;
   enrolledStudents: number;
+  enrolledStudentsCount?: number;
+  enrolledStudentsList?: any[];
   createdAt?: string;
   updatedAt?: string;
 }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { StudentController } from '../controllers/studentController';
 import { protect } from '../middlewares/authMiddleware';
+import { authorizeRoles } from '../middlewares/roleMiddleware';
 
 const router = Router();
 
@@ -15,12 +16,12 @@ router.get('/my-portal', StudentController.getMyPortalData);
 router.get('/', StudentController.getStudents);
 router.post('/', StudentController.createStudent);
 
-// Bulk Import
-router.post('/bulk-import', StudentController.bulkImport);
+// Bulk Import (Restricted to Super Admin & Admin)
+router.post('/bulk-import', authorizeRoles('Super Admin', 'Admin') as any, StudentController.bulkImport);
 
 // ID specific routes
 router.get('/:id', StudentController.getStudentById);
-router.put('/:id', StudentController.updateStudent);
-router.delete('/:id', StudentController.deleteStudent);
+router.put('/:id', authorizeRoles('Super Admin', 'Admin') as any, StudentController.updateStudent);
+router.delete('/:id', authorizeRoles('Super Admin', 'Admin') as any, StudentController.deleteStudent);
 
 export default router;

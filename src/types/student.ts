@@ -31,7 +31,7 @@ export interface SemesterRecord {
   creditsEarned: number;
   attendancePercentage: number;
   backlogsCount: number;
-  status: 'Passed' | 'Promoted' | 'In Progress' | 'Withheld' | 'Backlog';
+  status: 'Passed' | 'Promoted' | 'In Progress' | 'Withheld' | 'Backlog' | 'Pending';
   remarks?: string;
   updatedAt?: string;
   courses?: CourseGradeItem[];

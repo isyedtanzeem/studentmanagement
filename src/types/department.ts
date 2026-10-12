@@ -9,6 +9,8 @@ export interface Department {
   studentCount: number;
   facultyCount: number;
   coursesCount: number;
+  coursesList?: any[];
+  facultyList?: any[];
   establishedYear?: number;
   buildingLocation?: string;
   status: 'Active' | 'Inactive';

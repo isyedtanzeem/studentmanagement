@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, User, Mail, Phone, GraduationCap, Award, FileText, CheckCircle2, AlertCircle, Building2, MapPin, Upload, Plus, Trash2, Paperclip } from 'lucide-react';
 import { admissionApi } from '../../api/admissionApi';
@@ -20,6 +20,9 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [departmentsList, setDepartmentsList] = useState<string[]>(DEPARTMENTS);
+  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>(DEPARTMENT_DEGREES);
+
   const [formData, setFormData] = useState<CreateAdmissionInput>({
     applicantName: '',
     email: '',
@@ -32,7 +35,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
     state: INDIAN_STATES[0],
     address: '',
     department: DEPARTMENTS[0],
-    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]][0],
+    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]]?.[0] || 'B.Tech',
     academicTerm: '2026-2027 Session',
     classXPercentage: 90.0,
     classXIIPercentage: 88.5,
@@ -40,12 +43,35 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
     attachments: []
   });
 
+  // Fetch dynamic departments and degrees from backend database
+  useEffect(() => {
+    if (isOpen) {
+      admissionApi.getAcademicOptions()
+        .then(res => {
+          if (res.success && res.data) {
+            if (res.data.departments && res.data.departments.length > 0) {
+              setDepartmentsList(res.data.departments);
+              setDeptDegreesMap(res.data.departmentDegrees);
+              setFormData(prev => ({
+                ...prev,
+                department: res.data.departments.includes(prev.department) ? prev.department : res.data.departments[0],
+                degree: res.data.departmentDegrees[prev.department]?.[0] || res.data.departmentDegrees[res.data.departments[0]]?.[0] || prev.degree
+              }));
+            }
+          }
+        })
+        .catch(err => {
+          console.warn('Failed to fetch dynamic academic options, using default options:', err);
+        });
+    }
+  }, [isOpen]);
+
   const [customDocTitle, setCustomDocTitle] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === 'department') {
-      const availableDegrees = DEPARTMENT_DEGREES[value] || ['B.Tech'];
+      const availableDegrees = deptDegreesMap[value] || DEPARTMENT_DEGREES[value] || ['B.Tech'];
       setFormData((prev) => ({
         ...prev,
         department: value,
@@ -412,7 +438,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         onChange={handleChange}
                         className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                       >
-                        {DEPARTMENTS.map((dept) => (
+                        {departmentsList.map((dept) => (
                           <option key={dept} value={dept}>{dept}</option>
                         ))}
                       </select>
@@ -427,7 +453,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       onChange={handleChange}
                       className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     >
-                      {(DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
+                      {(deptDegreesMap[formData.department] || DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
                         <option key={deg} value={deg}>{deg}</option>
                       ))}
                     </select>

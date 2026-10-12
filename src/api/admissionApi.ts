@@ -157,6 +157,21 @@ class AdmissionApiClient {
     }
     return data;
   }
+
+  public async getAcademicOptions(): Promise<{
+    success: boolean;
+    data: {
+      departments: string[];
+      departmentDegrees: Record<string, string[]>;
+    };
+  }> {
+    const response = await fetch('/api/v1/admissions/public/academic-options');
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to retrieve academic departments and degrees.');
+    }
+    return data;
+  }
 }
 
 export const admissionApi = new AdmissionApiClient();

@@ -32,6 +32,8 @@ interface StudentListTableProps {
   sortBy: string;
   sortOrder: 'asc' | 'desc';
   onSortChange: (column: string) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const StudentListTable: React.FC<StudentListTableProps> = ({
@@ -49,7 +51,9 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
   onOpenPDF,
   sortBy,
   sortOrder,
-  onSortChange
+  onSortChange,
+  canEdit = true,
+  canDelete = true
 }) => {
   const allSelected = students.length > 0 && students.every(s => selectedIds.includes(s.id));
 
@@ -289,13 +293,15 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                           </button>
                         )}
 
-                        <button
-                          onClick={() => onEdit(student)}
-                          title="Edit Student"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
-                        >
-                          <Edit className="w-4 h-4 text-slate-600" />
-                        </button>
+                        {canEdit && (
+                          <button
+                            onClick={() => onEdit(student)}
+                            title="Edit Student"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                          >
+                            <Edit className="w-4 h-4 text-slate-600" />
+                          </button>
+                        )}
 
                         <button
                           onClick={() => onOpenPDF(student)}
@@ -305,13 +311,15 @@ export const StudentListTable: React.FC<StudentListTableProps> = ({
                           <Printer className="w-4 h-4 text-blue-600" />
                         </button>
 
-                        <button
-                          onClick={() => onDelete(student)}
-                          title="Delete Student"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
-                        >
-                          <Trash2 className="w-4 h-4 text-rose-500" />
-                        </button>
+                        {canDelete && (
+                          <button
+                            onClick={() => onDelete(student)}
+                            title="Delete Student"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                          >
+                            <Trash2 className="w-4 h-4 text-rose-500" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

@@ -110,6 +110,15 @@ export class DashboardController {
       const { actionType, payload } = req.body;
       const user = (req as any).user;
 
+      // Admission Officers are restricted to admissions and broadcast alerts only
+      if (user?.role === 'Admission Officer' && (actionType === 'ADD_DEPARTMENT' || actionType === 'ADD_COURSE')) {
+        res.status(403).json({
+          success: false,
+          message: `Forbidden: Role '${user.role}' lacks permissions to create departments or courses.`
+        });
+        return;
+      }
+
       let result: any;
       if (actionType === 'ADD_ADMISSION') {
         result = dashboardService.quickAddAdmission(payload, user);

@@ -92,35 +92,35 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       label: 'Faculty & HODs',
       icon: UserCheck,
       description: 'Faculty Registration, HODs & Staff',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'departments',
       label: 'Departments',
       icon: Building2,
       description: 'Department HODs & Operations',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'courses',
       label: 'Course Catalog',
       icon: BookOpen,
       description: 'Syllabus, Credits & Departments',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'idcards',
       label: 'Digital ID Cards',
       icon: CreditCard,
       description: 'Issue & QR Verification',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'promotion',
       label: 'Semester Promotion',
       icon: TrendingUp,
       description: 'Grading & Elevation',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'alumni',
@@ -128,14 +128,14 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       icon: GraduationCap,
       badge: 'Global',
       description: 'Placements & Directory',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'reports',
       label: 'Reports & Analytics',
       icon: FileText,
       description: 'PDF Export & Charts',
-      roles: ['Super Admin', 'Admin', 'Admission Officer']
+      roles: ['Super Admin', 'Admin']
     },
     {
       id: 'notifications',

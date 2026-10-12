@@ -1,7 +1,12 @@
 import { Router, Request, Response } from 'express';
 import { AlumniService } from '../services/alumniService';
+import { protect } from '../middlewares/authMiddleware';
+import { authorizeRoles } from '../middlewares/roleMiddleware';
 
 const router = Router();
+
+// Protect all alumni routes
+router.use(protect as any);
 
 // GET /api/v1/alumni - Get all alumni with filters
 router.get('/', (req: Request, res: Response) => {
@@ -71,7 +76,7 @@ router.get('/:id', (req: Request, res: Response) => {
 });
 
 // POST /api/v1/alumni - Add new alumni record
-router.post('/', (req: Request, res: Response) => {
+router.post('/', authorizeRoles('Super Admin', 'Admin') as any, (req: Request, res: Response) => {
   try {
     const payload = req.body;
     if (!payload.fullName || !payload.email || !payload.graduationYear) {
@@ -96,7 +101,7 @@ router.post('/', (req: Request, res: Response) => {
 });
 
 // PUT /api/v1/alumni/:id - Update alumni details
-router.put('/:id', (req: Request, res: Response) => {
+router.put('/:id', authorizeRoles('Super Admin', 'Admin') as any, (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -116,7 +121,7 @@ router.put('/:id', (req: Request, res: Response) => {
 });
 
 // DELETE /api/v1/alumni/:id - Delete alumni record
-router.delete('/:id', (req: Request, res: Response) => {
+router.delete('/:id', authorizeRoles('Super Admin', 'Admin') as any, (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const success = AlumniService.delete(id);
@@ -140,7 +145,7 @@ router.delete('/:id', (req: Request, res: Response) => {
 });
 
 // POST /api/v1/alumni/:id/giving - Record alumni donation/giving
-router.post('/:id/giving', (req: Request, res: Response) => {
+router.post('/:id/giving', authorizeRoles('Super Admin', 'Admin') as any, (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { amount, currency, purpose, date } = req.body;
