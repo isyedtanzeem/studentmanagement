@@ -50,7 +50,7 @@ export class AuthController {
       const refreshToken = req.body.refreshToken || req.cookies?.refreshToken;
 
       if (!refreshToken) {
-        return res.status(400).json({
+        return res.status(401).json({
           success: false,
           message: 'Refresh token is required.'
         });
@@ -77,7 +77,15 @@ export class AuthController {
         message: 'Tokens refreshed successfully.',
         data: result
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.statusCode === 401) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        return res.status(401).json({
+          success: false,
+          message: error.message || 'Invalid or expired refresh token. Please login again.'
+        });
+      }
       next(error);
     }
   }

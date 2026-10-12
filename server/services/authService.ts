@@ -115,7 +115,10 @@ export class AuthService {
       throw new AppError('Invalid or expired refresh token. Please login again.', 401);
     }
 
-    const user = await UserModel.findById(decoded.userId);
+    let user = await UserModel.findById(decoded.userId);
+    if (!user && decoded.email) {
+      user = await UserModel.findByEmail(decoded.email);
+    }
 
     if (!user || user.status !== 'Active') {
       throw new AppError('User account not active.', 401);

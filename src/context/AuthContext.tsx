@@ -102,23 +102,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
 
-    // Fallback: If cached user profile exists, use as graceful offline session
-    if (storedUserRaw) {
-      try {
-        const cachedUser = JSON.parse(storedUserRaw);
-        setState({
-          user: cachedUser,
-          accessToken: storedToken,
-          refreshToken: storedRefresh,
-          isAuthenticated: true,
-          isLoading: false,
-          error: null
-        });
-        return;
-      } catch {
-        // Ignore parse error
-      }
-    }
+    // Both verification and refresh failed - clean reset session
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_KEY);
+    localStorage.removeItem(USER_KEY);
 
     setState({
       user: null,
@@ -132,6 +119,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     rehydrateSession();
+
+    const handleUnauthorized = () => {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+      localStorage.removeItem(USER_KEY);
+      setState({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null
+      });
+    };
+
+    window.addEventListener('sims:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('sims:unauthorized', handleUnauthorized);
   }, [rehydrateSession]);
 
   // Login handler

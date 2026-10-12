@@ -14,7 +14,11 @@ export function errorHandler(err: any, req: Request, res: Response, _next: NextF
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
 
-  console.error(`[SERVER ERROR] ${req.method} ${req.path} - ${statusCode}: ${message}`);
+  if (statusCode >= 500) {
+    console.error(`[SERVER ERROR] ${req.method} ${req.path} - ${statusCode}: ${message}`);
+  } else {
+    console.warn(`[CLIENT ${statusCode}] ${req.method} ${req.path}: ${message}`);
+  }
 
   res.status(statusCode).json({
     success: false,
