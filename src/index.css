@@ -35,7 +35,7 @@
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -51,6 +51,21 @@
 .font-mono,
 .font-sans {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+/* Dark scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1A2226;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #37474F;
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #455A64;
 }
 
 /* 2015 Flat Design 2.0 & Material Elevation Tokens */

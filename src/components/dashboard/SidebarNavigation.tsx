@@ -172,10 +172,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   });
 
   const sidebarContent = (
-    <div className="flex flex-col h-full font-roboto select-none bg-[#222D32] text-[#B8C7CE]">
+    <div className="flex flex-col h-full font-poppins select-none bg-[#222D32] text-[#B8C7CE]">
       {/* Brand Header */}
       <div
-        className={`h-14 px-4 bg-[#1A2226] border-b border-[#1E282C] flex items-center ${
+        className={`h-14 px-4 bg-[#1A2226] border-b border-[#1E282C] flex items-center shrink-0 ${
           isCollapsed ? 'justify-center' : 'justify-between'
         }`}
       >
@@ -187,7 +187,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-white tracking-tight flex items-center gap-1.5 truncate">
                 ScholarCore
-                <span className="text-[10px] font-mono px-1.5 py-0.2 bg-[#00B5AD]/20 text-[#00B5AD] border border-[#00B5AD]/30 rounded-[4px] font-semibold">
+                <span className="text-[10px] font-poppins px-1.5 py-0.2 bg-[#00B5AD]/20 text-[#00B5AD] border border-[#00B5AD]/30 rounded-[4px] font-semibold">
                   SIMS
                 </span>
               </h2>
@@ -216,7 +216,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
       {/* Navigation Section Header */}
       {!isCollapsed && (
-        <div className="px-4 pt-3 pb-1 text-[10px] font-bold text-[#4B646F] uppercase tracking-wider">
+        <div className="px-4 pt-3 pb-1 text-[10px] font-bold text-[#4B646F] uppercase tracking-wider shrink-0">
           Main Navigation
         </div>
       )}
@@ -255,7 +255,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                     <span className="text-xs truncate font-medium">{item.label}</span>
                     {item.badge && (
                       <span
-                        className={`text-[10px] px-1.5 py-0.2 rounded-[4px] font-mono font-bold ${
+                        className={`text-[10px] px-1.5 py-0.2 rounded-[4px] font-poppins font-bold ${
                           item.id === 'notifications' && unreadCount > 0
                             ? 'bg-[#E74C3C] text-white animate-pulse'
                             : 'bg-[#1E282C] text-[#8AA4AF] border border-[#2C3B41]'
@@ -277,7 +277,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
       {/* Role Footer */}
       {!isCollapsed && (
-        <div className="p-3 m-2 rounded-[4px] bg-[#1A2226] border border-[#2C3B41] flex items-center justify-between text-xs shadow-xs">
+        <div className="p-3 m-2 rounded-[4px] bg-[#1A2226] border border-[#2C3B41] flex items-center justify-between text-xs shadow-xs shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-[4px] bg-[#00B5AD]/20 border border-[#00B5AD]/40 flex items-center justify-center">
               <Shield className="w-3.5 h-3.5 text-[#00B5AD]" />
@@ -312,10 +312,10 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
         {sidebarContent}
       </aside>
 
-      {/* Desktop Sidebar in Deep Charcoal Slate Gray */}
+      {/* Desktop Sidebar in Deep Charcoal Slate Gray - Fixed in place */}
       <aside
-        className={`hidden md:block shrink-0 bg-[#222D32] border-r border-[#1E282C] transition-all duration-200 sticky top-0 h-screen z-30 shadow-md ${
-          isCollapsed ? 'w-18' : 'w-64'
+        className={`hidden md:flex flex-col shrink-0 bg-[#222D32] border-r border-[#1E282C] transition-all duration-200 h-screen sticky top-0 z-30 shadow-md ${
+          isCollapsed ? 'w-[72px]' : 'w-64'
         }`}
       >
         {sidebarContent}

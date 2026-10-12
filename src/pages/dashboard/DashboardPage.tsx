@@ -176,7 +176,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   }, [user?.role, accessToken]);
 
   return (
-    <div className="min-h-screen bg-[#F4F6F9] text-[#263238] flex font-poppins selection:bg-[#00B5AD]/20 selection:text-[#00B5AD]">
+    <div className="h-screen w-full bg-[#F4F6F9] text-[#263238] flex font-poppins selection:bg-[#00B5AD]/20 selection:text-[#00B5AD] overflow-hidden">
       {/* Change Password Modal */}
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
@@ -193,7 +193,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         }}
       />
 
-      {/* Left-side Navigation Bar in Deep Charcoal Slate Gray */}
+      {/* Left-side Navigation Bar in Deep Charcoal Slate Gray - Strictly Stationary */}
       <SidebarNavigation
         activeModule={activeModule}
         onSelectModule={setActiveModule}
@@ -205,10 +205,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      {/* Main Content Area in Light Cool Gray Background (#F4F6F9) */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-[#F4F6F9]">
+      {/* Main Content Area in Light Cool Gray Background (#F4F6F9) - Scrollable Viewport */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto bg-[#F4F6F9]">
         {/* Navigation Header (Google Material Design & 2015 Flat 2.0) */}
-        <header className="h-14 border-b border-[#CFD8DC] bg-white sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_4px_5px_0_rgba(0,0,0,0.06)] font-poppins">
+        <header className="h-14 border-b border-[#CFD8DC] bg-white sticky top-0 z-40 shrink-0 flex items-center justify-between px-4 sm:px-6 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_4px_5px_0_rgba(0,0,0,0.06)] font-poppins">
           <div className="flex items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
@@ -458,7 +458,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         </main>
 
         {/* 2015 Flat Footer */}
-        <footer className="h-10 border-t border-[#CFD8DC] px-6 bg-white flex items-center justify-between text-[11px] text-[#546E7A] font-poppins shadow-2xs">
+        <footer className="h-10 border-t border-[#CFD8DC] px-6 bg-white shrink-0 flex items-center justify-between text-[11px] text-[#546E7A] font-poppins shadow-2xs">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-[#1A237E]">ScholarCore SIMS</span>
             <span className="text-[#B0BEC5]">|</span>

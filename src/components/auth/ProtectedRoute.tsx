@@ -42,7 +42,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-light text-white serif-font">Access Denied (RBAC Restricted)</h3>
+            <h3 className="text-xl font-light text-white font-poppins">Access Denied (RBAC Restricted)</h3>
             <p className="text-xs text-gray-400 leading-relaxed">
               Your account role <span className="text-[#D4AF37] font-semibold">'{user.role}'</span> is not granted permissions to access this view module.
             </p>
