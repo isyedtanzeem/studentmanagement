@@ -1,5 +1,5 @@
 import { dbStore, StudentRecord, PromotionRecord, RecentActivityRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc } from '../config/mongo';
 
 export interface ValidationRules {
   minAttendance: number; // e.g. 75
@@ -109,8 +109,6 @@ export class PromotionService {
     status?: string;
     validationRules?: Partial<ValidationRules>;
   }) {
-    DashboardModel.seedDataIfEmpty();
-
     let list = Array.from(dbStore.students.values());
 
     if (params.search && params.search.trim() !== '') {
@@ -182,8 +180,6 @@ export class PromotionService {
   }
 
   public static promoteIndividual(payload: PromoteIndividualPayload): PromotionRecord {
-    DashboardModel.seedDataIfEmpty();
-
     const student = dbStore.students.get(payload.studentDbId);
     if (!student) {
       throw new Error(`Student not found with ID ${payload.studentDbId}`);
@@ -217,6 +213,7 @@ export class PromotionService {
     }
 
     dbStore.students.set(student.id, student);
+    saveDoc('students', student.id, student);
 
     const promotionRecord: PromotionRecord = {
       id: `prm-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -247,24 +244,26 @@ export class PromotionService {
     };
 
     dbStore.promotionHistory.set(promotionRecord.id, promotionRecord);
+    saveDoc('promotions', promotionRecord.id, promotionRecord);
 
     // Audit Log
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: `Student Promotion (${actualType})`,
       description: `Promoted ${student.fullName} (${student.studentId}) from Sem ${prevSem} to Sem ${student.currentSemester}`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: payload.promotedBy || 'Academic Admin',
       actorRole: 'Registrar',
       timestamp: new Date().toISOString(),
-      badgeType: actualType === 'Conditional Promotion' ? 'warning' : 'success',
-    });
+      badgeType: (actualType === 'Conditional Promotion' ? 'warning' : 'success') as 'warning' | 'success',
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return promotionRecord;
   }
 
   public static promoteBulk(payload: PromoteBulkPayload) {
-    DashboardModel.seedDataIfEmpty();
 
     let successCount = 0;
     let conditionalCount = 0;
@@ -397,8 +396,6 @@ export class PromotionService {
     promotionType?: string;
     status?: string;
   }) {
-    DashboardModel.seedDataIfEmpty();
-
     let list = Array.from(dbStore.promotionHistory.values());
 
     if (params.search && params.search.trim() !== '') {
@@ -444,8 +441,6 @@ export class PromotionService {
   }
 
   public static rollbackPromotion(promotionId: string, rollbackReason: string, rolledBackBy: string): PromotionRecord {
-    DashboardModel.seedDataIfEmpty();
-
     const record = dbStore.promotionHistory.get(promotionId);
     if (!record) {
       throw new Error(`Promotion record not found with ID ${promotionId}`);
@@ -463,6 +458,7 @@ export class PromotionService {
         student.status = 'Active';
       }
       dbStore.students.set(student.id, student);
+      saveDoc('students', student.id, student);
     }
 
     record.status = 'Rolled Back';
@@ -471,18 +467,21 @@ export class PromotionService {
     record.rolledBackAt = new Date().toISOString();
 
     dbStore.promotionHistory.set(record.id, record);
+    saveDoc('promotions', record.id, record);
 
     // Audit Log
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: `Promotion Rolled Back`,
       description: `Rolled back promotion for ${record.studentName} (${record.studentId}) back to Semester ${record.previousSemester}`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: rolledBackBy || 'Academic Admin',
       actorRole: 'Registrar',
       timestamp: new Date().toISOString(),
-      badgeType: 'warning',
-    });
+      badgeType: 'warning' as const,
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return record;
   }

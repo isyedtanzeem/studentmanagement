@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import { dbStore, IdCardRecord, CollegeBrandingConfig } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 import { generateBarcodeSvg } from '../utils/barcodeGenerator';
 
 export interface IdCardQueryParams {
@@ -14,8 +14,6 @@ export interface IdCardQueryParams {
 
 export class IdCardService {
   constructor() {
-    DashboardModel.seedDataIfEmpty();
-    this.seedInitialCardsIfEmpty();
     this.migrateLegacyLayouts();
   }
 
@@ -30,70 +28,7 @@ export class IdCardService {
     }
   }
 
-  public async seedInitialCardsIfEmpty() {
-    if (dbStore.idCards.size > 0) return;
-
-    const students = Array.from(dbStore.students.values());
-    const bloodGroups = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-'];
-    const layouts: IdCardRecord['layoutTemplate'][] = [
-      'compact-badge',
-      'compact-badge-blue'
-    ];
-
-    for (let i = 0; i < Math.min(students.length, 12); i++) {
-      const student = students[i];
-      const bg = bloodGroups[i % bloodGroups.length];
-      const layout = layouts[i % layouts.length];
-      
-      const cardNumber = `IDC-${student.enrollmentYear}-${1000 + i + 1}`;
-      const qrContent = JSON.stringify({
-        cardNo: cardNumber,
-        studentId: student.studentId,
-        name: student.fullName,
-        dept: student.department,
-        issued: `${student.enrollmentYear}-08-01`,
-        valid: `${student.enrollmentYear + 4}-06-30`,
-        verifyUrl: `https://scholarcore.edu.in/verify/idcard/${cardNumber}`
-      });
-
-      let qrDataUrl = '';
-      try {
-        qrDataUrl = await QRCode.toDataURL(qrContent, { margin: 1, width: 180, color: { dark: '#0f172a', light: '#ffffff' } });
-      } catch (err) {
-        qrDataUrl = '';
-      }
-
-      const barcodeValue = generateBarcodeSvg(student.studentId, 45);
-
-      const card: IdCardRecord = {
-        id: `card-${Date.now()}-${i}`,
-        cardNumber,
-        studentDbId: student.id,
-        studentRollNo: student.studentId,
-        studentName: student.fullName,
-        department: student.department,
-        enrollmentYear: student.enrollmentYear,
-        validUntil: `30 JUN ${student.enrollmentYear + 4}`,
-        issueDate: `01 AUG ${student.enrollmentYear}`,
-        dob: student.dateOfBirth || '15/08/2003',
-        bloodGroup: bg,
-        emergencyPhone: student.guardianPhone || '+91 98765 43210',
-        address: student.address || 'Bengaluru, Karnataka',
-        photoUrl: student.photoUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(student.fullName)}`,
-        qrCodeData: qrDataUrl,
-        barcodeValue,
-        status: 'Active',
-        layoutTemplate: layout,
-        printCount: Math.floor(Math.random() * 3) + 1,
-        createdAt: new Date().toISOString()
-      };
-
-      dbStore.idCards.set(card.id, card);
-    }
-  }
-
   public getIdCards(params: IdCardQueryParams) {
-    DashboardModel.seedDataIfEmpty();
     let cardList = Array.from(dbStore.idCards.values());
 
     // Search filter
@@ -239,9 +174,10 @@ export class IdCardService {
     };
 
     dbStore.idCards.set(id, newCard);
+    await saveDoc('id_cards', id, newCard);
 
     // Audit log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id || 'usr-admin',
       userEmail: user.email || 'admin@scholarcore.edu',
@@ -250,7 +186,9 @@ export class IdCardService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: `Generated ID Card ${cardNumber} for ${student.fullName} (${student.studentId})`
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return newCard;
   }
@@ -284,6 +222,7 @@ export class IdCardService {
     };
 
     dbStore.idCards.set(id, updated);
+    saveDoc('id_cards', id, updated);
     return updated;
   }
 
@@ -293,8 +232,9 @@ export class IdCardService {
 
     card.status = 'Revoked';
     dbStore.idCards.set(id, card);
+    saveDoc('id_cards', id, card);
 
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id || 'usr-admin',
       userEmail: user.email || 'admin@scholarcore.edu',
@@ -303,7 +243,9 @@ export class IdCardService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: `Revoked ID Card ${card.cardNumber} (${card.studentName}). Reason: ${reason}`
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return card;
   }
@@ -314,6 +256,7 @@ export class IdCardService {
 
     card.printCount = (card.printCount || 0) + 1;
     dbStore.idCards.set(id, card);
+    saveDoc('id_cards', id, card);
     return card;
   }
 
@@ -327,7 +270,9 @@ export class IdCardService {
       ...data
     };
 
-    dbStore.auditLogs.unshift({
+    saveDoc('branding', 'config', dbStore.brandingConfig);
+
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id || 'usr-admin',
       userEmail: user.email || 'admin@scholarcore.edu',
@@ -336,7 +281,9 @@ export class IdCardService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: 'Updated College ID Card Branding & Logo Configurations'
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return dbStore.brandingConfig;
   }

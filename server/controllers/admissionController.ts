@@ -13,7 +13,7 @@ export class AdmissionController {
       const sortBy = (req.query.sortBy as string) || 'appliedDate';
       const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
 
-      const result = AdmissionService.getAllApplications({
+      const result = AdmissionService.getApplications({
         page,
         limit,
         search,

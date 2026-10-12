@@ -1,5 +1,5 @@
 import { dbStore, FacultyRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 
 export interface FacultyQueryParams {
   page?: number;
@@ -14,8 +14,6 @@ export interface FacultyQueryParams {
 
 export class FacultyService {
   public async getFacultyList(params: FacultyQueryParams = {}) {
-    DashboardModel.seedDataIfEmpty();
-
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
     const search = (params.search || '').trim().toLowerCase();
@@ -50,53 +48,48 @@ export class FacultyService {
       facultyList = facultyList.filter(f => f.status === statusFilter);
     }
 
-    // Stats calculation
-    const allFaculty = Array.from(dbStore.faculty.values());
-    const stats = {
-      total: allFaculty.length,
-      hodCount: allFaculty.filter(f => f.designation.toUpperCase().includes('HOD')).length,
-      professorCount: allFaculty.filter(f => f.designation.toLowerCase().includes('professor') && !f.designation.toUpperCase().includes('HOD') && !f.designation.toLowerCase().includes('asst')).length,
-      asstProfessorCount: allFaculty.filter(f => f.designation.toLowerCase().includes('asst') || f.designation.toLowerCase().includes('assistant')).length,
-      activeCount: allFaculty.filter(f => f.status === 'Active').length
-    };
-
     // Sorting
     const sortBy = params.sortBy || 'fullName';
-    const sortOrder = params.sortOrder || 'asc';
+    const sortOrder = params.sortOrder === 'desc' ? -1 : 1;
 
-    facultyList.sort((a, b) => {
-      let valA: any = (a as any)[sortBy] || '';
-      let valB: any = (b as any)[sortBy] || '';
-
-      if (typeof valA === 'string') valA = valA.toLowerCase();
-      if (typeof valB === 'string') valB = valB.toLowerCase();
-
-      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+    facultyList.sort((a: any, b: any) => {
+      const valA = (a[sortBy] || '').toString().toLowerCase();
+      const valB = (b[sortBy] || '').toString().toLowerCase();
+      if (valA < valB) return -1 * sortOrder;
+      if (valA > valB) return 1 * sortOrder;
       return 0;
     });
 
-    // Pagination
     const totalItems = facultyList.length;
     const totalPages = Math.ceil(totalItems / limit) || 1;
     const startIndex = (page - 1) * limit;
-    const paginatedItems = facultyList.slice(startIndex, startIndex + limit);
+    const paginatedList = facultyList.slice(startIndex, startIndex + limit);
+
+    // Compute stats
+    const allFaculty = Array.from(dbStore.faculty.values());
+    const stats = {
+      total: allFaculty.length,
+      active: allFaculty.filter(f => f.status === 'Active').length,
+      onLeave: allFaculty.filter(f => f.status === 'On Leave').length,
+      hodCount: allFaculty.filter(f => f.designation.toUpperCase().includes('HOD')).length,
+      professorsCount: allFaculty.filter(f => f.designation.toUpperCase().includes('PROFESSOR') && !f.designation.toUpperCase().includes('ASST')).length,
+      asstProfessorsCount: allFaculty.filter(f => f.designation.toUpperCase().includes('ASST')).length
+    };
 
     return {
       success: true,
-      data: paginatedItems,
-      stats,
+      data: paginatedList,
       pagination: {
+        page,
+        limit,
         totalItems,
-        totalPages,
-        currentPage: page,
-        limit
-      }
+        totalPages
+      },
+      stats
     };
   }
 
   public async getFacultyById(id: string) {
-    DashboardModel.seedDataIfEmpty();
     const faculty = dbStore.faculty.get(id);
     if (!faculty) {
       throw new Error(`Faculty member with ID '${id}' not found.`);
@@ -117,8 +110,6 @@ export class FacultyService {
   }
 
   public async createFaculty(data: Partial<FacultyRecord>, actorName: string = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
-
     if (!data.fullName || !data.fullName.trim()) {
       throw new Error('Faculty Full Name is required.');
     }
@@ -150,9 +141,10 @@ export class FacultyService {
     };
 
     dbStore.faculty.set(id, newFaculty);
+    await saveDoc('faculty', id, newFaculty);
 
     // Audit Log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: 'admin-01',
       userEmail: 'admin@scholarcore.edu.in',
@@ -161,7 +153,9 @@ export class FacultyService {
       ipAddress: '127.0.0.1',
       details: `Registered new faculty: ${newFaculty.fullName} (${newFaculty.designation}) in ${newFaculty.department}`,
       timestamp: new Date().toISOString()
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return {
       success: true,
@@ -171,7 +165,6 @@ export class FacultyService {
   }
 
   public async updateFaculty(id: string, data: Partial<FacultyRecord>, actorName: string = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
     const existing = dbStore.faculty.get(id);
 
     if (!existing) {
@@ -186,9 +179,10 @@ export class FacultyService {
     };
 
     dbStore.faculty.set(id, updated);
+    await saveDoc('faculty', id, updated);
 
     // Audit Log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: 'admin-01',
       userEmail: 'admin@scholarcore.edu.in',
@@ -197,7 +191,9 @@ export class FacultyService {
       ipAddress: '127.0.0.1',
       details: `Updated faculty dossier for ${updated.fullName} (${updated.designation})`,
       timestamp: new Date().toISOString()
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return {
       success: true,
@@ -207,7 +203,6 @@ export class FacultyService {
   }
 
   public async deleteFaculty(id: string, actorName: string = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
     const existing = dbStore.faculty.get(id);
 
     if (!existing) {
@@ -215,9 +210,10 @@ export class FacultyService {
     }
 
     dbStore.faculty.delete(id);
+    await deleteDoc('faculty', id);
 
     // Audit Log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: 'admin-01',
       userEmail: 'admin@scholarcore.edu.in',
@@ -226,7 +222,9 @@ export class FacultyService {
       ipAddress: '127.0.0.1',
       details: `Removed faculty member: ${existing.fullName} (${existing.employeeId})`,
       timestamp: new Date().toISOString()
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return {
       success: true,

@@ -1,5 +1,5 @@
 import { dbStore, DepartmentRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 
 export interface DepartmentQueryParams {
   page?: number;
@@ -11,12 +11,9 @@ export interface DepartmentQueryParams {
 }
 
 export class DepartmentService {
-  constructor() {
-    DashboardModel.seedDataIfEmpty();
-  }
+  constructor() {}
 
   public async getDepartments(params: DepartmentQueryParams) {
-    DashboardModel.seedDataIfEmpty();
     this.reconcileHodAssignments();
 
     const page = Math.max(1, Number(params.page) || 1);
@@ -48,96 +45,85 @@ export class DepartmentService {
     });
 
     // Compute Overall Stats before search filtering
-    const total = list.length;
-    const active = list.filter(d => d.status === 'Active').length;
-    const inactive = list.filter(d => d.status === 'Inactive').length;
-    const totalStudents = list.reduce((sum, d) => sum + d.studentCount, 0);
-    const totalFaculty = list.reduce((sum, d) => sum + d.facultyCount, 0);
-    const totalCourses = list.reduce((sum, d) => sum + d.coursesCount, 0);
+    const totalDepartments = list.length;
+    const activeDepartments = list.filter(d => d.status === 'Active').length;
+    const totalStudentsInDepts = list.reduce((acc, d) => acc + (d.studentCount || 0), 0);
+    const totalFacultyInDepts = list.reduce((acc, d) => acc + (d.facultyCount || 0), 0);
+    const totalCoursesInDepts = list.reduce((acc, d) => acc + (d.coursesCount || 0), 0);
 
-    // Search filter
-    if (search) {
-      list = list.filter(d =>
-        d.name.toLowerCase().includes(search) ||
-        d.code.toLowerCase().includes(search) ||
-        d.headOfDepartment.toLowerCase().includes(search) ||
-        (d.buildingLocation && d.buildingLocation.toLowerCase().includes(search)) ||
-        (d.description && d.description.toLowerCase().includes(search))
-      );
-    }
-
-    // Status filter
+    // Apply Status Filter
     if (status !== 'ALL') {
       list = list.filter(d => d.status === status);
     }
 
+    // Apply Search Filter
+    if (search) {
+      list = list.filter(
+        d =>
+          d.name.toLowerCase().includes(search) ||
+          d.code.toLowerCase().includes(search) ||
+          d.headOfDepartment.toLowerCase().includes(search) ||
+          d.buildingLocation.toLowerCase().includes(search)
+      );
+    }
+
     // Sorting
     list.sort((a, b) => {
-      let aVal: any = (a as any)[sortBy] ?? '';
-      let bVal: any = (b as any)[sortBy] ?? '';
+      let fieldA: any = a[sortBy as keyof DepartmentRecord] ?? '';
+      let fieldB: any = b[sortBy as keyof DepartmentRecord] ?? '';
 
-      if (typeof aVal === 'string') {
-        aVal = aVal.toLowerCase();
-        bVal = String(bVal).toLowerCase();
-      }
+      if (typeof fieldA === 'string') fieldA = fieldA.toLowerCase();
+      if (typeof fieldB === 'string') fieldB = fieldB.toLowerCase();
 
-      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+      if (fieldA < fieldB) return sortOrder === 'asc' ? -1 : 1;
+      if (fieldA > fieldB) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
 
     // Pagination
-    const totalItems = list.length;
-    const totalPages = Math.ceil(totalItems / limit) || 1;
+    const totalFiltered = list.length;
+    const totalPages = Math.ceil(totalFiltered / limit) || 1;
     const startIndex = (page - 1) * limit;
-    const paginatedItems = list.slice(startIndex, startIndex + limit);
+    const paginatedDepartments = list.slice(startIndex, startIndex + limit);
 
     return {
-      departments: paginatedItems,
+      departments: paginatedDepartments,
       stats: {
-        total,
-        active,
-        inactive,
-        totalStudents,
-        totalFaculty,
-        totalCourses
+        total: totalDepartments,
+        active: activeDepartments,
+        totalStudents: totalStudentsInDepts,
+        totalFaculty: totalFacultyInDepts,
+        totalCourses: totalCoursesInDepts
       },
       pagination: {
-        totalItems,
-        totalPages,
-        currentPage: page,
-        limit
+        page,
+        limit,
+        totalItems: totalFiltered,
+        totalPages
       }
     };
   }
 
   public async getDepartmentById(id: string) {
-    DashboardModel.seedDataIfEmpty();
     const dept = dbStore.departments.get(id);
+    if (!dept) return null;
 
-    if (!dept) {
-      return null;
-    }
-
-    // Related courses & faculty
-    const courses = Array.from(dbStore.courses.values()).filter(c => c.department === dept.name);
-    const facultyMembers = Array.from(dbStore.faculty.values()).filter(f => f.department === dept.name);
     const students = Array.from(dbStore.students.values()).filter(s => s.department === dept.name);
+    const faculty = Array.from(dbStore.faculty.values()).filter(f => f.department === dept.name);
+    const courses = Array.from(dbStore.courses.values()).filter(c => c.department === dept.name);
 
     return {
       ...dept,
-      status: dept.status || 'Active',
       studentCount: students.length > 0 ? students.length : dept.studentCount,
-      facultyCount: facultyMembers.length > 0 ? facultyMembers.length : dept.facultyCount,
+      facultyCount: faculty.length > 0 ? faculty.length : dept.facultyCount,
       coursesCount: courses.length > 0 ? courses.length : dept.coursesCount,
-      coursesList: courses,
-      facultyList: facultyMembers
+      associatedStudents: students.slice(0, 5).map(s => ({ id: s.id, studentId: s.studentId, fullName: s.fullName, status: s.status })),
+      associatedFaculty: faculty.slice(0, 5).map(f => ({ id: f.id, fullName: f.fullName, designation: f.designation, email: f.email })),
+      associatedCourses: courses.slice(0, 5).map(c => ({ id: c.id, code: c.code, title: c.title, credits: c.credits }))
     };
   }
 
   public async createDepartment(data: Partial<DepartmentRecord>, actorName = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
-
     if (!data.code || !data.name || !data.headOfDepartment) {
       throw new Error('Department Code, Name, and Head of Department are required.');
     }
@@ -179,25 +165,26 @@ export class DepartmentService {
     this.syncDepartmentHod(nameTrimmed, data);
 
     dbStore.departments.set(newId, newDepartment);
+    await saveDoc('departments', newId, newDepartment);
 
     // Audit Activity
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: 'New Department Created',
       description: `Department '${newDepartment.name}' (${newDepartment.code}) was created under HOD ${newDepartment.headOfDepartment}.`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName,
       actorRole: 'Registrar',
       timestamp: now,
-      badgeType: 'gold'
-    });
+      badgeType: 'gold' as const
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return newDepartment;
   }
 
   public async updateDepartment(id: string, data: Partial<DepartmentRecord>, actorName = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
-
     const existing = dbStore.departments.get(id);
     if (!existing) {
       throw new Error('Department not found.');
@@ -222,26 +209,28 @@ export class DepartmentService {
     if (data.hodEmail !== undefined) existing.hodEmail = data.hodEmail.trim();
     if (data.hodPhone !== undefined) existing.hodPhone = data.hodPhone.trim();
     if (data.hodDesignation !== undefined) existing.hodDesignation = data.hodDesignation.trim();
-    if (data.establishedYear !== undefined) existing.establishedYear = Number(data.establishedYear);
-    if (data.buildingLocation !== undefined) existing.buildingLocation = data.buildingLocation.trim();
+    if (data.buildingLocation) existing.buildingLocation = data.buildingLocation.trim();
     if (data.status) existing.status = data.status;
     if (data.description !== undefined) existing.description = data.description.trim();
-
+    if (data.establishedYear) existing.establishedYear = Number(data.establishedYear);
     existing.updatedAt = new Date().toISOString();
 
     dbStore.departments.set(id, existing);
+    await saveDoc('departments', id, existing);
 
     // Audit Activity
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: 'Department Details Updated',
       description: `Department '${existing.name}' (${existing.code}) record was updated by ${actorName}.`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName,
       actorRole: 'Registrar',
       timestamp: new Date().toISOString(),
-      badgeType: 'info'
-    });
+      badgeType: 'info' as const
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return existing;
   }
@@ -259,12 +248,14 @@ export class DepartmentService {
 
     if (!selectedFaculty) return;
 
-    dbStore.faculty.set(selectedFaculty.id, {
+    const updatedFaculty = {
       ...selectedFaculty,
       department: departmentName,
       designation: 'HOD',
       updatedAt: new Date().toISOString()
-    });
+    };
+    dbStore.faculty.set(selectedFaculty.id, updatedFaculty);
+    saveDoc('faculty', selectedFaculty.id, updatedFaculty);
 
     for (const department of dbStore.departments.values()) {
       if (
@@ -272,28 +263,16 @@ export class DepartmentService {
         department.headOfDepartment !== selectedFaculty.fullName
       ) continue;
 
-      dbStore.departments.set(department.id, {
+      const vacantDept = {
         ...department,
         headOfDepartment: 'Not Assigned',
         hodEmail: '',
         hodPhone: '',
         hodDesignation: 'Vacant',
         updatedAt: new Date().toISOString()
-      });
-    }
-
-    for (const faculty of dbStore.faculty.values()) {
-      if (faculty.id === selectedFaculty.id || faculty.department !== departmentName) continue;
-
-      const isCurrentHod = faculty.designation.toUpperCase().includes('HOD');
-
-      if (isCurrentHod) {
-        dbStore.faculty.set(faculty.id, {
-          ...faculty,
-          designation: 'Professor',
-          updatedAt: new Date().toISOString()
-        });
-      }
+      };
+      dbStore.departments.set(department.id, vacantDept);
+      saveDoc('departments', department.id, vacantDept);
     }
   }
 
@@ -311,21 +290,21 @@ export class DepartmentService {
       for (const department of matchingDepartments) {
         if (department === departmentForFaculty) continue;
 
-        dbStore.departments.set(department.id, {
+        const vacantDept = {
           ...department,
           headOfDepartment: 'Not Assigned',
           hodEmail: '',
           hodPhone: '',
           hodDesignation: 'Vacant',
           updatedAt: new Date().toISOString()
-        });
+        };
+        dbStore.departments.set(department.id, vacantDept);
+        saveDoc('departments', department.id, vacantDept);
       }
     }
   }
 
   public async deleteDepartment(id: string, actorName = 'System Admin') {
-    DashboardModel.seedDataIfEmpty();
-
     const existing = dbStore.departments.get(id);
     if (!existing) {
       throw new Error('Department not found.');
@@ -343,24 +322,26 @@ export class DepartmentService {
     }
 
     dbStore.departments.delete(id);
+    await deleteDoc('departments', id);
 
     // Audit Activity
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: 'Department Removed',
       description: `Department '${existing.name}' (${existing.code}) was deleted from system records.`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName,
       actorRole: 'Registrar',
       timestamp: new Date().toISOString(),
-      badgeType: 'danger'
-    });
+      badgeType: 'danger' as const
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return { success: true, message: `Department '${existing.name}' deleted successfully.` };
   }
 
   public async getFacultyOptions() {
-    DashboardModel.seedDataIfEmpty();
     const faculty = Array.from(dbStore.faculty.values());
 
     return faculty.map(f => ({

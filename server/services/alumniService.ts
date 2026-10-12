@@ -1,5 +1,5 @@
 import { dbStore, AlumniRecord, AlumniGivingRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 
 export interface AlumniFilters {
   search?: string;
@@ -11,12 +11,7 @@ export interface AlumniFilters {
 }
 
 export class AlumniService {
-  private static ensureSeeded() {
-    DashboardModel.seedDataIfEmpty();
-  }
-
   public static getAll(filters: AlumniFilters = {}) {
-    this.ensureSeeded();
     let records = Array.from(dbStore.alumni.values());
 
     // Search query match
@@ -66,12 +61,10 @@ export class AlumniService {
   }
 
   public static getById(id: string): AlumniRecord | null {
-    this.ensureSeeded();
     return dbStore.alumni.get(id) || null;
   }
 
   public static create(data: Partial<AlumniRecord>): AlumniRecord {
-    this.ensureSeeded();
     const id = `alm-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const now = new Date().toISOString();
 
@@ -109,24 +102,26 @@ export class AlumniService {
     };
 
     dbStore.alumni.set(id, record);
+    saveDoc('alumni', id, record);
 
     // Audit log
-    dbStore.activities.unshift({
+    const act = {
       id: `act-${Date.now()}`,
       title: 'Alumni Profile Created',
       description: `Created new alumni profile for ${record.fullName} (Class of ${record.graduationYear})`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: 'Admin Registrar',
       actorRole: 'Super Admin',
       timestamp: new Date().toISOString(),
-      badgeType: 'gold'
-    });
+      badgeType: 'gold' as const
+    };
+    dbStore.activities.unshift(act);
+    saveDoc('activities', act.id, act);
 
     return record;
   }
 
   public static update(id: string, updates: Partial<AlumniRecord>): AlumniRecord {
-    this.ensureSeeded();
     const existing = dbStore.alumni.get(id);
     if (!existing) {
       throw new Error(`Alumni record with ID ${id} not found.`);
@@ -139,16 +134,19 @@ export class AlumniService {
     };
 
     dbStore.alumni.set(id, updated);
+    saveDoc('alumni', id, updated);
     return updated;
   }
 
   public static delete(id: string): boolean {
-    this.ensureSeeded();
-    return dbStore.alumni.delete(id);
+    const deleted = dbStore.alumni.delete(id);
+    if (deleted) {
+      deleteDoc('alumni', id);
+    }
+    return deleted;
   }
 
   public static addGiving(id: string, givingData: { amount: number; currency?: string; purpose: string; date?: string }): AlumniRecord {
-    this.ensureSeeded();
     const alumni = dbStore.alumni.get(id);
     if (!alumni) {
       throw new Error(`Alumni record with ID ${id} not found.`);
@@ -171,11 +169,11 @@ export class AlumniService {
     };
 
     dbStore.alumni.set(id, updated);
+    saveDoc('alumni', id, updated);
     return updated;
   }
 
   public static getReportsAndAnalytics() {
-    this.ensureSeeded();
     const all = Array.from(dbStore.alumni.values());
     const total = all.length;
 

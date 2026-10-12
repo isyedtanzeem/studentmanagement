@@ -1,5 +1,5 @@
 import { dbStore, AdmissionRecord, StudentRecord, VerificationChecklist, SystemUser } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 import { hashPassword } from '../utils/passwordUtils';
 
 export interface AdmissionQueryParams {
@@ -44,13 +44,31 @@ export class AdmissionService {
     'Civil Engineering': 'CE'
   };
 
+  public static getAcademicOptions() {
+    const departments = Array.from(dbStore.departments.values()).map(d => ({
+      code: d.code,
+      name: d.name
+    }));
+    return {
+      departments: departments.length > 0 ? departments : [
+        { code: 'CSE', name: 'Computer Science & Engineering' },
+        { code: 'ECE', name: 'Electronics & Communication' },
+        { code: 'EEE', name: 'Electrical & Electronics' },
+        { code: 'ME', name: 'Mechanical Engineering' },
+        { code: 'BT', name: 'Biotechnology & Life Sciences' },
+        { code: 'CE', name: 'Civil Engineering' },
+      ],
+      categories: ['General', 'OBC', 'SC', 'ST', 'EWS', 'Management'],
+      sessions: ['2026-2027', '2025-2026']
+    };
+  }
+
   private static generateApplicationNumber(): string {
     const randomDigits = Math.floor(1000 + Math.random() * 9000);
     return `APP-2026-${randomDigits}`;
   }
 
   public static generateAdmissionRollNumber(departmentName: string, year: number = 2026): string {
-    DashboardModel.seedDataIfEmpty();
     const dept = Array.from(dbStore.departments.values()).find(
       (d) => d.name.toLowerCase() === departmentName.toLowerCase() || d.code.toLowerCase() === departmentName.toLowerCase()
     );
@@ -58,75 +76,42 @@ export class AdmissionService {
     
     // Find highest index among existing students and admissions
     let count = 1000;
-    dbStore.students.forEach((s) => {
+    const allStudents = Array.from(dbStore.students.values());
+    for (const s of allStudents) {
       if (s.studentId && s.studentId.includes(code)) {
-        const numPart = parseInt(s.studentId.replace(/[^0-9]/g, ''), 10);
-        if (!isNaN(numPart) && numPart >= count) {
-          count = numPart + 1;
+        const matches = s.studentId.match(/\d+$/);
+        if (matches) {
+          const num = parseInt(matches[0], 10);
+          if (num > count) count = num;
         }
       }
-    });
-
-    dbStore.admissions.forEach((a) => {
+    }
+    const allAdmissions = Array.from(dbStore.admissions.values());
+    for (const a of allAdmissions) {
       if (a.generatedStudentId && a.generatedStudentId.includes(code)) {
-        const numPart = parseInt(a.generatedStudentId.replace(/[^0-9]/g, ''), 10);
-        if (!isNaN(numPart) && numPart >= count) {
-          count = numPart + 1;
+        const matches = a.generatedStudentId.match(/\d+$/);
+        if (matches) {
+          const num = parseInt(matches[0], 10);
+          if (num > count) count = num;
         }
       }
-    });
+    }
 
     return `${year}${code}${count + 1}`;
   }
 
-  public static getAcademicOptions() {
-    DashboardModel.seedDataIfEmpty();
-    const depts = Array.from(dbStore.departments.values());
-    const courses = Array.from(dbStore.courses.values());
-
-    const departments = depts.map(d => d.name);
-    const departmentDegrees: Record<string, string[]> = {};
-
-    depts.forEach(d => {
-      const deptCourses = courses.filter(c => c.department.toLowerCase() === d.name.toLowerCase());
-      const degreeSet = new Set<string>();
-      deptCourses.forEach(c => {
-        if (c.degreeProgram) degreeSet.add(c.degreeProgram);
-      });
-
-      if (degreeSet.size > 0) {
-        departmentDegrees[d.name] = Array.from(degreeSet);
-      } else {
-        // Fallback default degrees if no courses registered yet
-        departmentDegrees[d.name] = [
-          `B.Tech (${d.name})`,
-          `M.Tech (${d.name})`,
-          `Diploma in ${d.name}`
-        ];
-      }
-    });
-
-    return {
-      departments,
-      departmentDegrees
-    };
-  }
-
-  public static getAllApplications(params: AdmissionQueryParams) {
-    DashboardModel.seedDataIfEmpty();
-
+  public static getApplications(params: AdmissionQueryParams) {
     let list = Array.from(dbStore.admissions.values());
 
     // Search filter
-    if (params.search) {
+    if (params.search && params.search.trim() !== '') {
       const q = params.search.toLowerCase().trim();
       list = list.filter(
         (a) =>
           a.applicantName.toLowerCase().includes(q) ||
-          a.email.toLowerCase().includes(q) ||
           a.applicationNumber.toLowerCase().includes(q) ||
-          (a.generatedStudentId && a.generatedStudentId.toLowerCase().includes(q)) ||
-          (a.phone && a.phone.includes(q))
+          a.email.toLowerCase().includes(q) ||
+          (a.phone && a.phone.toLowerCase().includes(q))
       );
     }
 
@@ -193,7 +178,6 @@ export class AdmissionService {
   }
 
   public static getApplicationsByPhone(phone: string): AdmissionRecord[] {
-    DashboardModel.seedDataIfEmpty();
     const cleanInput = phone.replace(/\D/g, '');
     if (!cleanInput) return [];
 
@@ -212,13 +196,10 @@ export class AdmissionService {
   }
 
   public static getApplicationById(id: string): AdmissionRecord | null {
-    DashboardModel.seedDataIfEmpty();
     return dbStore.admissions.get(id) || null;
   }
 
   public static createApplication(input: CreateAdmissionInput): AdmissionRecord {
-    DashboardModel.seedDataIfEmpty();
-
     const id = `adm-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const applicationNumber = this.generateApplicationNumber();
 
@@ -253,18 +234,21 @@ export class AdmissionService {
     };
 
     dbStore.admissions.set(id, newApp);
+    saveDoc('admissions', id, newApp);
 
     // Record system activity
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'New Admission Application Submitted',
       description: `${newApp.applicantName} applied for ${newApp.degree || ''} ${newApp.department} (${newApp.applicationNumber}).`,
-      category: 'Admission',
+      category: 'Admission' as const,
       actorName: newApp.applicantName,
       actorRole: 'Applicant',
       timestamp: new Date().toISOString(),
-      badgeType: 'gold'
-    });
+      badgeType: 'gold' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     return newApp;
   }
@@ -274,7 +258,6 @@ export class AdmissionService {
     status: 'Pending' | 'Under Review' | 'Document Verification' | 'Approved' | 'Rejected',
     remarks?: string
   ): Promise<AdmissionRecord | null> {
-    DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
 
@@ -290,23 +273,25 @@ export class AdmissionService {
     app.updatedAt = new Date().toISOString();
 
     dbStore.admissions.set(id, app);
+    await saveDoc('admissions', id, app);
 
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: `Admission Status Updated: ${status}`,
       description: `Application ${app.applicationNumber} (${app.applicantName}) updated to ${status}.`,
-      category: 'Admission',
+      category: 'Admission' as const,
       actorName: 'Admissions Officer',
       actorRole: 'Officer',
       timestamp: new Date().toISOString(),
-      badgeType: status === 'Rejected' ? 'danger' : 'info'
-    });
+      badgeType: status === 'Rejected' ? ('danger' as const) : ('info' as const)
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     return app;
   }
 
   public static verifyDocuments(id: string, checklist: Partial<VerificationChecklist>, verifiedBy?: string): AdmissionRecord | null {
-    DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
 
@@ -326,23 +311,25 @@ export class AdmissionService {
     app.updatedAt = new Date().toISOString();
 
     dbStore.admissions.set(id, app);
+    saveDoc('admissions', id, app);
 
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'Document Verification Updated',
       description: `Verification status updated for ${app.applicantName} (${app.applicationNumber}).`,
-      category: 'Admission',
+      category: 'Admission' as const,
       actorName: verifiedBy || 'Verification Officer',
       actorRole: 'Officer',
       timestamp: new Date().toISOString(),
-      badgeType: 'info'
-    });
+      badgeType: 'info' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     return app;
   }
 
   public static async approveAndEnrollStudent(id: string, customStudentRollNo?: string, approvedBy?: string): Promise<{ application: AdmissionRecord; student: StudentRecord } | null> {
-    DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
 
@@ -383,23 +370,27 @@ export class AdmissionService {
     dbStore.admissions.set(id, app);
     dbStore.students.set(newStudentId, newStudent);
 
-    // 4. Log Enrollment Activity (Note: System login disabled for students in pure back-office portal)
-    dbStore.activities.unshift({
+    await saveDoc('admissions', id, app);
+    await saveDoc('students', newStudentId, newStudent);
+
+    // 4. Log Enrollment Activity
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'Admission Approved & Student Enrolled',
       description: `${app.applicantName} enrolled into ${app.department} with Roll No: ${rollNo}. Student record created in Back Office Directory.`,
-      category: 'Admission',
+      category: 'Admission' as const,
       actorName: approvedBy || 'Academic Registrar Cell',
       actorRole: 'Registrar',
       timestamp: new Date().toISOString(),
-      badgeType: 'success'
-    });
+      badgeType: 'success' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     return { application: app, student: newStudent };
   }
 
   public static rejectApplication(id: string, rejectionReason: string, rejectedBy?: string): AdmissionRecord | null {
-    DashboardModel.seedDataIfEmpty();
     const app = dbStore.admissions.get(id);
     if (!app) return null;
 
@@ -408,17 +399,20 @@ export class AdmissionService {
     app.updatedAt = new Date().toISOString();
 
     dbStore.admissions.set(id, app);
+    saveDoc('admissions', id, app);
 
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'Admission Application Rejected',
       description: `Application ${app.applicationNumber} (${app.applicantName}) rejected: ${rejectionReason}`,
-      category: 'Admission',
+      category: 'Admission' as const,
       actorName: rejectedBy || 'Admissions Officer',
       actorRole: 'Officer',
       timestamp: new Date().toISOString(),
-      badgeType: 'danger'
-    });
+      badgeType: 'danger' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     return app;
   }

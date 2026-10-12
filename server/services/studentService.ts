@@ -1,5 +1,5 @@
 import { dbStore, StudentRecord, RecentActivityRecord } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
+import { saveDoc, deleteDoc } from '../config/mongo';
 
 export interface StudentQueryParams {
   page?: number;
@@ -14,13 +14,9 @@ export interface StudentQueryParams {
 }
 
 export class StudentService {
-  constructor() {
-    DashboardModel.seedDataIfEmpty();
-  }
+  constructor() {}
 
   public getStudents(params: StudentQueryParams) {
-    DashboardModel.seedDataIfEmpty();
-
     let studentsList = Array.from(dbStore.students.values());
 
     // Search filter
@@ -101,7 +97,6 @@ export class StudentService {
   }
 
   public getStudentById(id: string): StudentRecord {
-    DashboardModel.seedDataIfEmpty();
     const student = dbStore.students.get(id);
     if (!student) {
       throw new Error(`Student with ID ${id} not found.`);
@@ -110,8 +105,6 @@ export class StudentService {
   }
 
   public createStudent(data: Partial<StudentRecord>, user: any): StudentRecord {
-    DashboardModel.seedDataIfEmpty();
-
     // Generate Student ID if not provided
     const year = data.enrollmentYear || new Date().getFullYear();
     const randomNum = Math.floor(100 + Math.random() * 900);
@@ -138,21 +131,24 @@ export class StudentService {
     };
 
     dbStore.students.set(id, newStudent);
+    saveDoc('students', id, newStudent);
 
     // Add activity
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'New Student Profile Registered',
       description: `Student ${newStudent.fullName} (${newStudent.studentId}) registered under ${newStudent.department}.`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: user.fullName,
       actorRole: user.role,
       timestamp: new Date().toISOString(),
-      badgeType: 'success'
-    });
+      badgeType: 'success' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     // Add Audit Log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id,
       userEmail: user.email,
@@ -161,13 +157,14 @@ export class StudentService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: `Created student record: ${newStudent.fullName} (${newStudent.studentId})`
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return newStudent;
   }
 
   public updateStudent(id: string, data: Partial<StudentRecord>, user: any): StudentRecord {
-    DashboardModel.seedDataIfEmpty();
     const existing = dbStore.students.get(id);
     if (!existing) {
       throw new Error(`Student with ID ${id} not found.`);
@@ -181,21 +178,24 @@ export class StudentService {
     };
 
     dbStore.students.set(id, updatedStudent);
+    saveDoc('students', id, updatedStudent);
 
     // Activity log
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'Student Record Updated',
       description: `Profile details updated for ${updatedStudent.fullName} (${updatedStudent.studentId}).`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: user.fullName,
       actorRole: user.role,
       timestamp: new Date().toISOString(),
-      badgeType: 'info'
-    });
+      badgeType: 'info' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     // Audit log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id,
       userEmail: user.email,
@@ -204,34 +204,38 @@ export class StudentService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: `Updated student record ID: ${id}`
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return updatedStudent;
   }
 
   public deleteStudent(id: string, user: any): boolean {
-    DashboardModel.seedDataIfEmpty();
     const existing = dbStore.students.get(id);
     if (!existing) {
       throw new Error(`Student with ID ${id} not found.`);
     }
 
     dbStore.students.delete(id);
+    deleteDoc('students', id);
 
     // Activity log
-    dbStore.activities.unshift({
+    const activity = {
       id: `act-${Date.now()}`,
       title: 'Student Record Removed',
       description: `Student ${existing.fullName} (${existing.studentId}) removed from database.`,
-      category: 'Academic',
+      category: 'Academic' as const,
       actorName: user.fullName,
       actorRole: user.role,
       timestamp: new Date().toISOString(),
-      badgeType: 'warning'
-    });
+      badgeType: 'warning' as const
+    };
+    dbStore.activities.unshift(activity);
+    saveDoc('activities', activity.id, activity);
 
     // Audit log
-    dbStore.auditLogs.unshift({
+    const audit = {
       id: `audit-${Date.now()}`,
       userId: user.id,
       userEmail: user.email,
@@ -240,13 +244,14 @@ export class StudentService {
       ipAddress: '127.0.0.1',
       timestamp: new Date().toISOString(),
       details: `Deleted student: ${existing.fullName} (${existing.studentId})`
-    });
+    };
+    dbStore.auditLogs.unshift(audit);
+    saveDoc('audit_logs', audit.id, audit);
 
     return true;
   }
 
   public bulkImportStudents(studentsData: Partial<StudentRecord>[], user: any) {
-    DashboardModel.seedDataIfEmpty();
     let importedCount = 0;
     const errors: string[] = [];
 
@@ -272,7 +277,6 @@ export class StudentService {
   }
 
   public exportCSV(): string {
-    DashboardModel.seedDataIfEmpty();
     const students = Array.from(dbStore.students.values());
 
     const headers = [
@@ -307,7 +311,6 @@ export class StudentService {
   }
 
   public getStudentPortalData(user: any) {
-    DashboardModel.seedDataIfEmpty();
     const studentsList = Array.from(dbStore.students.values());
     const userEmail = (user.email || '').toLowerCase().trim();
 
@@ -352,34 +355,16 @@ export class StudentService {
       }
     }
 
-    // 3. Fallback for demo student user account
     if (!student) {
-      if (userEmail === 'student@scholarcore.edu.in' || user.role === 'Student') {
-        student = studentsList[0] || {
-          id: 'std-1',
-          studentId: '2024CSE1001',
-          fullName: user.fullName || 'Aarav Sharma',
-          email: user.email || 'student@scholarcore.edu.in',
-          phone: '+91 98765 43210',
-          department: user.department || 'Computer Science & Engineering',
-          gender: 'Male',
-          status: 'Active',
-          enrollmentYear: 2024,
-          currentSemester: 3,
-          currentYear: 2,
-          academicBatch: '2024-2028',
-          attendancePercentage: 88.5,
-          gpa: 8.95,
-          createdAt: '2024-07-15T09:00:00Z',
-          photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
-          dateOfBirth: '2004-03-14',
-          address: 'B-104, Vasant Kunj, New Delhi, Delhi 110070',
-          guardianName: 'Rajesh Sharma',
-          guardianPhone: '+91 98112 34567'
-        };
-      } else {
-        student = studentsList[0];
-      }
+      return {
+        student: null,
+        enrolledCourses: [],
+        subjectAttendance: [],
+        sgpaHistory: [],
+        weeklySchedule: [],
+        documents: [],
+        notices: []
+      };
     }
 
     const dept = student.department || 'Computer Science & Engineering';

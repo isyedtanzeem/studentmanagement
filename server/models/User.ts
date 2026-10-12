@@ -1,5 +1,6 @@
 import { dbStore, SystemUser } from '../config/db';
 import { hashPassword } from '../utils/passwordUtils';
+import { saveDoc, getMongoCollection } from '../config/mongo';
 
 export class UserModel {
   public static async findByEmail(email: string): Promise<SystemUser | null> {
@@ -35,6 +36,7 @@ export class UserModel {
 
     const updatedUser: SystemUser = { ...user, ...updates };
     dbStore.users.set(id, updatedUser);
+    await saveDoc('users', id, updatedUser);
     return updatedUser;
   }
 
@@ -43,7 +45,7 @@ export class UserModel {
 
     const defaultPasswordHash = await hashPassword('Password123!');
 
-    const seedUsers: SystemUser[] = [
+    const initialUsers: SystemUser[] = [
       {
         id: 'usr_superadmin',
         email: 'superadmin@scholarcore.edu.in',
@@ -52,7 +54,6 @@ export class UserModel {
         role: 'Super Admin',
         department: 'Vice Chancellor Office & IT Operations',
         employeeId: 'EMP-VC-001',
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
         status: 'Active',
         createdAt: new Date().toISOString()
       },
@@ -64,7 +65,6 @@ export class UserModel {
         role: 'Admin',
         department: 'Academic Registrar Cell',
         employeeId: 'EMP-REG-102',
-        avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250',
         status: 'Active',
         createdAt: new Date().toISOString()
       },
@@ -76,14 +76,14 @@ export class UserModel {
         role: 'Admission Officer',
         department: 'Central Admissions & Verification Cell',
         employeeId: 'EMP-ADM-003',
-        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
         status: 'Active',
         createdAt: new Date().toISOString()
       }
     ];
 
-    for (const u of seedUsers) {
+    for (const u of initialUsers) {
       dbStore.users.set(u.id, u);
+      await saveDoc('users', u.id, u);
     }
   }
 }

@@ -1,5 +1,4 @@
 import { dbStore } from '../config/db';
-import { DashboardModel } from '../models/Dashboard';
 
 export interface ReportFilterOptions {
   department?: string;
@@ -11,7 +10,7 @@ export interface ReportFilterOptions {
 
 export class ReportService {
   private static ensureSeeded() {
-    DashboardModel.seedDataIfEmpty();
+    // Clean data mode: No mock seeding
   }
 
   // 1. Student Report

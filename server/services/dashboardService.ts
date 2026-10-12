@@ -1,14 +1,10 @@
 import { dbStore, AdmissionRecord, StudentRecord, DepartmentRecord, CourseRecord, NotificationRecord, RecentActivityRecord } from '../config/db';
 import { getMongoCollection, isMongoConnected } from '../config/mongo';
-import { DashboardModel } from '../models/Dashboard';
 
 export class DashboardService {
-  constructor() {
-    DashboardModel.seedDataIfEmpty();
-  }
+  constructor() {}
 
   public async getStats() {
-    DashboardModel.seedDataIfEmpty();
     const [studentsList, admissionsList, deptsList, coursesList, facultyList] = await Promise.all([
       this.readCollection<StudentRecord>('students'),
       this.readCollection<AdmissionRecord>('admissions'),
@@ -94,7 +90,6 @@ export class DashboardService {
   }
 
   public async getChartData(timeframe: 'year' | 'semester' | 'month' = 'year') {
-    DashboardModel.seedDataIfEmpty();
     const [students, admissions, depts, faculty, courses] = await Promise.all([
       this.readCollection<StudentRecord>('students'),
       this.readCollection<AdmissionRecord>('admissions'),
@@ -158,13 +153,11 @@ export class DashboardService {
   }
 
   public async getRecentActivities(limit: number = 10) {
-    DashboardModel.seedDataIfEmpty();
     const activities = await this.readCollection<RecentActivityRecord>('activities');
     return activities.sort((a, b) => b.timestamp.localeCompare(a.timestamp)).slice(0, limit);
   }
 
   public async getNotifications() {
-    DashboardModel.seedDataIfEmpty();
     const notifications = await this.readCollection<NotificationRecord>('notifications');
     const unreadCount = notifications.filter(n => !n.read).length;
     return {
