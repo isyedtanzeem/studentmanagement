@@ -176,7 +176,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   }, [user?.role, accessToken]);
 
   return (
-    <div className="min-h-screen bg-[#F4F6F9] text-[#263238] flex font-roboto selection:bg-[#00B5AD]/20 selection:text-[#00B5AD]">
+    <div className="min-h-screen bg-[#F4F6F9] text-[#263238] flex font-poppins selection:bg-[#00B5AD]/20 selection:text-[#00B5AD]">
       {/* Change Password Modal */}
       <ChangePasswordModal
         isOpen={isChangePasswordOpen}
@@ -208,12 +208,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
       {/* Main Content Area in Light Cool Gray Background (#F4F6F9) */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-[#F4F6F9]">
         {/* Navigation Header (Google Material Design & 2015 Flat 2.0) */}
-        <header className="h-14 border-b border-[#E4E7EB] bg-white sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <header className="h-14 border-b border-[#CFD8DC] bg-white sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_4px_5px_0_rgba(0,0,0,0.06)] font-poppins">
           <div className="flex items-center gap-3">
             {/* Mobile Sidebar Toggle Button */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="md:hidden p-1.5 text-[#546E7A] hover:text-[#263238] rounded-[4px] bg-[#F4F6F9] border border-[#E4E7EB]"
+              className="md:hidden p-1.5 text-[#546E7A] hover:text-[#263238] rounded-[3px] bg-[#ECEFF1] border border-[#CFD8DC] transition-colors"
               title="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
@@ -222,31 +222,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
             {/* University Portal Title & Breadcrumbs */}
             <div className="hidden sm:block">
               <div className="flex items-center gap-2 text-xs">
-                <span className="font-bold text-[#263238] tracking-tight">
+                <span className="font-bold text-[#1A237E] tracking-tight">
                   ScholarCore SIMS
                 </span>
                 <span className="text-[#90A4AE]">/</span>
-                <span className="text-[#546E7A] font-medium capitalize">
+                <span className="text-[#546E7A] font-semibold capitalize">
                   {activeModule === 'executive' ? 'Executive Overview' : activeModule}
                 </span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-[4px] bg-[#ECEFF1] text-[#455A64] border border-[#CFD8DC] font-mono font-bold ml-1">
+                <span className="text-[10px] px-2 py-0.5 rounded-[2px] bg-[#ECEFF1] text-[#37474F] border border-[#CFD8DC] font-poppins font-bold uppercase tracking-wider ml-1">
                   {user?.role}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Center Search Bar Trigger */}
+          {/* Center Material Search Bar Trigger */}
           <div className="flex-1 max-w-md mx-4">
             <button
               onClick={() => setIsGlobalSearchOpen(true)}
-              className="w-full bg-[#F4F6F9] hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[4px] px-3 py-1.5 text-xs text-[#546E7A] flex items-center justify-between transition-colors shadow-2xs"
+              className="w-full bg-[#ECEFF1] hover:bg-[#CFD8DC]/50 border border-[#CFD8DC] rounded-[3px] px-3.5 py-1.5 text-xs text-[#546E7A] flex items-center justify-between transition-all shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:border-[#1E88E5]"
             >
-              <div className="flex items-center gap-2">
-                <Search className="w-3.5 h-3.5 text-[#00B5AD]" />
-                <span className="truncate">Quick search students, courses, applications...</span>
+              <div className="flex items-center gap-2.5">
+                <Search className="w-3.5 h-3.5 text-[#009688]" />
+                <span className="truncate">Search students, courses, applications...</span>
               </div>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.2 rounded-[2px] bg-white border border-[#CFD8DC] text-[10px] text-[#78909C] font-mono">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded-[2px] bg-white border border-[#CFD8DC] text-[10px] text-[#78909C] font-poppins font-semibold shadow-2xs">
                 ⌘K
               </kbd>
             </button>
@@ -256,16 +256,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setIsChangePasswordOpen(true)}
-              className="px-3 py-1.5 bg-white hover:bg-[#F4F6F9] border border-[#CFD8DC] rounded-[4px] text-xs text-[#546E7A] hover:text-[#263238] transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 bg-white hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[3px] text-xs font-semibold uppercase tracking-wider text-[#546E7A] hover:text-[#263238] transition-all flex items-center gap-1.5 shadow-2xs"
               title="Change Password"
             >
-              <KeyRound className="w-3.5 h-3.5 text-[#F39C12]" />
+              <KeyRound className="w-3.5 h-3.5 text-[#FFA000]" />
               <span className="hidden lg:inline">Password</span>
             </button>
 
             <button
               onClick={logout}
-              className="px-3 py-1.5 bg-[#FDEDEC] hover:bg-[#FADBD8] border border-[#F5B7B1] rounded-[4px] text-xs text-[#C0392B] transition-colors flex items-center gap-1.5 font-medium"
+              className="px-3.5 py-1.5 bg-[#E53935] hover:bg-[#D32F2F] text-white rounded-[3px] text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-[0_2px_4px_rgba(0,0,0,0.16)] active:shadow-none"
               title="Sign Out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -310,15 +310,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-xl font-bold text-[#263238] font-roboto tracking-tight">
+                      <h2 className="text-xl font-bold text-[#263238] font-poppins tracking-tight">
                         {user?.fullName}
                       </h2>
                       <span className="text-[11px] px-2 py-0.5 rounded-[4px] bg-[#E8F8F5] text-[#27AE60] border border-[#A3E4D7] font-bold">
                         {user?.status || 'Active'}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#546E7A] mt-1 font-roboto">
-                      <span className="font-mono text-[#78909C]">{user?.email}</span>
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#546E7A] mt-1 font-poppins">
+                      <span className="font-poppins text-[#78909C]">{user?.email}</span>
                       <span aria-hidden="true" className="text-[#CFD8DC]">·</span>
                       <span className="flex items-center gap-1">
                         <Building2 className="w-3.5 h-3.5 text-[#00B5AD]" />
@@ -327,7 +327,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
                       {(user?.employeeId || user?.studentId) && (
                         <>
                           <span aria-hidden="true" className="text-[#CFD8DC]">·</span>
-                          <span className="flex items-center gap-1 font-mono">
+                          <span className="flex items-center gap-1 font-poppins">
                             <UserCheck className="w-3.5 h-3.5 text-[#3498DB]" />
                             ID: {user?.employeeId || user?.studentId}
                           </span>
@@ -355,7 +355,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
               </div>
 
               {error && (
-                <div className="p-3 rounded-[4px] bg-[#FDEDEC] border border-[#F5B7B1] text-[#C0392B] text-xs font-mono">
+                <div className="p-3 rounded-[4px] bg-[#FDEDEC] border border-[#F5B7B1] text-[#C0392B] text-xs font-poppins">
                   {error}
                 </div>
               )}
@@ -395,7 +395,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
               {/* 4. Security Audit Stream (Admins) */}
               {(user?.role === 'Super Admin' || user?.role === 'Admin') && (
-                <div className="bg-white border border-[#E4E7EB] p-5 rounded-[4px] shadow-[0_2px_4px_rgba(0,0,0,0.06)] space-y-3 font-roboto">
+                <div className="bg-white border border-[#E4E7EB] p-5 rounded-[4px] shadow-[0_2px_4px_rgba(0,0,0,0.06)] space-y-3 font-poppins">
                   <div className="flex items-center justify-between border-b border-[#ECEFF1] pb-3">
                     <div className="flex items-center gap-2">
                       <Terminal className="w-4 h-4 text-[#00B5AD]" />
@@ -407,14 +407,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
                     <button
                       onClick={fetchAuditLogs}
                       disabled={logsLoading}
-                      className="px-2.5 py-1 bg-[#F4F6F9] hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[4px] text-xs text-[#546E7A] transition-colors flex items-center gap-1.5 font-mono shadow-2xs"
+                      className="px-2.5 py-1 bg-[#F4F6F9] hover:bg-[#ECEFF1] border border-[#CFD8DC] rounded-[4px] text-xs text-[#546E7A] transition-colors flex items-center gap-1.5 font-poppins shadow-2xs"
                     >
                       <RefreshCw className={`w-3 h-3 text-[#00B5AD] ${logsLoading ? 'animate-spin' : ''}`} />
                       <span>Refresh</span>
                     </button>
                   </div>
 
-                  <div className="font-mono text-xs overflow-x-auto">
+                  <div className="font-poppins text-xs overflow-x-auto">
                     {auditLogs.length === 0 ? (
                       <p className="text-[#90A4AE] py-4 text-center">
                         No audit logs recorded in current runtime session.
@@ -458,9 +458,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         </main>
 
         {/* 2015 Flat Footer */}
-        <footer className="h-10 border-t border-[#E4E7EB] px-6 bg-white flex items-center justify-between text-[11px] text-[#78909C] font-roboto shadow-2xs">
-          <div>ScholarCore SIMS • Flat 2.0 & Material Design Dashboard</div>
-          <div className="font-mono text-[10px]">Real-time Academic Analytics Engine</div>
+        <footer className="h-10 border-t border-[#CFD8DC] px-6 bg-white flex items-center justify-between text-[11px] text-[#546E7A] font-poppins shadow-2xs">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-[#1A237E]">ScholarCore SIMS</span>
+            <span className="text-[#B0BEC5]">|</span>
+            <span>2015 Flat Design 2.0 & Material Portal</span>
+          </div>
+          <div className="font-poppins text-[10px] text-[#78909C] uppercase tracking-wider font-semibold">
+            Real-Time Academic Management
+          </div>
         </footer>
       </div>
     </div>

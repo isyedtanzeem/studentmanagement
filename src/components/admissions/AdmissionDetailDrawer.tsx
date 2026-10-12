@@ -101,21 +101,21 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
           {/* Header */}
           <div className="p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+              <div className="w-10 h-10 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-900 font-mono uppercase tracking-wider">
+                <h2 className="text-base font-bold text-slate-900 font-poppins uppercase tracking-wider">
                   Admission Profile Dossier
                 </h2>
-                <p className="text-xs text-slate-500 font-mono">
+                <p className="text-xs text-slate-500 font-poppins">
                   App #{application.applicationNumber}
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-200/60 transition-colors"
+              className="text-slate-400 hover:text-slate-700 p-2 rounded-[3px] hover:bg-slate-200/60 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -124,33 +124,33 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
           {/* Drawer Content */}
           <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
             {/* Top Identity Banner */}
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-[4px] flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 shadow-md">
-                  <div className="w-full h-full bg-white rounded-[14px] flex items-center justify-center text-blue-700 font-bold text-lg font-mono">
+                <div className="w-14 h-14 rounded-[4px] bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 shadow-md">
+                  <div className="w-full h-full bg-white rounded-[14px] flex items-center justify-center text-blue-700 font-bold text-lg font-poppins">
                     {application.applicantName.charAt(0)}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 font-mono">{application.applicantName}</h3>
+                  <h3 className="text-lg font-bold text-slate-900 font-poppins">{application.applicantName}</h3>
                   <p className="text-slate-600 text-xs">{application.email}</p>
                   <p className="text-slate-500 text-xs mt-0.5">{application.phone || 'Phone not provided'}</p>
                 </div>
               </div>
 
               <div className="text-right flex flex-col items-start md:items-end">
-                <span className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border ${statusBadgeColor}`}>
+                <span className={`px-3 py-1 rounded-full text-xs font-poppins font-semibold border ${statusBadgeColor}`}>
                   {application.status}
                 </span>
-                <span className="text-slate-500 font-mono text-[10px] mt-1">
+                <span className="text-slate-500 font-poppins text-[10px] mt-1">
                   Applied: {new Date(application.appliedDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </span>
               </div>
             </div>
 
             {/* Application Tracking Timeline */}
-            <div className="bg-slate-50/80 border border-slate-200 p-5 rounded-2xl space-y-3">
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+            <div className="bg-slate-50/80 border border-slate-200 p-5 rounded-[4px] space-y-3">
+              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                 <Clock className="w-4 h-4 text-blue-600" />
                 Application Lifecycle Tracking
               </h4>
@@ -166,7 +166,7 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
                   return (
                     <div
                       key={step.key}
-                      className={`p-2.5 rounded-xl border text-center font-mono text-[10px] flex flex-col items-center gap-1 transition-all ${
+                      className={`p-2.5 rounded-[3px] border text-center font-poppins text-[10px] flex flex-col items-center gap-1 transition-all ${
                         state === 'completed'
                           ? 'bg-emerald-50 border-emerald-200 text-emerald-700 font-medium'
                           : state === 'current'
@@ -190,7 +190,7 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
               </div>
 
               {application.generatedStudentId && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 flex items-center justify-between font-mono">
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[3px] text-emerald-800 flex items-center justify-between font-poppins">
                   <span className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Enrolled Roll Number:
                   </span>
@@ -201,8 +201,8 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
               )}
 
               {application.rejectionReason && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-800 space-y-1">
-                  <strong className="block font-mono uppercase text-[10px] text-red-900">Rejection Remarks:</strong>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-[3px] text-red-800 space-y-1">
+                  <strong className="block font-poppins uppercase text-[10px] text-red-900">Rejection Remarks:</strong>
                   <p>{application.rejectionReason}</p>
                 </div>
               )}
@@ -210,106 +210,106 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
 
             {/* Academic & Program Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl space-y-3">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-[3px] space-y-3">
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-blue-600" />
                   Academic Discipline
                 </h4>
                 <div className="space-y-1.5 text-slate-700">
                   <div>
-                    <span className="text-slate-500 block text-[10px] uppercase font-mono">Department</span>
+                    <span className="text-slate-500 block text-[10px] uppercase font-poppins">Department</span>
                     <strong className="text-slate-900">{application.department}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px] uppercase font-mono">Degree Choice</span>
+                    <span className="text-slate-500 block text-[10px] uppercase font-poppins">Degree Choice</span>
                     <strong className="text-blue-700">{application.degree || 'B.Tech'}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px] uppercase font-mono">Academic Term</span>
+                    <span className="text-slate-500 block text-[10px] uppercase font-poppins">Academic Term</span>
                     <span className="text-slate-800">{application.academicTerm}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl space-y-3">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-[3px] space-y-3">
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                   <Award className="w-4 h-4 text-blue-600" />
                   Prior Academic Performance
                 </h4>
                 <div className="space-y-1.5 text-slate-700">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600">Class X Board:</span>
-                    <strong className="text-slate-900 font-mono">{application.classXPercentage ? `${application.classXPercentage}%` : 'N/A'}</strong>
+                    <strong className="text-slate-900 font-poppins">{application.classXPercentage ? `${application.classXPercentage}%` : 'N/A'}</strong>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600">Class XII Board:</span>
-                    <strong className="text-slate-900 font-mono">{application.classXIIPercentage ? `${application.classXIIPercentage}%` : 'N/A'}</strong>
+                    <strong className="text-slate-900 font-poppins">{application.classXIIPercentage ? `${application.classXIIPercentage}%` : 'N/A'}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px] uppercase font-mono">Entrance Score</span>
-                    <span className="text-blue-700 font-mono font-bold">{application.entranceExamScore || 'N/A'}</span>
+                    <span className="text-slate-500 block text-[10px] uppercase font-poppins">Entrance Score</span>
+                    <span className="text-blue-700 font-poppins font-bold">{application.entranceExamScore || 'N/A'}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Personal & Parent Dossier */}
-            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl space-y-3">
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-[3px] space-y-3">
+              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                 <User className="w-4 h-4 text-blue-600" />
                 Personal & Family Details
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-slate-700">
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Category</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Category</span>
                   <span className="text-slate-900 font-semibold">{application.category || 'General'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Gender</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Gender</span>
                   <span className="text-slate-900">{application.gender}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Date of Birth</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Date of Birth</span>
                   <span className="text-slate-900">{application.dateOfBirth || 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Father's Name</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Father's Name</span>
                   <span className="text-slate-900">{application.fatherName || 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Mother's Name</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Mother's Name</span>
                   <span className="text-slate-900">{application.motherName || 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">State / Domicile</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">State / Domicile</span>
                   <span className="text-slate-900">{application.state || 'N/A'}</span>
                 </div>
               </div>
 
               {application.address && (
                 <div className="pt-2 border-t border-slate-200">
-                  <span className="text-slate-500 block text-[10px] uppercase font-mono">Address</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-poppins">Address</span>
                   <span className="text-slate-700">{application.address}</span>
                 </div>
               )}
             </div>
 
             {/* Document Verification Overview */}
-            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl space-y-3">
+            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-[3px] space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-blue-600" />
                   Document Verification Checklist
                 </h4>
                 <button
                   onClick={onOpenVerifyModal}
-                  className="text-blue-600 hover:underline font-mono text-[11px] cursor-pointer"
+                  className="text-blue-600 hover:underline font-poppins text-[11px] cursor-pointer"
                 >
                   Edit Checklist
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] font-mono">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] font-poppins">
                 <div className="flex items-center justify-between p-2 rounded bg-white border border-slate-200">
                   <span className="text-slate-700">Class X Marksheet</span>
                   <div className="flex items-center gap-2">
@@ -389,20 +389,20 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
             </div>
 
             {/* Applicant Attached Files & Documents */}
-            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl space-y-3">
+            <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-[3px] space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                   <Paperclip className="w-4 h-4 text-blue-600" />
                   Uploaded Attachments Dossier ({application.attachments?.length || 0})
                 </h4>
               </div>
 
               {application.attachments && application.attachments.length > 0 ? (
-                <div className="space-y-2 text-[11px] font-mono">
+                <div className="space-y-2 text-[11px] font-poppins">
                   {application.attachments.map((att) => (
                     <div
                       key={att.id}
-                      className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200"
+                      className="flex items-center justify-between p-2.5 rounded-[3px] bg-white border border-slate-200"
                     >
                       <div className="min-w-0 pr-2">
                         <span className="text-slate-900 font-medium block truncate">{att.category}</span>
@@ -445,7 +445,7 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="p-3 bg-white border border-slate-200 rounded-lg text-center text-slate-500 font-mono text-[11px] space-y-1">
+                <div className="p-3 bg-white border border-slate-200 rounded-[3px] text-center text-slate-500 font-poppins text-[11px] space-y-1">
                   <p>No additional custom attachments uploaded for this application.</p>
                   <button
                     type="button"
@@ -462,11 +462,11 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
           {/* Drawer Quick Action Footer */}
           <div className="p-5 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-slate-600 font-mono text-[11px]">Quick Status:</span>
+              <span className="text-slate-600 font-poppins text-[11px]">Quick Status:</span>
               <select
                 value={application.status}
                 onChange={(e) => onUpdateStatus(e.target.value as AdmissionStatus)}
-                className="bg-white border border-slate-300 rounded-lg px-2 py-1 text-slate-900 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-white border border-slate-300 rounded-[3px] px-2 py-1 text-slate-900 text-xs font-poppins focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="Pending">Pending</option>
                 <option value="Under Review">Under Review</option>
@@ -479,21 +479,21 @@ export const AdmissionDetailDrawer: React.FC<AdmissionDetailDrawerProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={onOpenRejectModal}
-                className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-mono font-medium transition-colors"
+                className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-[3px] text-xs font-poppins font-medium transition-colors"
               >
                 Reject
               </button>
 
               <button
                 onClick={onOpenVerifyModal}
-                className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-xl text-xs font-mono font-medium transition-colors"
+                className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-[3px] text-xs font-poppins font-medium transition-colors"
               >
                 Verify Docs
               </button>
 
               <button
                 onClick={onOpenApproveModal}
-                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs font-mono transition-colors shadow-xs"
+                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-[3px] text-xs font-poppins transition-colors shadow-xs"
               >
                 Approve & Enroll
               </button>

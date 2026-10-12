@@ -193,16 +193,16 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white border border-slate-200 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
+          className="bg-white border border-slate-200 rounded-[4px] w-full max-w-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col"
         >
           {/* Header */}
           <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+              <div className="w-10 h-10 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 font-mono uppercase tracking-wider">
+                <h2 className="text-lg font-bold text-slate-900 font-poppins uppercase tracking-wider">
                   New Admission Application
                 </h2>
                 <p className="text-xs text-slate-500">
@@ -212,14 +212,14 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-200/60 transition-colors"
+              className="text-slate-400 hover:text-slate-700 p-2 rounded-[3px] hover:bg-slate-200/60 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Stepper Header */}
-          <div className="grid grid-cols-3 border-b border-slate-200 text-xs font-mono bg-slate-50/50">
+          <div className="grid grid-cols-3 border-b border-slate-200 text-xs font-poppins bg-slate-50/50">
             <button
               type="button"
               onClick={() => setActiveStep(1)}
@@ -267,7 +267,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 text-xs flex-1">
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-2 text-xs">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-[3px] text-red-700 flex items-center gap-2 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                 <span>{error}</span>
               </div>
@@ -288,7 +288,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         placeholder="e.g. Siddharth Mukherjee"
                         value={formData.applicantName}
                         onChange={handleChange}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                       />
                     </div>
                   </div>
@@ -304,7 +304,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         placeholder="e.g. siddharth.m@gmail.com"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                       />
                     </div>
                   </div>
@@ -321,7 +321,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         placeholder="+91 98765 43210"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                       />
                     </div>
                   </div>
@@ -332,7 +332,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     >
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -347,7 +347,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       placeholder="e.g. Debabrata Mukherjee"
                       value={formData.fatherName}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
 
@@ -373,7 +373,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       placeholder="e.g. Sharmila Mukherjee"
                       value={formData.motherName}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
 
@@ -383,7 +383,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="category"
                       value={formData.category}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     >
                       <option value="General">General</option>
                       <option value="OBC">OBC (Non-Creamy)</option>
@@ -401,7 +401,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="state"
                       value={formData.state}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     >
                       {INDIAN_STATES.map((s) => (
                         <option key={s} value={s}>{s}</option>
@@ -417,7 +417,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       placeholder="Full residential street address with pincode"
                       value={formData.address}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
                 </div>
@@ -436,7 +436,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                       >
                         {departmentsList.map((dept) => (
                           <option key={dept} value={dept}>{dept}</option>
@@ -451,7 +451,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="degree"
                       value={formData.degree}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     >
                       {(deptDegreesMap[formData.department] || DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
                         <option key={deg} value={deg}>{deg}</option>
@@ -471,7 +471,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="classXPercentage"
                       value={formData.classXPercentage}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
 
@@ -485,7 +485,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="classXIIPercentage"
                       value={formData.classXIIPercentage}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
 
@@ -496,7 +496,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       name="academicTerm"
                       readOnly
                       value={formData.academicTerm}
-                      className="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-slate-500 cursor-not-allowed"
+                      className="w-full bg-slate-100 border border-slate-200 rounded-[3px] px-3 py-2 text-slate-500 cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -511,7 +511,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                       placeholder="e.g. JEE Main: 98.4 Percentile or CUET Score: 720/800"
                       value={formData.entranceExamScore}
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                     />
                   </div>
                 </div>
@@ -521,8 +521,8 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
             {/* STEP 3: Documents Upload & Confirmation */}
             {activeStep === 3 && (
               <div className="space-y-4">
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-[3px] space-y-3">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-2">
                     <FileText className="w-4 h-4 text-blue-600" />
                     Document Submission & Attachments
                   </h3>
@@ -537,18 +537,18 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                     ].map((doc) => {
                       const existingAtt = (formData.attachments || []).find((a) => a.category === doc.key);
                       return (
-                        <div key={doc.key} className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200">
+                        <div key={doc.key} className="flex items-center justify-between p-2.5 rounded-[3px] bg-white border border-slate-200">
                           <div className="min-w-0 pr-2">
                             <span className="block font-medium text-slate-900 truncate">{doc.label}</span>
                             {existingAtt ? (
-                              <span className="text-[10px] text-emerald-600 font-mono truncate block font-semibold">
+                              <span className="text-[10px] text-emerald-600 font-poppins truncate block font-semibold">
                                 ✓ {existingAtt.name} ({existingAtt.size})
                               </span>
                             ) : (
-                              <span className="text-[10px] text-slate-400 font-mono block">Not Attached</span>
+                              <span className="text-[10px] text-slate-400 font-poppins block">Not Attached</span>
                             )}
                           </div>
-                          <label className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-mono text-slate-700 cursor-pointer transition-colors shrink-0 flex items-center gap-1 border border-slate-300">
+                          <label className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] font-poppins text-slate-700 cursor-pointer transition-colors shrink-0 flex items-center gap-1 border border-slate-300">
                             <Upload className="w-3 h-3 text-blue-600" />
                             <input
                               type="file"
@@ -565,10 +565,10 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                   {/* Custom Document Attachment Input */}
                   <div className="pt-3 border-t border-slate-200 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold text-blue-700 uppercase flex items-center gap-1">
+                      <span className="text-xs font-poppins font-bold text-blue-700 uppercase flex items-center gap-1">
                         <Paperclip className="w-3.5 h-3.5" /> Add Custom Attachment
                       </span>
-                      <span className="text-[10px] text-slate-500 font-mono">
+                      <span className="text-[10px] text-slate-500 font-poppins">
                         {(formData.attachments || []).length} Attached
                       </span>
                     </div>
@@ -579,9 +579,9 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         value={customDocTitle}
                         onChange={(e) => setCustomDocTitle(e.target.value)}
                         placeholder="e.g. Caste / Income / Sports Certificate"
-                        className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="flex-1 bg-white border border-slate-300 rounded-[3px] px-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <label className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs font-mono cursor-pointer transition-colors flex items-center gap-1 shrink-0 shadow-xs">
+                      <label className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs font-poppins cursor-pointer transition-colors flex items-center gap-1 shrink-0 shadow-xs">
                         <Plus className="w-3.5 h-3.5" />
                         <span>Upload</span>
                         <input
@@ -598,7 +598,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                         {(formData.attachments || []).map((att) => (
                           <div
                             key={att.id}
-                            className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between text-xs font-mono"
+                            className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between text-xs font-poppins"
                           >
                             <div className="min-w-0 pr-2">
                               <span className="text-slate-900 font-medium block truncate">{att.category}</span>
@@ -619,8 +619,8 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                   </div>
                 </div>
 
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 text-[11px] leading-relaxed">
-                  <strong className="text-blue-800 block font-mono uppercase tracking-wider mb-0.5">
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-[3px] text-blue-900 text-[11px] leading-relaxed">
+                  <strong className="text-blue-800 block font-poppins uppercase tracking-wider mb-0.5">
                     Verification Notice
                   </strong>
                   Upon submitting this admission application, an official tracking application number (e.g. APP-2026-XXXX) will be issued. The Central Verification Cell will audit academic credentials before approving student enrollment.
@@ -634,7 +634,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                 <button
                   type="button"
                   onClick={() => setActiveStep((prev) => (prev - 1) as any)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-mono transition-colors"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[3px] text-xs font-poppins transition-colors"
                 >
                   Back
                 </button>
@@ -646,7 +646,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl text-xs font-mono transition-colors"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-[3px] text-xs font-poppins transition-colors"
                 >
                   Cancel
                 </button>
@@ -655,7 +655,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                   <button
                     type="button"
                     onClick={() => setActiveStep((prev) => (prev + 1) as any)}
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs font-mono transition-colors shadow-xs"
+                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs font-poppins transition-colors shadow-xs"
                   >
                     Next Step
                   </button>
@@ -663,7 +663,7 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs font-mono transition-colors flex items-center gap-2 disabled:opacity-50 shadow-xs"
+                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs font-poppins transition-colors flex items-center gap-2 disabled:opacity-50 shadow-xs"
                   >
                     {isSubmitting ? 'Submitting Application...' : 'Submit Admission Application'}
                   </button>

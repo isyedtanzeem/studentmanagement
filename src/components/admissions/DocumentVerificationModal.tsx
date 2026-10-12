@@ -159,26 +159,26 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+            className="bg-white border border-slate-200 rounded-[4px] w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
           >
             {/* Header */}
             <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-slate-900 font-mono uppercase tracking-wider">
+                  <h2 className="text-base font-bold text-slate-900 font-poppins uppercase tracking-wider">
                     Document Verification
                   </h2>
-                  <p className="text-xs text-slate-500 font-mono">
+                  <p className="text-xs text-slate-500 font-poppins">
                     {application.applicationNumber} • {application.applicantName}
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-200/60 transition-colors cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-2 rounded-[3px] hover:bg-slate-200/60 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -186,7 +186,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
 
             <form onSubmit={handleSave} className="p-6 space-y-5 text-xs overflow-y-auto flex-1">
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-[3px] text-red-700 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                   <span>{error}</span>
                 </div>
@@ -198,7 +198,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                 </p>
 
                 {/* Verification Checklist Items with direct Document Viewer Action */}
-                <div className="space-y-2.5 bg-slate-50 p-4 border border-slate-200 rounded-xl">
+                <div className="space-y-2.5 bg-slate-50 p-4 border border-slate-200 rounded-[3px]">
                   {checklistDocConfig.map((item) => {
                     const isChecked = Boolean(checklist[item.key]);
                     const docToView = getDocForCategory(item.title, item.keys);
@@ -206,7 +206,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                     return (
                       <div
                         key={item.key}
-                        className="p-3 rounded-xl bg-white border border-slate-200 space-y-2"
+                        className="p-3 rounded-[3px] bg-white border border-slate-200 space-y-2"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div
@@ -225,7 +225,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
 
                           <div className="flex items-center gap-2 shrink-0">
                             <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
+                              className={`px-2 py-0.5 rounded text-[10px] font-poppins font-semibold ${
                                 isChecked
                                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                   : 'bg-slate-100 text-slate-500 border border-slate-200'
@@ -238,7 +238,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                             <button
                               type="button"
                               onClick={() => openDocumentView(docToView)}
-                              className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-lg flex items-center gap-1 font-mono text-[11px] transition-colors cursor-pointer"
+                              className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-[3px] flex items-center gap-1 font-poppins text-[11px] transition-colors cursor-pointer"
                               title="View Document Attachment"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -252,21 +252,21 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                 </div>
 
                 {/* Uploaded Attachments Dossier */}
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-[3px] space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-poppins flex items-center gap-1.5">
                       <Paperclip className="w-3.5 h-3.5 text-blue-600" />
                       Uploaded File Attachments ({application.attachments?.length || 0})
                     </h4>
-                    <span className="text-[10px] text-slate-500 font-mono">All Submitted Documents</span>
+                    <span className="text-[10px] text-slate-500 font-poppins">All Submitted Documents</span>
                   </div>
 
                   {application.attachments && application.attachments.length > 0 ? (
-                    <div className="space-y-2 font-mono text-[11px]">
+                    <div className="space-y-2 font-poppins text-[11px]">
                       {application.attachments.map((att) => (
                         <div
                           key={att.id}
-                          className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200"
+                          className="flex items-center justify-between p-2.5 rounded-[3px] bg-white border border-slate-200"
                         >
                           <div className="min-w-0 pr-2">
                             <span className="text-slate-900 font-medium block truncate">{att.category}</span>
@@ -327,7 +327,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-3 bg-white border border-slate-200 rounded-lg text-center text-slate-500 font-mono text-[11px] space-y-1">
+                    <div className="p-3 bg-white border border-slate-200 rounded-[3px] text-center text-slate-500 font-poppins text-[11px] space-y-1">
                       <p className="text-slate-700">Standard secondary board & identification certificates attached.</p>
                       <button
                         type="button"
@@ -339,7 +339,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                             size: '2.4 MB Scan'
                           })
                         }
-                        className="mt-2 px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded font-mono text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer"
+                        className="mt-2 px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded font-poppins text-[11px] inline-flex items-center gap-1 transition-colors cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>View Applicant Document Dossier</span>
@@ -354,7 +354,7 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                     type="text"
                     value={verifiedBy}
                     onChange={(e) => setVerifiedBy(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                   />
                 </div>
               </div>
@@ -363,14 +363,14 @@ export const DocumentVerificationModal: React.FC<DocumentVerificationModalProps>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl text-xs font-mono transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-[3px] text-xs font-poppins transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs font-mono transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs font-poppins transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Document Verification'}
                 </button>

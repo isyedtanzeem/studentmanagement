@@ -126,19 +126,19 @@ export const CourseModal: React.FC<CourseModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-3xl bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden my-8"
+          className="relative w-full max-w-3xl bg-white border border-slate-200 rounded-[4px] shadow-xl overflow-hidden my-8"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50/80">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
+              <div className="w-10 h-10 rounded-[3px] bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
                 <h2 className="text-base font-bold text-slate-900">
                   {isEditing ? `Edit Course: ${courseToEdit?.code}` : 'Add New Academic Course'}
                 </h2>
-                <p className="text-xs text-slate-500 font-sans">
+                <p className="text-xs text-slate-500 font-poppins">
                   Define curriculum duration, fee structure, academic credits & department mapping
                 </p>
               </div>
@@ -146,16 +146,16 @@ export const CourseModal: React.FC<CourseModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-slate-700 rounded-[3px] hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Form Content */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-5 text-xs font-sans">
+          <form onSubmit={handleSubmit} className="p-6 space-y-5 text-xs font-poppins">
             {errorMessage && (
-              <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-rose-700 font-mono">
+              <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-[3px] flex items-center gap-3 text-rose-700 font-poppins">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -174,7 +174,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   value={formData.code}
                   onChange={handleChange}
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 font-mono text-xs uppercase"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 font-poppins text-xs uppercase"
                 />
               </div>
 
@@ -189,7 +189,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   value={formData.department}
                   onChange={handleChange}
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
                 >
                   {departmentOptions.length > 0 ? (
                     departmentOptions.map((d) => (
@@ -246,7 +246,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   placeholder="e.g. B.Tech CSE, MBA, M.Tech"
                   value={formData.degreeProgram}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
                 />
               </div>
 
@@ -258,7 +258,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   name="level"
                   value={formData.level}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
                 >
                   <option value="Undergraduate">Undergraduate</option>
                   <option value="Postgraduate">Postgraduate</option>
@@ -269,7 +269,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
             </div>
 
             {/* Course Duration & Credits Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 border border-slate-200 p-3.5 rounded-xl font-sans">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 border border-slate-200 p-3.5 rounded-[3px] font-poppins">
               <div>
                 <label className="block text-slate-700 text-[11px] mb-1 font-medium flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-blue-600" />
@@ -279,7 +279,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   name="duration"
                   value={formData.duration}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
+                  className="w-full bg-white border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
                 >
                   <option value="4 Years / 8 Semesters">4 Years / 8 Semesters</option>
                   <option value="3 Years / 6 Semesters">3 Years / 6 Semesters</option>
@@ -301,7 +301,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   max="30"
                   value={formData.credits}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-medium font-mono"
+                  className="w-full bg-white border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-medium font-poppins"
                 />
               </div>
 
@@ -316,19 +316,19 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   max="1000"
                   value={formData.maxCapacity}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-medium font-mono"
+                  className="w-full bg-white border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-medium font-poppins"
                 />
               </div>
             </div>
 
             {/* Course Fee Structure Section */}
-            <div className="bg-blue-50/60 border border-blue-200 p-4 rounded-xl space-y-3 font-sans">
+            <div className="bg-blue-50/60 border border-blue-200 p-4 rounded-[3px] space-y-3 font-poppins">
               <div className="flex items-center justify-between border-b border-blue-200/80 pb-2">
                 <span className="text-xs text-blue-900 font-bold uppercase tracking-wide flex items-center gap-1.5">
                   <DollarSign className="w-4 h-4 text-blue-600" />
                   Course Fee Structure (INR ₹ / Semester)
                 </span>
-                <span className="text-blue-900 font-bold text-xs bg-white border border-blue-200 px-2 py-0.5 rounded font-mono">
+                <span className="text-blue-900 font-bold text-xs bg-white border border-blue-200 px-2 py-0.5 rounded font-poppins">
                   Total Fee: ₹{calculatedTotalFee.toLocaleString('en-IN')}
                 </span>
               </div>
@@ -345,7 +345,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                     step="1000"
                     value={formData.courseFee}
                     onChange={handleChange}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-mono font-medium"
+                    className="w-full bg-white border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-poppins font-medium"
                   />
                 </div>
 
@@ -360,7 +360,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                     step="500"
                     value={formData.labFee}
                     onChange={handleChange}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-mono font-medium"
+                    className="w-full bg-white border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:border-blue-600 text-xs font-poppins font-medium"
                   />
                 </div>
               </div>
@@ -379,7 +379,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   placeholder="e.g. Prof. Ramesh Kulkarni"
                   value={formData.instructorName}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
                 />
               </div>
 
@@ -391,7 +391,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
                 >
                   <option value="Active">Active (Offering Intake)</option>
                   <option value="Inactive">Inactive (Suspended)</option>
@@ -409,7 +409,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 placeholder="e.g. Basic Mathematics, Linear Algebra, Object-Oriented Programming"
                 value={formData.prerequisites}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs font-medium"
               />
             </div>
 
@@ -423,7 +423,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
                 placeholder="Brief summary of modules, academic goals, and learning outcomes..."
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs resize-none font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 text-xs resize-none font-medium"
               />
             </div>
 
@@ -432,7 +432,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors text-xs cursor-pointer"
+                className="px-4 py-2.5 rounded-[3px] border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors text-xs cursor-pointer"
               >
                 Cancel
               </button>
@@ -440,7 +440,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>{isSubmitting ? 'Saving...' : isEditing ? 'Update Course' : 'Save New Course'}</span>

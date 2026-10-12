@@ -53,7 +53,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-card-dark border-glass rounded-xl p-6 shadow-2xl relative space-y-6">
+      <div className="max-w-md w-full bg-card-dark border-glass rounded-[3px] p-6 shadow-2xl relative space-y-6">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
@@ -62,7 +62,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-lg flex items-center justify-center text-[#D4AF37]">
+          <div className="w-10 h-10 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-[3px] flex items-center justify-center text-[#D4AF37]">
             <KeyRound className="w-5 h-5" />
           </div>
           <div>
@@ -72,14 +72,14 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
         </div>
 
         {error && (
-          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-2.5 text-xs text-red-400">
+          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-[3px] flex items-center gap-2.5 text-xs text-red-400">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {message && (
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg flex items-center gap-2.5 text-xs text-emerald-400">
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-[3px] flex items-center gap-2.5 text-xs text-emerald-400">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{message}</span>
           </div>
@@ -93,7 +93,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37] transition-all"
+              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-[3px] text-white focus:outline-none focus:border-[#D4AF37] transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -105,7 +105,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37] transition-all"
+              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-[3px] text-white focus:outline-none focus:border-[#D4AF37] transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -117,7 +117,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#D4AF37] transition-all"
+              className="w-full px-3.5 py-2.5 bg-black/60 border border-white/10 rounded-[3px] text-white focus:outline-none focus:border-[#D4AF37] transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -126,7 +126,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg text-xs transition-all"
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 rounded-[3px] text-xs transition-all"
             >
               Cancel
             </button>
@@ -134,7 +134,7 @@ export const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-[#D4AF37] hover:bg-[#b8972e] text-black font-semibold rounded-lg text-xs transition-all flex items-center gap-2"
+              className="px-4 py-2 bg-[#D4AF37] hover:bg-[#b8972e] text-black font-semibold rounded-[3px] text-xs transition-all flex items-center gap-2"
             >
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>Update Password</span>

@@ -79,15 +79,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       {/* Top Header */}
       <header className="h-16 border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur-md shadow-xs sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20">
-            <span className="serif-font">S</span>
+          <div className="w-9 h-9 bg-blue-600 text-white rounded-[3px] flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20 font-poppins">
+            <span>S</span>
           </div>
           <div>
             <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
               <span>ScholarCore</span>
-              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-mono">ERP</span>
+              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-poppins">ERP</span>
             </h1>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Enterprise Auth System v1.0</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-poppins">Enterprise Auth System v1.0</p>
           </div>
         </div>
 
@@ -95,14 +95,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           {onNavigateToApplicantPortal && (
             <button
               onClick={onNavigateToApplicantPortal}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-[3px] bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs transition-all cursor-pointer"
             >
               <GraduationCap className="w-4 h-4 text-blue-600" />
               <span>Student Applicant Portal (2026-27)</span>
             </button>
           )}
 
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-600 font-medium bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-600 font-medium bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-[3px]">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="text-emerald-700 text-[11px] font-semibold">Authentication Active</span>
           </div>
@@ -114,9 +114,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* Left Column: Quick Role Presets & Architecture Info */}
-          <div className="lg:col-span-5 bg-white border border-slate-200/90 p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-6">
+          <div className="lg:col-span-5 bg-white border border-slate-200/90 p-6 rounded-[4px] shadow-sm flex flex-col justify-between space-y-6">
             <div>
-              <div className="flex items-center gap-2 text-blue-600 text-xs font-mono font-bold uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-blue-600 text-xs font-poppins font-bold uppercase tracking-wider mb-2">
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>Demo Role Quick Switcher</span>
               </div>
@@ -133,7 +133,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     key={preset.role}
                     type="button"
                     onClick={() => handlePresetSelect(preset)}
-                    className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
+                    className={`w-full p-3 rounded-[3px] border text-left transition-all flex items-center justify-between cursor-pointer ${
                       selectedPreset === preset.role
                         ? 'bg-blue-50/80 border-blue-500 text-blue-900 shadow-sm shadow-blue-500/10'
                         : 'bg-slate-50/70 border-slate-200/80 text-slate-700 hover:bg-slate-100/80 hover:border-slate-300'
@@ -153,21 +153,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </div>
             </div>
 
-            <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl text-[11px] text-slate-600 space-y-1">
+            <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-[3px] text-[11px] text-slate-600 space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-blue-700 font-mono font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
+                <span className="text-blue-700 font-poppins font-bold text-[10px] uppercase tracking-wider flex items-center gap-1">
                   <KeyRound className="w-3 h-3 text-blue-600" /> Default Demo Password
                 </span>
                 <span className="text-[10px] text-slate-400">Bcrypt Salted</span>
               </div>
-              <p className="font-mono text-slate-900 font-bold text-xs bg-white px-2.5 py-1 rounded border border-slate-200">
+              <p className="font-poppins text-slate-900 font-bold text-xs bg-white px-2.5 py-1 rounded border border-slate-200">
                 Password123!
               </p>
             </div>
           </div>
 
           {/* Right Column: Login Form */}
-          <div className="lg:col-span-7 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-sm flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-white border border-slate-200/90 p-6 sm:p-8 rounded-[4px] shadow-sm flex flex-col justify-between">
             <div className="space-y-6">
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Account Authentication</h3>
@@ -177,7 +177,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </div>
 
               {error && (
-                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-xs text-rose-700 font-medium">
+                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-[3px] flex items-center gap-3 text-xs text-rose-700 font-medium">
                   <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                   <span>{error}</span>
                 </div>
@@ -197,7 +197,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         if (error) clearError();
                       }}
                       placeholder="user@scholarcore.edu.in"
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-[3px] text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -224,7 +224,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         if (error) clearError();
                       }}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+                      className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-[3px] text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                     />
                     <button
                       type="button"
@@ -246,13 +246,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     />
                     <span className="text-xs font-medium">Keep me logged in for 7 days</span>
                   </label>
-                  <span className="text-slate-400 text-[10px] font-mono">JWT + HttpOnly Cookie</span>
+                  <span className="text-slate-400 text-[10px] font-poppins">JWT + HttpOnly Cookie</span>
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 mt-4 cursor-pointer disabled:opacity-70"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-[3px] text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 mt-4 cursor-pointer disabled:opacity-70"
                 >
                   {isLoading ? (
                     <>
@@ -269,7 +269,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               </form>
             </div>
 
-            <div className="pt-6 border-t border-slate-100 mt-6 flex justify-between items-center text-[10px] text-slate-500 font-mono">
+            <div className="pt-6 border-t border-slate-100 mt-6 flex justify-between items-center text-[10px] text-slate-500 font-poppins">
               <span className="flex items-center gap-1">
                 <Building2 className="w-3 h-3 text-slate-400" />
                 ScholarCore Enterprise Instance
@@ -281,7 +281,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       </main>
 
       {/* Footer */}
-      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-mono">
+      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-poppins">
         <div>ScholarCore SIMS Auth Module • JWT + Bcrypt Engine</div>
         <div className="hidden sm:block">Session Timeout: 15m (AccessToken) / 7d (RefreshToken)</div>
       </footer>

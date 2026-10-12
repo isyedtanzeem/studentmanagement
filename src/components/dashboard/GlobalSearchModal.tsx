@@ -123,7 +123,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4 animate-in fade-in duration-200">
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[80vh]">
+      <div className="bg-white border border-slate-200 rounded-[4px] w-full max-w-2xl overflow-hidden shadow-xl flex flex-col max-h-[80vh]">
         {/* Search Bar Input */}
         <div className="p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50">
           <Search className="w-5 h-5 text-blue-600 shrink-0" />
@@ -133,20 +133,20 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             onChange={e => setQuery(e.target.value)}
             autoFocus
             placeholder="Search students, courses, departments, applications, or jump to workspace module..."
-            className="w-full bg-transparent text-sm text-slate-900 focus:outline-none placeholder:text-slate-400 font-sans"
+            className="w-full bg-transparent text-sm text-slate-900 focus:outline-none placeholder:text-slate-400 font-poppins"
           />
           {query && (
             <button onClick={() => setQuery('')} className="text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] text-slate-500 font-mono shadow-2xs">
+          <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-white border border-slate-200 text-[10px] text-slate-500 font-poppins shadow-2xs">
             ESC
           </span>
         </div>
 
         {/* Results Body */}
-        <div className="p-4 overflow-y-auto space-y-4 flex-1 font-sans">
+        <div className="p-4 overflow-y-auto space-y-4 flex-1 font-poppins">
           {loading && (
             <div className="py-8 text-center text-xs text-blue-600 flex items-center justify-center gap-2">
               <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -170,10 +170,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         onSelectModule(mod.id as any);
                         onClose();
                       }}
-                      className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-left flex items-center justify-between group shadow-2xs"
+                      className="p-2.5 rounded-[3px] bg-slate-50 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-left flex items-center justify-between group shadow-2xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <div className="p-1.5 rounded-[3px] bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
                           <Icon className="w-4 h-4" />
                         </div>
                         <div>
@@ -203,7 +203,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onSelectModule('students');
                       onClose();
                     }}
-                    className="p-2.5 rounded-xl bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
+                    className="p-2.5 rounded-[3px] bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
                       <Users className="w-4 h-4 text-amber-400" />
@@ -212,7 +212,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <p className="text-[10px] text-zinc-400">Roll: {s.roll} • Dept: {s.dept}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-mono">View Record</span>
+                    <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-poppins">View Record</span>
                   </div>
                 ))}
               </div>
@@ -233,7 +233,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onSelectModule('courses');
                       onClose();
                     }}
-                    className="p-2.5 rounded-xl bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
+                    className="p-2.5 rounded-[3px] bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
                       <BookOpen className="w-4 h-4 text-indigo-400" />
@@ -242,7 +242,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <p className="text-[10px] text-zinc-400">Department: {c.dept}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded font-mono font-semibold">Syllabus</span>
+                    <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded font-poppins font-semibold">Syllabus</span>
                   </div>
                 ))}
               </div>
@@ -263,7 +263,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onSelectModule('departments');
                       onClose();
                     }}
-                    className="p-2.5 rounded-xl bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
+                    className="p-2.5 rounded-[3px] bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
                       <Building2 className="w-4 h-4 text-emerald-400" />
@@ -271,7 +271,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <p className="text-xs font-medium text-white">[{d.code}] {d.name}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-mono">Faculty Info</span>
+                    <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-poppins">Faculty Info</span>
                   </div>
                 ))}
               </div>
@@ -292,7 +292,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onSelectModule('admissions');
                       onClose();
                     }}
-                    className="p-2.5 rounded-xl bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
+                    className="p-2.5 rounded-[3px] bg-black/40 border border-white/5 hover:border-amber-500/30 cursor-pointer flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
                       <GraduationCap className="w-4 h-4 text-amber-400" />
@@ -301,7 +301,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <p className="text-[10px] text-zinc-400">Status: {a.status}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-mono">Applicant Details</span>
+                    <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-poppins">Applicant Details</span>
                   </div>
                 ))}
               </div>
@@ -312,10 +312,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         {/* Footer */}
         <div className="p-3 bg-black/60 border-t border-white/10 text-xs text-zinc-400 flex items-center justify-between px-4">
           <div className="flex items-center gap-2 text-[11px]">
-            <span className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">↑↓</span> to navigate
-            <span className="px-1.5 py-0.5 rounded bg-white/10 font-mono text-[10px]">ENTER</span> to select
+            <span className="px-1.5 py-0.5 rounded bg-white/10 font-poppins text-[10px]">↑↓</span> to navigate
+            <span className="px-1.5 py-0.5 rounded bg-white/10 font-poppins text-[10px]">ENTER</span> to select
           </div>
-          <span className="text-[10px] text-amber-400/80 font-mono">ScholarCore Search v2.6</span>
+          <span className="text-[10px] text-amber-400/80 font-poppins">ScholarCore Search v2.6</span>
         </div>
       </div>
     </div>

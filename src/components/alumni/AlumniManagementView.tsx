@@ -251,7 +251,7 @@ export const AlumniManagementView: React.FC = () => {
       {/* Top Banner Alert */}
       {banner && (
         <div
-          className={`p-4 rounded-xl border shadow-sm flex items-start justify-between transition-all ${
+          className={`p-4 rounded-[3px] border shadow-sm flex items-start justify-between transition-all ${
             banner.type === 'success'
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
               : banner.type === 'error'
@@ -272,11 +272,11 @@ export const AlumniManagementView: React.FC = () => {
       )}
 
       {/* Header & Quick Summary KPI Cards */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-[4px] border border-slate-200 p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl border border-amber-100">
+              <div className="p-2.5 bg-amber-50 text-amber-600 rounded-[3px] border border-amber-100">
                 <GraduationCap className="w-6 h-6" />
               </div>
               <div>
@@ -291,7 +291,7 @@ export const AlumniManagementView: React.FC = () => {
           <div className="flex items-center space-x-3">
             <button
               onClick={handleExportCSV}
-              className="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition"
+              className="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-[3px] transition"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export Directory</span>
@@ -326,7 +326,7 @@ export const AlumniManagementView: React.FC = () => {
                 });
                 setShowAddEditModal(true);
               }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-sm"
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-[3px] transition shadow-sm"
             >
               <Plus className="w-4 h-4" />
               <span>Register Alumni</span>
@@ -336,7 +336,7 @@ export const AlumniManagementView: React.FC = () => {
 
         {/* Stats Metrics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100">
-          <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-200/60">
+          <div className="bg-slate-50/80 rounded-[3px] p-4 border border-slate-200/60">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-slate-500">Total Registered Alumni</span>
               <Users className="w-4 h-4 text-slate-400" />
@@ -345,7 +345,7 @@ export const AlumniManagementView: React.FC = () => {
             <div className="text-[11px] text-slate-500 mt-0.5">Classes of 2018 - 2024</div>
           </div>
 
-          <div className="bg-emerald-50/50 rounded-xl p-4 border border-emerald-100">
+          <div className="bg-emerald-50/50 rounded-[3px] p-4 border border-emerald-100">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-emerald-700">Employment Rate</span>
               <Briefcase className="w-4 h-4 text-emerald-600" />
@@ -354,7 +354,7 @@ export const AlumniManagementView: React.FC = () => {
             <div className="text-[11px] text-emerald-600 mt-0.5">Employed + Founders + Higher Ed</div>
           </div>
 
-          <div className="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100">
+          <div className="bg-indigo-50/50 rounded-[3px] p-4 border border-indigo-100">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-indigo-700">Top Employers</span>
               <Building2 className="w-4 h-4 text-indigo-600" />
@@ -365,7 +365,7 @@ export const AlumniManagementView: React.FC = () => {
             <div className="text-[11px] text-indigo-600 mt-0.5">{reports?.topCompanies?.length || 5}+ MNCs & Startups</div>
           </div>
 
-          <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-100">
+          <div className="bg-amber-50/50 rounded-[3px] p-4 border border-amber-100">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-amber-700">Total Alumni Giving</span>
               <Heart className="w-4 h-4 text-amber-600" />
@@ -390,7 +390,7 @@ export const AlumniManagementView: React.FC = () => {
         >
           <Users className="w-4 h-4" />
           <span>Alumni Directory</span>
-          <span className="ml-1.5 px-2 py-0.5 rounded-full text-xs bg-indigo-50 text-indigo-700 font-bold">
+          <span className="ml-1.5 px-2 py-0.5 rounded-[3px] text-xs bg-indigo-50 text-indigo-700 font-bold">
             {alumniList.length}
           </span>
         </button>
@@ -424,7 +424,7 @@ export const AlumniManagementView: React.FC = () => {
       {activeTab === 'directory' && (
         <div className="space-y-6">
           {/* Filters Bar */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
+          <div className="bg-white rounded-[4px] border border-slate-200 p-4 shadow-sm space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
               {/* Search */}
               <div className="relative md:col-span-2">
@@ -434,7 +434,7 @@ export const AlumniManagementView: React.FC = () => {
                   placeholder="Search name, roll ID, company, location..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-[3px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 />
               </div>
 
@@ -443,7 +443,7 @@ export const AlumniManagementView: React.FC = () => {
                 <select
                   value={yearFilter}
                   onChange={e => setYearFilter(e.target.value)}
-                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-[3px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 >
                   <option value="ALL">All Graduation Years</option>
                   <option value="2024">Class of 2024</option>
@@ -459,7 +459,7 @@ export const AlumniManagementView: React.FC = () => {
                 <select
                   value={departmentFilter}
                   onChange={e => setDepartmentFilter(e.target.value)}
-                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-[3px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 >
                   <option value="ALL">All Departments</option>
                   <option value="Computer Science & Engineering">Computer Science & Engg</option>
@@ -476,7 +476,7 @@ export const AlumniManagementView: React.FC = () => {
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value)}
-                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full py-2 px-3 text-xs bg-slate-50 border border-slate-200 rounded-[3px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 >
                   <option value="ALL">All Employment Statuses</option>
                   <option value="Employed">Employed</option>
@@ -504,7 +504,7 @@ export const AlumniManagementView: React.FC = () => {
                 <span className="text-slate-400">View:</span>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                  className={`px-2.5 py-1 rounded-[3px] text-xs font-semibold ${
                     viewMode === 'grid' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-slate-500'
                   }`}
                 >
@@ -512,7 +512,7 @@ export const AlumniManagementView: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                  className={`px-2.5 py-1 rounded-[3px] text-xs font-semibold ${
                     viewMode === 'table' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-slate-500'
                   }`}
                 >
@@ -524,12 +524,12 @@ export const AlumniManagementView: React.FC = () => {
 
           {/* Alumni Grid / Table */}
           {loading ? (
-            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+            <div className="p-12 text-center bg-white rounded-[4px] border border-slate-200">
               <RefreshCw className="w-6 h-6 text-indigo-600 animate-spin mx-auto" />
               <p className="text-xs text-slate-500 mt-2">Loading alumni directory...</p>
             </div>
           ) : alumniList.length === 0 ? (
-            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+            <div className="p-12 text-center bg-white rounded-[4px] border border-slate-200">
               <Users className="w-10 h-10 text-slate-300 mx-auto" />
               <h3 className="text-sm font-semibold text-slate-800 mt-2">No alumni profiles match current search criteria</h3>
               <p className="text-xs text-slate-500 mt-1">Try resetting search keywords or filters above.</p>
@@ -539,7 +539,7 @@ export const AlumniManagementView: React.FC = () => {
               {alumniList.map(alumni => (
                 <div
                   key={alumni.id}
-                  className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                  className="bg-white rounded-[4px] border border-slate-200/90 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
@@ -556,7 +556,7 @@ export const AlumniManagementView: React.FC = () => {
                           <h3 className="text-sm font-bold text-slate-900 hover:text-indigo-600 transition">
                             {alumni.fullName}
                           </h3>
-                          <div className="text-[11px] text-slate-500 font-mono">
+                          <div className="text-[11px] text-slate-500 font-poppins">
                             {alumni.studentId} • Class of {alumni.graduationYear}
                           </div>
                         </div>
@@ -577,7 +577,7 @@ export const AlumniManagementView: React.FC = () => {
                       </span>
                     </div>
 
-                    <div className="p-3 bg-slate-50/80 rounded-xl text-xs space-y-1.5 border border-slate-100">
+                    <div className="p-3 bg-slate-50/80 rounded-[3px] text-xs space-y-1.5 border border-slate-100">
                       <div className="font-semibold text-slate-800 flex items-center truncate">
                         <Building2 className="w-3.5 h-3.5 text-slate-400 mr-1.5 flex-shrink-0" />
                         <span className="truncate">{alumni.designation || 'Alumni'}</span>
@@ -600,7 +600,7 @@ export const AlumniManagementView: React.FC = () => {
                     </div>
 
                     {alumni.higherEducation && (
-                      <div className="text-[11px] p-2.5 bg-purple-50/60 rounded-xl border border-purple-100 text-purple-900">
+                      <div className="text-[11px] p-2.5 bg-purple-50/60 rounded-[3px] border border-purple-100 text-purple-900">
                         <span className="font-bold">Higher Studies:</span> {alumni.higherEducation.degree} in {alumni.higherEducation.fieldOfStudy} at {alumni.higherEducation.institution}
                       </div>
                     )}
@@ -613,7 +613,7 @@ export const AlumniManagementView: React.FC = () => {
                           href={alumni.linkedinUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg transition"
+                          className="p-1.5 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-[3px] transition"
                           title="LinkedIn Profile"
                         >
                           <Linkedin className="w-3.5 h-3.5" />
@@ -622,7 +622,7 @@ export const AlumniManagementView: React.FC = () => {
                       {alumni.email && (
                         <a
                           href={`mailto:${alumni.email}`}
-                          className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition"
+                          className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-[3px] transition"
                           title={`Email ${alumni.email}`}
                         >
                           <Mail className="w-3.5 h-3.5" />
@@ -641,7 +641,7 @@ export const AlumniManagementView: React.FC = () => {
                     <div className="flex items-center space-x-1.5">
                       <button
                         onClick={() => setSelectedAlumni(alumni)}
-                        className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium rounded-lg transition"
+                        className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 font-medium rounded-[3px] transition"
                       >
                         Inspect
                       </button>
@@ -657,7 +657,7 @@ export const AlumniManagementView: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[4px] border border-slate-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
@@ -686,7 +686,7 @@ export const AlumniManagementView: React.FC = () => {
                             />
                             <div>
                               <div className="font-bold text-slate-900">{alumni.fullName}</div>
-                              <div className="text-[11px] text-slate-500 font-mono">{alumni.studentId} • {alumni.email}</div>
+                              <div className="text-[11px] text-slate-500 font-poppins">{alumni.studentId} • {alumni.email}</div>
                             </div>
                           </div>
                         </td>
@@ -726,7 +726,7 @@ export const AlumniManagementView: React.FC = () => {
                         <td className="p-3.5 text-right space-x-2">
                           <button
                             onClick={() => setSelectedAlumni(alumni)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-xs font-medium rounded-lg transition"
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-xs font-medium rounded-[3px] transition"
                           >
                             Inspect
                           </button>
@@ -752,7 +752,7 @@ export const AlumniManagementView: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Industry Breakdown Card */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4 md:col-span-2">
+            <div className="bg-white rounded-[4px] border border-slate-200 p-5 shadow-sm space-y-4 md:col-span-2">
               <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
                 <Building2 className="w-4 h-4 text-indigo-600" />
                 <span>Industry & Placement Sectors</span>
@@ -779,7 +779,7 @@ export const AlumniManagementView: React.FC = () => {
             </div>
 
             {/* Top Hiring Companies Card */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div className="bg-white rounded-[4px] border border-slate-200 p-5 shadow-sm space-y-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
                 <Award className="w-4 h-4 text-amber-600" />
                 <span>Top Recruiting Organizations</span>
@@ -789,10 +789,10 @@ export const AlumniManagementView: React.FC = () => {
                 {reports?.topCompanies.map((c, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-xs"
+                    className="p-3 bg-slate-50 rounded-[3px] border border-slate-100 flex items-center justify-between text-xs"
                   >
                     <div className="font-bold text-slate-900">{c.company}</div>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700">
+                    <span className="px-2 py-0.5 rounded-[3px] text-[10px] font-bold bg-indigo-50 text-indigo-700">
                       {c.count} Hires
                     </span>
                   </div>
@@ -808,7 +808,7 @@ export const AlumniManagementView: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Graduation Year Progression */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div className="bg-white rounded-[4px] border border-slate-200 p-5 shadow-sm space-y-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
                 <TrendingUp className="w-4 h-4 text-indigo-600" />
                 <span>Graduation Batch Career Rates</span>
@@ -816,7 +816,7 @@ export const AlumniManagementView: React.FC = () => {
 
               <div className="space-y-3">
                 {reports.byGraduationYear.map(item => (
-                  <div key={item.year} className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+                  <div key={item.year} className="p-3.5 bg-slate-50 rounded-[3px] border border-slate-100 space-y-2">
                     <div className="flex items-center justify-between text-xs font-bold">
                       <span className="text-slate-900">Class of {item.year}</span>
                       <span className="text-emerald-700">{item.placementRate}% Career Rate</span>
@@ -833,7 +833,7 @@ export const AlumniManagementView: React.FC = () => {
             </div>
 
             {/* Department Distribution */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div className="bg-white rounded-[4px] border border-slate-200 p-5 shadow-sm space-y-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
                 <BookOpen className="w-4 h-4 text-purple-600" />
                 <span>Alumni Distribution by Academic Department</span>
@@ -863,7 +863,7 @@ export const AlumniManagementView: React.FC = () => {
       {/* INSPECT ALUMNI MODAL */}
       {selectedAlumni && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-[4px] border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setSelectedAlumni(null)}
               className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1"
@@ -879,11 +879,11 @@ export const AlumniManagementView: React.FC = () => {
                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
                 }
                 alt={selectedAlumni.fullName}
-                className="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-100 shadow-sm"
+                className="w-16 h-16 rounded-[4px] object-cover border-2 border-indigo-100 shadow-sm"
               />
               <div className="space-y-1">
                 <h2 className="text-xl font-bold text-slate-900">{selectedAlumni.fullName}</h2>
-                <div className="text-xs text-slate-500 font-mono">
+                <div className="text-xs text-slate-500 font-poppins">
                   {selectedAlumni.studentId} • Class of {selectedAlumni.graduationYear}
                 </div>
                 <div className="text-xs font-semibold text-indigo-700">
@@ -894,7 +894,7 @@ export const AlumniManagementView: React.FC = () => {
 
             {/* Detailed Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+              <div className="p-3.5 bg-slate-50 rounded-[3px] border border-slate-100 space-y-2">
                 <div className="font-bold text-slate-900 uppercase tracking-wider text-[10px]">
                   Career & Employment
                 </div>
@@ -905,7 +905,7 @@ export const AlumniManagementView: React.FC = () => {
                 <div>Salary Band: <strong>{selectedAlumni.salaryBand || 'N/A'}</strong></div>
               </div>
 
-              <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+              <div className="p-3.5 bg-slate-50 rounded-[3px] border border-slate-100 space-y-2">
                 <div className="font-bold text-slate-900 uppercase tracking-wider text-[10px]">
                   Contact & Location
                 </div>
@@ -925,7 +925,7 @@ export const AlumniManagementView: React.FC = () => {
                 </h4>
                 <button
                   onClick={() => setShowDonationModal(true)}
-                  className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-lg transition border border-amber-200"
+                  className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-[3px] transition border border-amber-200"
                 >
                   + Record Contribution
                 </button>
@@ -934,10 +934,10 @@ export const AlumniManagementView: React.FC = () => {
               {selectedAlumni.givingHistory && selectedAlumni.givingHistory.length > 0 ? (
                 <div className="space-y-2">
                   {selectedAlumni.givingHistory.map(g => (
-                    <div key={g.id} className="p-3 bg-amber-50/50 rounded-xl border border-amber-100 text-xs flex items-center justify-between">
+                    <div key={g.id} className="p-3 bg-amber-50/50 rounded-[3px] border border-amber-100 text-xs flex items-center justify-between">
                       <div>
                         <div className="font-bold text-amber-900">{g.purpose}</div>
-                        <div className="text-[11px] text-amber-700 font-mono">Date: {g.date} • Rec: {g.receiptNumber}</div>
+                        <div className="text-[11px] text-amber-700 font-poppins">Date: {g.date} • Rec: {g.receiptNumber}</div>
                       </div>
                       <div className="text-sm font-bold text-amber-900">
                         {g.currency} {g.amount.toLocaleString()}
@@ -953,7 +953,7 @@ export const AlumniManagementView: React.FC = () => {
             <div className="pt-3 border-t border-slate-100 flex items-center justify-end space-x-3">
               <button
                 onClick={() => setSelectedAlumni(null)}
-                className="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl"
+                className="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-semibold rounded-[3px]"
               >
                 Close
               </button>
@@ -965,7 +965,7 @@ export const AlumniManagementView: React.FC = () => {
       {/* RECORD DONATION MODAL */}
       {showDonationModal && selectedAlumni && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4">
+          <div className="bg-white rounded-[4px] border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4">
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
               <Heart className="w-5 h-5 text-amber-600" />
               <span>Record Contribution for {selectedAlumni.fullName}</span>
@@ -978,7 +978,7 @@ export const AlumniManagementView: React.FC = () => {
                   type="number"
                   value={donationAmount}
                   onChange={e => setDonationAmount(Number(e.target.value))}
-                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-[3px]"
                   required
                 />
               </div>
@@ -988,7 +988,7 @@ export const AlumniManagementView: React.FC = () => {
                 <select
                   value={donationCurrency}
                   onChange={e => setDonationCurrency(e.target.value)}
-                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-[3px]"
                 >
                   <option value="INR">INR (₹)</option>
                   <option value="USD">USD ($)</option>
@@ -1004,7 +1004,7 @@ export const AlumniManagementView: React.FC = () => {
                   value={donationPurpose}
                   onChange={e => setDonationPurpose(e.target.value)}
                   placeholder="e.g. Merit Scholarship Endowment Fund"
-                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  className="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-[3px]"
                   required
                 />
               </div>
@@ -1013,13 +1013,13 @@ export const AlumniManagementView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowDonationModal(false)}
-                  className="px-3 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl"
+                  className="px-3 py-2 bg-slate-100 text-slate-700 font-semibold rounded-[3px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl"
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-[3px]"
                 >
                   Record Donation
                 </button>
@@ -1032,7 +1032,7 @@ export const AlumniManagementView: React.FC = () => {
       {/* REGISTER / EDIT ALUMNI MODAL */}
       {showAddEditModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-[4px] border border-slate-200 shadow-2xl max-w-2xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowAddEditModal(false)}
               className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-1"
@@ -1053,7 +1053,7 @@ export const AlumniManagementView: React.FC = () => {
                     required
                     value={formData.fullName || ''}
                     onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1064,7 +1064,7 @@ export const AlumniManagementView: React.FC = () => {
                     required
                     value={formData.studentId || ''}
                     onChange={e => setFormData({ ...formData, studentId: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px] font-poppins"
                   />
                 </div>
 
@@ -1075,7 +1075,7 @@ export const AlumniManagementView: React.FC = () => {
                     required
                     value={formData.email || ''}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1085,7 +1085,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.phone || ''}
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1096,7 +1096,7 @@ export const AlumniManagementView: React.FC = () => {
                     required
                     value={formData.graduationYear || 2024}
                     onChange={e => setFormData({ ...formData, graduationYear: Number(e.target.value) })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1105,7 +1105,7 @@ export const AlumniManagementView: React.FC = () => {
                   <select
                     value={formData.department || 'Computer Science & Engineering'}
                     onChange={e => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   >
                     <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                     <option value="Electronics & Communication">Electronics & Communication</option>
@@ -1122,7 +1122,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.degree || 'B.Tech CSE'}
                     onChange={e => setFormData({ ...formData, degree: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1131,7 +1131,7 @@ export const AlumniManagementView: React.FC = () => {
                   <select
                     value={formData.employmentStatus || 'Employed'}
                     onChange={e => setFormData({ ...formData, employmentStatus: e.target.value as any })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   >
                     <option value="Employed">Employed</option>
                     <option value="Self-Employed / Founder">Self-Employed / Founder</option>
@@ -1146,7 +1146,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.currentCompany || ''}
                     onChange={e => setFormData({ ...formData, currentCompany: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1156,7 +1156,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.designation || ''}
                     onChange={e => setFormData({ ...formData, designation: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1166,7 +1166,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.workLocation || ''}
                     onChange={e => setFormData({ ...formData, workLocation: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
 
@@ -1176,7 +1176,7 @@ export const AlumniManagementView: React.FC = () => {
                     type="text"
                     value={formData.linkedinUrl || ''}
                     onChange={e => setFormData({ ...formData, linkedinUrl: e.target.value })}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl"
+                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-[3px]"
                   />
                 </div>
               </div>
@@ -1198,13 +1198,13 @@ export const AlumniManagementView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddEditModal(false)}
-                  className="px-4 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl"
+                  className="px-4 py-2 bg-slate-100 text-slate-700 font-semibold rounded-[3px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm"
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-[3px] shadow-sm"
                 >
                   Save Profile
                 </button>

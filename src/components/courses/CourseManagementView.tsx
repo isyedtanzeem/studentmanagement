@@ -146,9 +146,9 @@ export const CourseManagementView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Module Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/90 p-6 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/90 p-6 rounded-[4px] shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+          <div className="w-12 h-12 rounded-[4px] bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
             <BookOpen className="w-6 h-6" />
           </div>
           <div>
@@ -156,7 +156,7 @@ export const CourseManagementView: React.FC = () => {
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">
                 {isStudent ? 'My Department Course Catalog' : 'Course Management Module'}
               </h1>
-              <span className="bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold uppercase">
+              <span className="bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-poppins px-2 py-0.5 rounded-md font-semibold uppercase">
                 {isStudent ? 'Enrolled View' : "Curriculum '26"}
               </span>
             </div>
@@ -171,7 +171,7 @@ export const CourseManagementView: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchCourses()}
-            className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl transition-colors border border-slate-200 cursor-pointer"
+            className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-[3px] transition-colors border border-slate-200 cursor-pointer"
             title="Refresh Courses"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -180,7 +180,7 @@ export const CourseManagementView: React.FC = () => {
           {!isStudent && (
             <button
               onClick={handleOpenAdd}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 cursor-pointer"
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs transition-colors flex items-center gap-2 shadow-sm shadow-blue-500/20 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add New Course
@@ -191,43 +191,43 @@ export const CourseManagementView: React.FC = () => {
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Total Courses</span>
-          <span className="text-2xl font-bold text-slate-900 font-mono mt-0.5 block">{stats.total}</span>
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Courses</span>
+          <span className="text-2xl font-bold text-slate-900 font-poppins mt-0.5 block">{stats.total}</span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Active Intake</span>
-          <span className="text-2xl font-bold text-emerald-600 font-mono mt-0.5 block">{stats.active}</span>
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Active Intake</span>
+          <span className="text-2xl font-bold text-emerald-600 font-poppins mt-0.5 block">{stats.active}</span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Total Enrolled</span>
-          <span className="text-2xl font-bold text-blue-600 font-mono mt-0.5 block">{stats.totalEnrolled}</span>
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Enrolled</span>
+          <span className="text-2xl font-bold text-blue-600 font-poppins mt-0.5 block">{stats.totalEnrolled}</span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Total Credits</span>
-          <span className="text-2xl font-bold text-purple-600 font-mono mt-0.5 block">{stats.totalCredits}</span>
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Credits</span>
+          <span className="text-2xl font-bold text-purple-600 font-poppins mt-0.5 block">{stats.totalCredits}</span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Avg Semester Fee</span>
-          <span className="text-2xl font-bold text-amber-600 font-mono mt-0.5 block">
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Avg Semester Fee</span>
+          <span className="text-2xl font-bold text-amber-600 font-poppins mt-0.5 block">
             ₹{stats.avgFee > 0 ? stats.avgFee.toLocaleString('en-IN') : '0'}
           </span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono font-semibold tracking-wider block">Avg Enrollment</span>
-          <span className="text-2xl font-bold text-indigo-600 font-mono mt-0.5 block">
+        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Avg Enrollment</span>
+          <span className="text-2xl font-bold text-indigo-600 font-poppins mt-0.5 block">
             {stats.total > 0 ? Math.round(stats.totalEnrolled / stats.total) : 0}
           </span>
         </div>
       </div>
 
       {/* Filter and Search Toolbar */}
-      <div className="bg-white border border-slate-200/90 p-4 rounded-2xl shadow-xs space-y-3">
+      <div className="bg-white border border-slate-200/90 p-4 rounded-[4px] shadow-xs space-y-3">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
           {/* Search bar */}
           <div className="relative flex-1">
@@ -240,13 +240,13 @@ export const CourseManagementView: React.FC = () => {
                 setSearch(e.target.value);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-8 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-8 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             {/* Department Dropdown Filter */}
-            <div className={`flex items-center gap-1.5 border rounded-xl px-3 py-1.5 font-medium ${isStudent ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-300 text-slate-700'}`}>
+            <div className={`flex items-center gap-1.5 border rounded-[3px] px-3 py-1.5 font-medium ${isStudent ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-300 text-slate-700'}`}>
               <Building2 className="w-3.5 h-3.5 text-blue-600" />
               <select
                 value={selectedDepartment}
@@ -273,7 +273,7 @@ export const CourseManagementView: React.FC = () => {
             </div>
 
             {/* Level Filter Dropdown */}
-            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-medium text-slate-700">
+            <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-1.5 font-medium text-slate-700">
               <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
               <select
                 value={selectedLevel}
@@ -292,7 +292,7 @@ export const CourseManagementView: React.FC = () => {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1 bg-slate-50 border border-slate-300 rounded-xl px-2 py-1 font-medium text-slate-700">
+            <div className="flex items-center gap-1 bg-slate-50 border border-slate-300 rounded-[3px] px-2 py-1 font-medium text-slate-700">
               <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
               <select
                 value={sortBy}
@@ -315,10 +315,10 @@ export const CourseManagementView: React.FC = () => {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center bg-slate-100 border border-slate-300 rounded-xl p-1">
+            <div className="flex items-center bg-slate-100 border border-slate-300 rounded-[3px] p-1">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                className={`p-1.5 rounded-[3px] transition-colors cursor-pointer ${
                   viewMode === 'grid' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-500 hover:text-slate-900'
                 }`}
                 title="Grid Cards View"
@@ -327,7 +327,7 @@ export const CourseManagementView: React.FC = () => {
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                className={`p-1.5 rounded-[3px] transition-colors cursor-pointer ${
                   viewMode === 'table' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-500 hover:text-slate-900'
                 }`}
                 title="Table View"
@@ -341,16 +341,16 @@ export const CourseManagementView: React.FC = () => {
 
       {/* Main Grid or Table Content */}
       {isLoading ? (
-        <div className="p-12 text-center text-slate-500 font-mono bg-white border border-slate-200/90 rounded-2xl shadow-xs">
+        <div className="p-12 text-center text-slate-500 font-poppins bg-white border border-slate-200/90 rounded-[4px] shadow-xs">
           Loading course catalog records...
         </div>
       ) : courses.length === 0 ? (
-        <div className="p-12 text-center bg-white border border-slate-200/90 rounded-2xl shadow-xs space-y-3">
+        <div className="p-12 text-center bg-white border border-slate-200/90 rounded-[4px] shadow-xs space-y-3">
           <BookOpen className="w-10 h-10 text-slate-400 mx-auto" />
           <p className="text-slate-500 text-sm font-medium">No course records found matching your filters.</p>
           <button
             onClick={handleOpenAdd}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs inline-flex items-center gap-2 shadow-xs cursor-pointer"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs inline-flex items-center gap-2 shadow-xs cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add New Course
@@ -369,12 +369,12 @@ export const CourseManagementView: React.FC = () => {
                 key={crs.id}
                 whileHover={{ y: -2 }}
                 onClick={() => handleOpenDrawer(crs)}
-                className="bg-white border border-slate-200/90 hover:border-blue-400 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group space-y-4"
+                className="bg-white border border-slate-200/90 hover:border-blue-400 rounded-[4px] p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group space-y-4"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center font-mono font-bold text-blue-700 text-sm shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <div className="w-11 h-11 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center font-poppins font-bold text-blue-700 text-sm shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       {crs.code}
                     </div>
                     <div>
@@ -391,7 +391,7 @@ export const CourseManagementView: React.FC = () => {
                   </div>
 
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border font-semibold shrink-0 ${
+                    className={`text-[10px] font-poppins px-2 py-0.5 rounded-full border font-semibold shrink-0 ${
                       crs.status === 'Active'
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         : 'bg-slate-100 text-slate-600 border-slate-200'
@@ -402,9 +402,9 @@ export const CourseManagementView: React.FC = () => {
                 </div>
 
                 {/* Duration & Fee Row */}
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex items-center justify-between">
+                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-[3px] flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <span className="text-[10px] text-slate-400 uppercase font-mono font-semibold block">Duration</span>
+                    <span className="text-[10px] text-slate-400 uppercase font-poppins font-semibold block">Duration</span>
                     <div className="text-xs font-bold text-slate-800 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-blue-600" />
                       <span>{crs.duration || '4 Years'}</span>
@@ -412,28 +412,28 @@ export const CourseManagementView: React.FC = () => {
                   </div>
 
                   <div className="text-right space-y-0.5">
-                    <span className="text-[10px] text-slate-400 uppercase font-mono font-semibold block">Semester Fee</span>
-                    <div className="text-xs font-bold text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded font-mono">
+                    <span className="text-[10px] text-slate-400 uppercase font-poppins font-semibold block">Semester Fee</span>
+                    <div className="text-xs font-bold text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded font-poppins">
                       ₹{totalFee.toLocaleString('en-IN')}
                     </div>
                   </div>
                 </div>
 
                 {/* Metrics Pills */}
-                <div className="grid grid-cols-3 gap-2 font-mono text-[11px]">
-                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-lg text-center">
+                <div className="grid grid-cols-3 gap-2 font-poppins text-[11px]">
+                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-[3px] text-center">
                     <span className="text-slate-400 text-[9px] block uppercase font-semibold">Credits</span>
                     <span className="text-purple-700 font-bold block mt-0.5">{crs.credits}</span>
                   </div>
 
-                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-lg text-center">
+                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-[3px] text-center">
                     <span className="text-slate-400 text-[9px] block uppercase font-semibold">Level</span>
                     <span className="text-indigo-700 font-bold block mt-0.5 truncate text-[10px]">
                       {crs.level || 'UG'}
                     </span>
                   </div>
 
-                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-lg text-center">
+                  <div className="bg-slate-50 border border-slate-200/80 p-2 rounded-[3px] text-center">
                     <span className="text-slate-400 text-[9px] block uppercase font-semibold">Enrolled</span>
                     <span className="text-blue-700 font-bold block mt-0.5">{crs.enrolledStudents}</span>
                   </div>
@@ -449,7 +449,7 @@ export const CourseManagementView: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleOpenEdit(crs)}
-                        className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors cursor-pointer"
+                        className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-[3px] border border-blue-200 transition-colors cursor-pointer"
                         title="Edit Course"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -457,14 +457,14 @@ export const CourseManagementView: React.FC = () => {
 
                       <button
                         onClick={() => handleOpenDelete(crs)}
-                        className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 transition-colors cursor-pointer"
+                        className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-[3px] border border-rose-200 transition-colors cursor-pointer"
                         title="Delete Course"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   ) : (
-                    <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg">
+                    <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-[3px]">
                       View Syllabus →
                     </span>
                   )}
@@ -475,10 +475,10 @@ export const CourseManagementView: React.FC = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white border border-slate-200/90 rounded-[4px] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-mono text-[11px] uppercase border-b border-slate-200 font-semibold">
+              <thead className="bg-slate-50 text-slate-600 font-poppins text-[11px] uppercase border-b border-slate-200 font-semibold">
                 <tr>
                   <th className="p-3.5">Code</th>
                   <th className="p-3.5">Course Title & Program</th>
@@ -503,7 +503,7 @@ export const CourseManagementView: React.FC = () => {
                       onClick={() => handleOpenDrawer(crs)}
                       className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                     >
-                      <td className="p-3.5 font-mono text-blue-700 font-bold">
+                      <td className="p-3.5 font-poppins text-blue-700 font-bold">
                         {crs.code}
                       </td>
 
@@ -511,7 +511,7 @@ export const CourseManagementView: React.FC = () => {
                         <div className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                           {crs.title}
                         </div>
-                        <div className="text-[10px] text-slate-500 font-mono">
+                        <div className="text-[10px] text-slate-500 font-poppins">
                           {crs.degreeProgram || 'Degree Course'} • {crs.level || 'UG'}
                         </div>
                       </td>
@@ -524,21 +524,21 @@ export const CourseManagementView: React.FC = () => {
                         {crs.duration || '4 Years / 8 Semesters'}
                       </td>
 
-                      <td className="p-3.5 font-mono text-right text-slate-900 font-bold">
+                      <td className="p-3.5 font-poppins text-right text-slate-900 font-bold">
                         ₹{totalFee.toLocaleString('en-IN')}
                       </td>
 
-                      <td className="p-3.5 font-mono text-center text-purple-700 font-bold">
+                      <td className="p-3.5 font-poppins text-center text-purple-700 font-bold">
                         {crs.credits}
                       </td>
 
-                      <td className="p-3.5 font-mono text-center text-blue-700 font-bold">
+                      <td className="p-3.5 font-poppins text-center text-blue-700 font-bold">
                         {crs.enrolledStudents}
                       </td>
 
                       <td className="p-3.5">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono border font-semibold ${
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-poppins border font-semibold ${
                             crs.status === 'Active'
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : 'bg-slate-100 text-slate-600 border-slate-200'
@@ -553,7 +553,7 @@ export const CourseManagementView: React.FC = () => {
                           <div className="flex items-center justify-end gap-1.5 font-medium">
                             <button
                               onClick={() => handleOpenEdit(crs)}
-                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 text-xs cursor-pointer"
+                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-[3px] border border-blue-200 text-xs cursor-pointer"
                               title="Edit"
                             >
                               Edit
@@ -561,7 +561,7 @@ export const CourseManagementView: React.FC = () => {
 
                             <button
                               onClick={() => handleOpenDelete(crs)}
-                              className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 text-xs cursor-pointer"
+                              className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-[3px] border border-rose-200 text-xs cursor-pointer"
                               title="Delete"
                             >
                               Delete
@@ -570,7 +570,7 @@ export const CourseManagementView: React.FC = () => {
                         ) : (
                           <button
                             onClick={() => handleOpenDrawer(crs)}
-                            className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
+                            className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-[3px] hover:bg-blue-100 transition-colors cursor-pointer"
                           >
                             Details →
                           </button>
@@ -586,7 +586,7 @@ export const CourseManagementView: React.FC = () => {
       )}
 
       {/* Pagination Bar */}
-      <div className="p-4 bg-white border border-slate-200/90 rounded-2xl flex items-center justify-between text-xs text-slate-600 font-medium shadow-xs">
+      <div className="p-4 bg-white border border-slate-200/90 rounded-[4px] flex items-center justify-between text-xs text-slate-600 font-medium shadow-xs">
         <div>
           Showing {courses.length} of {pagination.totalItems} courses
         </div>
@@ -595,19 +595,19 @@ export const CourseManagementView: React.FC = () => {
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.max(1, prev.currentPage - 1) }))}
             disabled={pagination.currentPage === 1}
-            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-[3px] bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="font-mono">
+          <span className="font-poppins">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
 
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.min(prev.totalPages, prev.currentPage + 1) }))}
             disabled={pagination.currentPage >= pagination.totalPages}
-            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-[3px] bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

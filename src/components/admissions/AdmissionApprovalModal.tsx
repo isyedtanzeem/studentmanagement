@@ -77,26 +77,26 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl"
+          className="bg-white border border-slate-200 rounded-[4px] w-full max-w-lg overflow-hidden shadow-2xl"
         >
           {/* Header */}
           <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-emerald-50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700">
+              <div className="w-10 h-10 rounded-[3px] bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-900 font-mono uppercase tracking-wider">
+                <h2 className="text-base font-bold text-slate-900 font-poppins uppercase tracking-wider">
                   Approve Admission & Enroll Student
                 </h2>
-                <p className="text-xs text-slate-500 font-mono">
+                <p className="text-xs text-slate-500 font-poppins">
                   Application #{application.applicationNumber}
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-200/60 transition-colors"
+              className="text-slate-400 hover:text-slate-700 p-2 rounded-[3px] hover:bg-slate-200/60 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -104,18 +104,18 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
 
           <form onSubmit={handleApprove} className="p-6 space-y-4 text-xs">
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-2">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-[3px] text-red-700 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                 <span>{error}</span>
               </div>
             )}
 
-            <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-xl space-y-2">
+            <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-[3px] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-emerald-800 font-semibold font-mono uppercase tracking-wider">
+                <span className="text-emerald-800 font-semibold font-poppins uppercase tracking-wider">
                   Applicant Profile
                 </span>
-                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] font-mono border border-emerald-200">
+                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded text-[10px] font-poppins border border-emerald-200">
                   Verified Eligible
                 </span>
               </div>
@@ -131,7 +131,7 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
             {/* Generated Admission Roll Number */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="block text-slate-700 font-bold uppercase font-mono tracking-wider text-[11px] flex items-center gap-1.5">
+                <label className="block text-slate-700 font-bold uppercase font-poppins tracking-wider text-[11px] flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                   Generated Student Roll / Enrollment Number
                 </label>
@@ -139,7 +139,7 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
                   type="button"
                   onClick={() => fetchRollNumber(application.department)}
                   disabled={isGenerating}
-                  className="text-[11px] text-blue-600 hover:underline font-mono flex items-center gap-1"
+                  className="text-[11px] text-blue-600 hover:underline font-poppins flex items-center gap-1"
                 >
                   <RefreshCw className={`w-3 h-3 ${isGenerating ? 'animate-spin' : ''}`} /> Regenerate
                 </button>
@@ -152,7 +152,7 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
                   value={rollNumber}
                   onChange={(e) => setRollNumber(e.target.value)}
                   placeholder="e.g. 2026CSE1043"
-                  className="w-full bg-slate-50 border-2 border-blue-600 text-blue-900 font-mono font-bold text-lg rounded-xl px-4 py-2.5 tracking-widest focus:outline-none focus:bg-white"
+                  className="w-full bg-slate-50 border-2 border-blue-600 text-blue-900 font-poppins font-bold text-lg rounded-[3px] px-4 py-2.5 tracking-widest focus:outline-none focus:bg-white"
                 />
               </div>
               <p className="text-[11px] text-slate-500">
@@ -166,14 +166,14 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
                 type="text"
                 value={approvedBy}
                 onChange={(e) => setApprovedBy(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
               />
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-[11px] leading-relaxed flex items-start gap-2">
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-[3px] text-slate-700 text-[11px] leading-relaxed flex items-start gap-2">
               <UserCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>
-                <strong>Automatic Enrollment Confirmation:</strong> Approving this application will automatically convert <span className="text-slate-900 font-semibold">{application.applicantName}</span> into an active student record with Roll No <span className="text-blue-700 font-mono font-bold">{rollNumber}</span> in the Student Management Module.
+                <strong>Automatic Enrollment Confirmation:</strong> Approving this application will automatically convert <span className="text-slate-900 font-semibold">{application.applicantName}</span> into an active student record with Roll No <span className="text-blue-700 font-poppins font-bold">{rollNumber}</span> in the Student Management Module.
               </span>
             </div>
 
@@ -181,14 +181,14 @@ export const AdmissionApprovalModal: React.FC<AdmissionApprovalModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-xl text-xs font-mono transition-colors"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-[3px] text-xs font-poppins transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting || !rollNumber}
-                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs font-mono transition-colors flex items-center gap-2 disabled:opacity-50 shadow-xs"
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-[3px] text-xs font-poppins transition-colors flex items-center gap-2 disabled:opacity-50 shadow-xs"
               >
                 {isSubmitting ? 'Approving & Enrolling...' : 'Approve & Enroll Student'}
               </button>

@@ -68,7 +68,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
   const totalDonutValue = donutData.reduce((acc, curr) => acc + curr.value, 0);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 font-roboto">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 font-poppins">
       {/* 1. Left Card: Vibrant Flat Teal and Emerald Green Line Chart (Spans 2 columns) */}
       <div className="lg:col-span-2 bg-white border border-[#E4E7EB] rounded-[4px] p-5 shadow-[0_2px_4px_rgba(0,0,0,0.06)] flex flex-col justify-between">
         {/* Card Header */}
@@ -119,14 +119,14 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                 fontSize={11}
                 tickLine={false}
                 axisLine={{ stroke: '#CFD8DC' }}
-                fontFamily="Roboto, sans-serif"
+                fontFamily="Poppins, sans-serif"
               />
               <YAxis
                 stroke="#78909C"
                 fontSize={11}
                 tickLine={false}
                 axisLine={{ stroke: '#CFD8DC' }}
-                fontFamily="Roboto, sans-serif"
+                fontFamily="Poppins, sans-serif"
               />
               <Tooltip
                 contentStyle={{
@@ -136,7 +136,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                   boxShadow: '0 4px 6px rgba(0,0,0,0.15)',
                   color: '#FFFFFF',
                   fontSize: '12px',
-                  fontFamily: 'Roboto, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   padding: '8px 12px'
                 }}
                 itemStyle={{ color: '#ECEFF1' }}
@@ -144,7 +144,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
               <Legend
                 wrapperStyle={{
                   fontSize: '12px',
-                  fontFamily: 'Roboto, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   paddingTop: '8px'
                 }}
               />
@@ -184,7 +184,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
               <strong className="text-[#263238]">Emerald Green:</strong> Active Attendance
             </span>
           </div>
-          <span className="text-[11px] text-[#78909C] font-mono">
+          <span className="text-[11px] text-[#78909C] font-poppins">
             {timeframe.toUpperCase()} VIEW
           </span>
         </div>
@@ -244,7 +244,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                   boxShadow: '0 4px 6px rgba(0,0,0,0.15)',
                   color: '#FFFFFF',
                   fontSize: '12px',
-                  fontFamily: 'Roboto, sans-serif'
+                  fontFamily: 'Poppins, sans-serif'
                 }}
               />
             </PieChart>
@@ -255,7 +255,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
             <span className="text-[10px] font-bold text-[#78909C] uppercase tracking-wider">
               Total
             </span>
-            <span className="text-xl font-bold text-[#263238] tabular-nums font-roboto">
+            <span className="text-xl font-bold text-[#263238] tabular-nums font-poppins">
               {totalDonutValue.toLocaleString()}
             </span>
           </div>
@@ -284,7 +284,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 font-mono text-[11px] shrink-0">
+                <div className="flex items-center gap-2 font-poppins text-[11px] shrink-0">
                   <span className="text-[#78909C] tabular-nums">{item.value}</span>
                   <span className="font-bold text-[#263238] tabular-nums">{pct}%</span>
                 </div>

@@ -42,7 +42,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
             bold: true,
             size: 24,
             color: primaryColor,
-            font: 'Arial'
+            font: 'Poppins'
           })
         ]
       }),
@@ -69,7 +69,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
           bold: true,
           size: 21,
           color: secondaryColor,
-          font: 'Arial'
+          font: 'Poppins'
         })
       ]
     });
@@ -85,7 +85,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
           size: 20,
           color: darkTextColor,
           italics: isItalic,
-          font: 'Arial'
+          font: 'Poppins'
         })
       ]
     });
@@ -102,13 +102,13 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
           bold: true,
           size: 20,
           color: primaryColor,
-          font: 'Arial'
+          font: 'Poppins'
         }),
         new TextRun({
           text: description,
           size: 20,
           color: darkTextColor,
-          font: 'Arial'
+          font: 'Poppins'
         })
       ]
     });
@@ -123,7 +123,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
         children: [
           new TextRun({
             text: line.length > 0 ? line : ' ',
-            font: 'Courier New',
+            font: 'Poppins',
             size: 17,
             color: '0F172A'
           })
@@ -154,7 +154,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                   bold: true,
                   size: 18,
                   color: 'FFFFFF',
-                  font: 'Arial'
+                  font: 'Poppins'
                 })
               ]
             })
@@ -178,7 +178,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                   bold: cellIdx === 0 && rowArr.length > 2,
                   size: 18,
                   color: cellIdx === 0 && rowArr.length > 2 ? primaryColor : darkTextColor,
-                  font: 'Arial'
+                  font: 'Poppins'
                 })
               ]
             })
@@ -206,7 +206,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
       default: {
         document: {
           run: {
-            font: 'Arial',
+            font: 'Poppins',
             size: 20,
             color: darkTextColor
           }
@@ -230,7 +230,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                     text: 'ScholarCore SIMS — Project Synopsis & Technical Specification Document',
                     size: 16,
                     color: mutedTextColor,
-                    font: 'Arial'
+                    font: 'Poppins'
                   })
                 ]
               })
@@ -247,25 +247,25 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                     text: 'Page ',
                     size: 16,
                     color: mutedTextColor,
-                    font: 'Arial'
+                    font: 'Poppins'
                   }),
                   new TextRun({
                     children: [PageNumber.CURRENT],
                     size: 16,
                     color: mutedTextColor,
-                    font: 'Arial'
+                    font: 'Poppins'
                   }),
                   new TextRun({
                     text: ' of ',
                     size: 16,
                     color: mutedTextColor,
-                    font: 'Arial'
+                    font: 'Poppins'
                   }),
                   new TextRun({
                     children: [PageNumber.TOTAL_PAGES],
                     size: 16,
                     color: mutedTextColor,
-                    font: 'Arial'
+                    font: 'Poppins'
                   })
                 ]
               })
@@ -283,7 +283,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                 bold: true,
                 size: 22,
                 color: mutedTextColor,
-                font: 'Arial'
+                font: 'Poppins'
               })
             ]
           }),
@@ -296,7 +296,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                 bold: true,
                 size: 28,
                 color: primaryColor,
-                font: 'Arial'
+                font: 'Poppins'
               })
             ]
           }),
@@ -309,7 +309,7 @@ export async function generateProjectSynopsisDocx(): Promise<Buffer> {
                 italics: true,
                 size: 20,
                 color: secondaryColor,
-                font: 'Arial'
+                font: 'Poppins'
               })
             ]
           }),

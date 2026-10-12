@@ -19,9 +19,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-gray-200">
-        <div className="flex flex-col items-center gap-4 p-8 bg-card-dark border-glass rounded-xl shadow-2xl">
+        <div className="flex flex-col items-center gap-4 p-8 bg-card-dark border-glass rounded-[3px] shadow-2xl">
           <RefreshCw className="w-8 h-8 text-[#D4AF37] animate-spin" />
-          <p className="text-xs text-gray-400 font-mono tracking-wide">
+          <p className="text-xs text-gray-400 font-poppins tracking-wide">
             Verifying JWT Token & Authorization...
           </p>
         </div>
@@ -36,7 +36,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 text-gray-200">
-        <div className="max-w-md w-full bg-card-dark border-glass p-8 rounded-xl space-y-6 text-center shadow-2xl">
+        <div className="max-w-md w-full bg-card-dark border-glass p-8 rounded-[3px] space-y-6 text-center shadow-2xl">
           <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-400">
             <ShieldAlert className="w-7 h-7" />
           </div>
@@ -48,15 +48,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             </p>
           </div>
 
-          <div className="p-4 bg-black/50 border border-white/5 rounded-lg text-left text-xs font-mono space-y-1">
-            <p className="text-gray-500 text-[10px] uppercase tracking-wider font-sans">Required Role Permission</p>
+          <div className="p-4 bg-black/50 border border-white/5 rounded-[3px] text-left text-xs font-poppins space-y-1">
+            <p className="text-gray-500 text-[10px] uppercase tracking-wider font-poppins">Required Role Permission</p>
             <p className="text-emerald-400 font-semibold">{allowedRoles.join(' OR ')}</p>
             <p className="text-gray-400 text-[11px] pt-1">User ID: {user.id}</p>
           </div>
 
           <button
             onClick={() => window.location.reload()}
-            className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-[3px] text-xs font-medium transition-all flex items-center justify-center gap-2"
           >
             <Lock className="w-4 h-4 text-[#D4AF37]" />
             <span>Switch Role or Re-authenticate</span>

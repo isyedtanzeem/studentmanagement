@@ -51,21 +51,21 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
       {/* Top Header */}
       <header className="h-16 border-b border-slate-200 px-6 sm:px-8 flex items-center justify-between bg-white/95 backdrop-blur-md shadow-xs sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20">
-            <span className="serif-font">S</span>
+          <div className="w-9 h-9 bg-blue-600 text-white rounded-[3px] flex items-center justify-center font-bold text-lg shadow-sm shadow-blue-500/20 font-poppins">
+            <span>S</span>
           </div>
           <div>
             <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
               <span>ScholarCore</span>
-              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-mono">ERP</span>
+              <span className="text-blue-600 font-semibold text-xs bg-blue-50 border border-blue-200/80 px-1.5 py-0.5 rounded font-poppins">ERP</span>
             </h1>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono">Set New Account Password</p>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-poppins">Set New Account Password</p>
           </div>
         </div>
 
         <button
           onClick={onBackToLogin}
-          className="text-xs text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-xl cursor-pointer"
+          className="text-xs text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-[3px] cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-blue-600" />
           <span>Back to Sign In</span>
@@ -74,8 +74,8 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
 
       {/* Main Form */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
-        <div className="max-w-md w-full bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6">
-          <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center text-blue-600 mb-2">
+        <div className="max-w-md w-full bg-white border border-slate-200/90 p-6 sm:p-8 rounded-[4px] shadow-sm space-y-6">
+          <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-[3px] flex items-center justify-center text-blue-600 mb-2">
             <ShieldCheck className="w-6 h-6" />
           </div>
 
@@ -87,7 +87,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
           </div>
 
           {error && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-xs text-rose-700 font-medium">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-[3px] flex items-center gap-3 text-xs text-rose-700 font-medium">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
@@ -95,7 +95,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
 
           {success ? (
             <div className="space-y-4">
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs space-y-2">
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-[3px] text-xs space-y-2">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                   <span>Password Reset Completed!</span>
@@ -107,7 +107,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
 
               <button
                 onClick={onBackToLogin}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Back to Sign In Page</span>
               </button>
@@ -122,7 +122,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
                   placeholder="Paste security reset token..."
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-mono placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-[3px] text-xs text-slate-900 font-poppins placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                 />
               </div>
 
@@ -136,7 +136,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-[3px] text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                   />
                   <button
                     type="button"
@@ -158,7 +158,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-[3px] text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
                   />
                 </div>
               </div>
@@ -166,7 +166,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 mt-2"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs tracking-wide transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 mt-2"
               >
                 <span>Save New Password</span>
               </button>
@@ -176,7 +176,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
       </main>
 
       {/* Footer */}
-      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-mono">
+      <footer className="h-10 border-t border-slate-200 px-6 sm:px-8 bg-white flex items-center justify-between text-[11px] text-slate-500 font-poppins">
         <div>ScholarCore SIMS Auth Module • Password Reset</div>
         <div>256-Bit Encrypted Token Verification</div>
       </footer>

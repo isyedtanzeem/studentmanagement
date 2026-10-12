@@ -158,9 +158,9 @@ export const AdmissionManagementView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-[4px] shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <div className="w-12 h-12 rounded-[4px] bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
             <GraduationCap className="w-6 h-6" />
           </div>
           <div>
@@ -168,7 +168,7 @@ export const AdmissionManagementView: React.FC = () => {
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">
                 Admission Management Module
               </h1>
-              <span className="bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-mono px-2 py-0.5 rounded-md uppercase font-bold">
+              <span className="bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-poppins px-2 py-0.5 rounded-md uppercase font-bold">
                 2026-2027 Session
               </span>
             </div>
@@ -181,7 +181,7 @@ export const AdmissionManagementView: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchApplications()}
-            className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors border border-slate-300 cursor-pointer"
+            className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[3px] transition-colors border border-slate-300 cursor-pointer"
             title="Refresh Applications"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-blue-600' : ''}`} />
@@ -189,7 +189,7 @@ export const AdmissionManagementView: React.FC = () => {
 
           <button
             onClick={() => setIsNewAppModalOpen(true)}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-2 shadow-md shadow-blue-500/20 cursor-pointer"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs transition-colors flex items-center gap-2 shadow-md shadow-blue-500/20 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             New Admission Application
@@ -199,41 +199,41 @@ export const AdmissionManagementView: React.FC = () => {
 
       {/* KPI Stats Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-medium">Total Applications</span>
-          <span className="text-2xl font-bold text-slate-900 font-mono mt-0.5 block">{stats.total}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-medium">Total Applications</span>
+          <span className="text-2xl font-bold text-slate-900 font-poppins mt-0.5 block">{stats.total}</span>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-medium">Pending Intake</span>
-          <span className="text-2xl font-bold text-amber-600 font-mono mt-0.5 block">{stats.pending}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-medium">Pending Intake</span>
+          <span className="text-2xl font-bold text-amber-600 font-poppins mt-0.5 block">{stats.pending}</span>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-medium">Under Review</span>
-          <span className="text-2xl font-bold text-blue-600 font-mono mt-0.5 block">{stats.underReview}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-medium">Under Review</span>
+          <span className="text-2xl font-bold text-blue-600 font-poppins mt-0.5 block">{stats.underReview}</span>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-semibold">Docs Verification</span>
-          <span className="text-2xl font-bold text-purple-600 font-mono mt-0.5 block">{stats.documentVerification}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-semibold">Docs Verification</span>
+          <span className="text-2xl font-bold text-purple-600 font-poppins mt-0.5 block">{stats.documentVerification}</span>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-medium">Approved & Enrolled</span>
-          <span className="text-2xl font-bold text-emerald-600 font-mono mt-0.5 block">{stats.approved}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-medium">Approved & Enrolled</span>
+          <span className="text-2xl font-bold text-emerald-600 font-poppins mt-0.5 block">{stats.approved}</span>
         </div>
 
-        <div className="bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block font-medium">Rejected</span>
-          <span className="text-2xl font-bold text-rose-600 font-mono mt-0.5 block">{stats.rejected}</span>
+        <div className="bg-white border border-slate-200 p-4 rounded-[3px] shadow-xs">
+          <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block font-medium">Rejected</span>
+          <span className="text-2xl font-bold text-rose-600 font-poppins mt-0.5 block">{stats.rejected}</span>
         </div>
       </div>
 
       {/* Filter and Search Toolbar */}
-      <div className="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-xs">
+      <div className="bg-white border border-slate-200 p-4 rounded-[4px] space-y-3 shadow-xs">
         {/* Status Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 text-xs font-mono border-b border-slate-200">
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 text-xs font-poppins border-b border-slate-200">
           {[
             { id: 'ALL', label: 'All Applications' },
             { id: 'Pending', label: 'Pending' },
@@ -248,7 +248,7 @@ export const AdmissionManagementView: React.FC = () => {
                 setSelectedStatus(tab.id);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[3px] whitespace-nowrap transition-colors cursor-pointer ${
                 selectedStatus === tab.id
                   ? 'bg-blue-600 text-white font-semibold shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -271,7 +271,7 @@ export const AdmissionManagementView: React.FC = () => {
                 setSearch(e.target.value);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-8 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-8 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
             />
           </div>
 
@@ -282,7 +282,7 @@ export const AdmissionManagementView: React.FC = () => {
                 setSelectedDepartment(e.target.value);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
             >
               <option value="ALL">All Departments / Streams</option>
               {DEPARTMENTS.filter((d) => d !== 'ALL').map((dept) => (
@@ -298,7 +298,7 @@ export const AdmissionManagementView: React.FC = () => {
                 setSelectedCategory(e.target.value);
                 setPagination((prev) => ({ ...prev, currentPage: 1 }));
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
             >
               <option value="ALL">All Categories</option>
               {CATEGORIES.filter((c) => c !== 'ALL').map((cat) => (
@@ -310,10 +310,10 @@ export const AdmissionManagementView: React.FC = () => {
       </div>
 
       {/* Applications Data Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-[4px] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-mono text-[11px] uppercase border-b border-slate-200">
+            <thead className="bg-slate-50 text-slate-600 font-poppins text-[11px] uppercase border-b border-slate-200">
               <tr>
                 <th className="p-3.5">Application #</th>
                 <th className="p-3.5">Applicant Name</th>
@@ -324,16 +324,16 @@ export const AdmissionManagementView: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-slate-700 font-sans bg-white">
+            <tbody className="divide-y divide-slate-200 text-slate-700 font-poppins bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500 font-mono">
+                  <td colSpan={7} className="p-8 text-center text-slate-500 font-poppins">
                     Loading admission records...
                   </td>
                 </tr>
               ) : applications.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500 font-mono">
+                  <td colSpan={7} className="p-8 text-center text-slate-500 font-poppins">
                     No admission applications found matching current criteria.
                   </td>
                 </tr>
@@ -353,7 +353,7 @@ export const AdmissionManagementView: React.FC = () => {
                       className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                       onClick={() => handleOpenDrawer(app)}
                     >
-                      <td className="p-3.5 font-mono text-slate-900 font-bold">
+                      <td className="p-3.5 font-poppins text-slate-900 font-bold">
                         {app.applicationNumber}
                       </td>
 
@@ -366,15 +366,15 @@ export const AdmissionManagementView: React.FC = () => {
 
                       <td className="p-3.5">
                         <div className="text-slate-900 font-medium">{app.department}</div>
-                        <div className="text-[11px] text-blue-700 font-mono">{app.degree || 'B.Tech'} • {app.academicTerm}</div>
+                        <div className="text-[11px] text-blue-700 font-poppins">{app.degree || 'B.Tech'} • {app.academicTerm}</div>
                       </td>
 
-                      <td className="p-3.5 font-mono">
+                      <td className="p-3.5 font-poppins">
                         <div><span className="text-slate-500">Class XII:</span> <strong className="text-slate-900">{app.classXIIPercentage ? `${app.classXIIPercentage}%` : 'N/A'}</strong></div>
                         <div className="text-[10px] text-slate-500">{app.entranceExamScore || 'No entrance score'}</div>
                       </td>
 
-                      <td className="p-3.5 font-mono">
+                      <td className="p-3.5 font-poppins">
                         <span className="bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-slate-700">
                           {app.category || 'General'}
                         </span>
@@ -382,11 +382,11 @@ export const AdmissionManagementView: React.FC = () => {
 
                       <td className="p-3.5">
                         <div className="flex flex-col items-start gap-1">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono border font-semibold ${statusColors}`}>
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-poppins border font-semibold ${statusColors}`}>
                             {app.status}
                           </span>
                           {app.generatedStudentId && (
-                            <span className="text-[10px] font-mono text-emerald-700 font-bold">
+                            <span className="text-[10px] font-poppins text-emerald-700 font-bold">
                               Roll: {app.generatedStudentId}
                             </span>
                           )}
@@ -397,7 +397,7 @@ export const AdmissionManagementView: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenVerify(app)}
-                            className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 text-[10px] font-mono font-medium cursor-pointer"
+                            className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-[3px] border border-blue-200 text-[10px] font-poppins font-medium cursor-pointer"
                             title="Verify Documents"
                           >
                             Verify
@@ -405,7 +405,7 @@ export const AdmissionManagementView: React.FC = () => {
 
                           <button
                             onClick={() => handleOpenApprove(app)}
-                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-200 text-[10px] font-mono font-medium cursor-pointer"
+                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-[3px] border border-emerald-200 text-[10px] font-poppins font-medium cursor-pointer"
                             title="Approve & Enroll"
                           >
                             Approve
@@ -413,7 +413,7 @@ export const AdmissionManagementView: React.FC = () => {
 
                           <button
                             onClick={() => handleOpenReject(app)}
-                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 text-[10px] font-mono font-medium cursor-pointer"
+                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-[3px] border border-rose-200 text-[10px] font-poppins font-medium cursor-pointer"
                             title="Reject Application"
                           >
                             Reject
@@ -429,7 +429,7 @@ export const AdmissionManagementView: React.FC = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs font-mono text-slate-600">
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs font-poppins text-slate-600">
           <div>
             Showing {applications.length} of {pagination.totalItems} admission records
           </div>
@@ -438,7 +438,7 @@ export const AdmissionManagementView: React.FC = () => {
             <button
               onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.max(1, prev.currentPage - 1) }))}
               disabled={pagination.currentPage === 1}
-              className="p-1.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
+              className="p-1.5 rounded-[3px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -450,7 +450,7 @@ export const AdmissionManagementView: React.FC = () => {
             <button
               onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.min(prev.totalPages, prev.currentPage + 1) }))}
               disabled={pagination.currentPage >= pagination.totalPages}
-              className="p-1.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
+              className="p-1.5 rounded-[3px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

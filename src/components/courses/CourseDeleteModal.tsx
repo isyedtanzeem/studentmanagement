@@ -43,31 +43,31 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-md bg-white border border-rose-200 rounded-2xl shadow-xl overflow-hidden"
+          className="relative w-full max-w-md bg-white border border-rose-200 rounded-[4px] shadow-xl overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-5 border-b border-rose-100 bg-rose-50/80">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700">
+              <div className="w-10 h-10 rounded-[3px] bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900">Delete Academic Course</h3>
-                <p className="text-xs text-rose-700 font-mono font-medium">{course.code} • {course.title}</p>
+                <p className="text-xs text-rose-700 font-poppins font-medium">{course.code} • {course.title}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
+              className="p-1 text-slate-400 hover:text-slate-700 rounded-[3px] hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Body */}
-          <div className="p-5 space-y-4 text-xs font-sans">
+          <div className="p-5 space-y-4 text-xs font-poppins">
             {errorMessage ? (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 font-mono space-y-1">
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-[3px] text-rose-700 font-poppins space-y-1">
                 <div className="font-semibold text-rose-900 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
                   <span>Deletion Prevented</span>
@@ -81,7 +81,7 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
               </p>
             )}
 
-            <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl space-y-2 font-mono text-xs">
+            <div className="bg-slate-50 border border-slate-200 p-3 rounded-[3px] space-y-2 font-poppins text-xs">
               <div className="flex justify-between text-slate-600">
                 <span>Department Mapping:</span>
                 <span className="text-slate-900 font-medium">{course.department}</span>
@@ -107,7 +107,7 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors text-xs cursor-pointer"
+                className="px-4 py-2 rounded-[3px] border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors text-xs cursor-pointer"
               >
                 Cancel
               </button>
@@ -116,7 +116,7 @@ export const CourseDeleteModal: React.FC<CourseDeleteModalProps> = ({
                 type="button"
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-rose-500/20 disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-[3px] text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-rose-500/20 disabled:opacity-50 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>
