@@ -313,63 +313,63 @@ export const FacultyManagementView: React.FC = () => {
         </div>
       ) : viewMode === 'table' ? (
         /* Table View */
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white border border-[#D2D6DE] rounded-[3px] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-mono text-[11px] uppercase tracking-wider">
-                  <th className="p-3.5 pl-5">Faculty Member</th>
-                  <th className="p-3.5">Emp. ID</th>
-                  <th className="p-3.5">Designation</th>
-                  <th className="p-3.5">Department</th>
-                  <th className="p-3.5">Qualification</th>
-                  <th className="p-3.5 text-center">Status</th>
-                  <th className="p-3.5 text-right pr-5">Actions</th>
+                <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold uppercase text-[11px] tracking-wider">
+                  <th className="py-2.5 px-3 pl-4">Faculty Member</th>
+                  <th className="py-2.5 px-3">Emp. ID</th>
+                  <th className="py-2.5 px-3">Designation</th>
+                  <th className="py-2.5 px-3">Department</th>
+                  <th className="py-2.5 px-3">Qualification</th>
+                  <th className="py-2.5 px-3 text-center">Status</th>
+                  <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 text-slate-700">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                 {facultyList.map((fac) => (
-                  <tr key={fac.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 pl-5 font-semibold text-slate-900">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 font-mono font-bold text-xs flex-shrink-0">
+                  <tr key={fac.id} className="hover:bg-[#EBF5FB] transition-colors odd:bg-white even:bg-[#F9FAFC]">
+                    <td className="py-2 px-3 pl-4 font-bold text-[#1F2D3D]">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-[3px] bg-blue-50 border border-[#B0BEC5] flex items-center justify-center text-blue-700 font-bold text-xs flex-shrink-0">
                           {fac.fullName.charAt(0)}
                         </div>
                         <div>
-                          <span className="block font-medium text-slate-900">{fac.fullName}</span>
-                          <span className="block text-[10px] text-slate-500 font-mono">{fac.email}</span>
+                          <span className="block font-bold text-[#1F2D3D]">{fac.fullName}</span>
+                          <span className="block text-[11px] text-[#546E7A] font-mono">{fac.email}</span>
                         </div>
                       </div>
                     </td>
 
-                    <td className="p-3.5 font-mono text-slate-600 font-semibold">{fac.employeeId}</td>
+                    <td className="py-2 px-3 font-mono text-[#2C3E50] font-bold">{fac.employeeId}</td>
 
-                    <td className="p-3.5">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border ${designationBadgeStyle(fac.designation)}`}>
+                    <td className="py-2 px-3">
+                      <span className={`px-2 py-0.5 rounded-[2px] text-[10px] font-bold border uppercase ${designationBadgeStyle(fac.designation)}`}>
                         {fac.designation}
                       </span>
                     </td>
 
-                    <td className="p-3.5 font-medium text-slate-800">{fac.department}</td>
+                    <td className="py-2 px-3 font-medium text-[#37474F]">{fac.department}</td>
 
-                    <td className="p-3.5 text-slate-600">{fac.qualification || 'N/A'}</td>
+                    <td className="py-2 px-3 text-[#546E7A]">{fac.qualification || 'N/A'}</td>
 
-                    <td className="p-3.5 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-medium border ${
-                        fac.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+                    <td className="py-2 px-3 text-center">
+                      <span className={`px-2 py-0.5 rounded-[2px] text-[10px] font-bold border uppercase ${
+                        fac.status === 'Active' ? 'bg-[#E8F8F5] text-[#117A65] border-[#A3E4D7]' : 'bg-amber-50 text-amber-800 border-amber-300'
                       }`}>
                         {fac.status}
                       </span>
                     </td>
 
-                    <td className="p-3.5 text-right pr-5">
+                    <td className="py-2 px-3 text-right pr-4">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setViewingFaculty(fac)}
                           title="View Dossier"
-                          className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1 rounded-[2px] border border-slate-300 text-slate-600 hover:text-blue-700 hover:bg-slate-100 transition-colors cursor-pointer"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3.5 h-3.5 text-blue-700" />
                         </button>
 
                         <button
@@ -378,17 +378,17 @@ export const FacultyManagementView: React.FC = () => {
                             setIsFormModalOpen(true);
                           }}
                           title="Edit Faculty"
-                          className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1 rounded-[2px] border border-slate-300 text-slate-600 hover:text-indigo-700 hover:bg-slate-100 transition-colors cursor-pointer"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5 text-indigo-700" />
                         </button>
 
                         <button
                           onClick={() => setDeletingFaculty(fac)}
                           title="Delete Faculty"
-                          className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          className="p-1 rounded-[2px] border border-rose-300 text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5 text-rose-600" />
                         </button>
                       </div>
                     </td>

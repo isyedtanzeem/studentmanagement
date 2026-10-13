@@ -404,78 +404,80 @@ export const DepartmentManagementView: React.FC = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white border border-[#D2D6DE] rounded-[3px] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-mono text-[11px] uppercase border-b border-slate-200 font-semibold">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#F4F6F9] text-[#4B646F] uppercase text-[11px] border-b-2 border-[#D2D6DE] font-bold tracking-wider">
                 <tr>
-                  <th className="p-3.5">Code</th>
-                  <th className="p-3.5">Department Name</th>
-                  <th className="p-3.5">Head of Department (HOD)</th>
-                  <th className="p-3.5">Location</th>
-                  <th className="p-3.5 text-center">Students</th>
-                  <th className="p-3.5 text-center">Faculty</th>
-                  <th className="p-3.5 text-center">Courses</th>
-                  <th className="p-3.5">Status</th>
-                  <th className="p-3.5 text-right">Actions</th>
+                  <th className="py-2.5 px-3">Code</th>
+                  <th className="py-2.5 px-3">Department Name</th>
+                  <th className="py-2.5 px-3">Head of Department (HOD)</th>
+                  <th className="py-2.5 px-3">Location</th>
+                  <th className="py-2.5 px-3 text-center">Students</th>
+                  <th className="py-2.5 px-3 text-center">Faculty</th>
+                  <th className="py-2.5 px-3 text-center">Courses</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                 {departments.map((dept) => (
                   <tr
                     key={dept.id}
                     onClick={() => handleOpenDrawer(dept)}
-                    className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                    className="hover:bg-[#EBF5FB] transition-colors group cursor-pointer odd:bg-white even:bg-[#F9FAFC]"
                   >
-                    <td className="p-3.5 font-mono text-blue-700 font-bold">
-                      {dept.code}
+                    <td className="py-2 px-3 font-mono text-blue-800 font-bold">
+                      <span className="bg-[#EBF5FB] border border-[#A9CCE3] px-1.5 py-0.5 rounded-[2px]">
+                        {dept.code}
+                      </span>
                     </td>
 
-                    <td className="p-3.5">
-                      <div className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                    <td className="py-2 px-3">
+                      <div className="font-bold text-[#1F2D3D] group-hover:text-blue-700 transition-colors">
                         {dept.name}
                       </div>
-                      <div className="text-[10px] text-slate-500 font-mono">Est. {dept.establishedYear || 'N/A'}</div>
+                      <div className="text-[10px] text-[#546E7A] font-mono">Est. {dept.establishedYear || 'N/A'}</div>
                     </td>
 
-                    <td className="p-3.5">
-                      <div className="text-slate-900 font-medium">{dept.headOfDepartment || <span className="text-slate-400 italic">Not Assigned</span>}</div>
-                      {dept.headOfDepartment && <div className="text-[10px] text-slate-500">{dept.hodDesignation || 'Professor & HOD'}</div>}
+                    <td className="py-2 px-3">
+                      <div className="text-[#263238] font-medium">{dept.headOfDepartment || <span className="text-slate-400 italic">Not Assigned</span>}</div>
+                      {dept.headOfDepartment && <div className="text-[10px] text-[#78909C]">{dept.hodDesignation || 'Professor & HOD'}</div>}
                     </td>
 
-                    <td className="p-3.5 text-slate-700 font-medium">
+                    <td className="py-2 px-3 text-[#37474F] font-medium">
                       {dept.buildingLocation || 'Main Block'}
                     </td>
 
-                    <td className="p-3.5 font-mono text-center text-blue-700 font-bold">
+                    <td className="py-2 px-3 font-mono text-center text-blue-800 font-bold tabular-nums">
                       {dept.studentCount}
                     </td>
 
-                    <td className="p-3.5 font-mono text-center text-indigo-700 font-bold">
+                    <td className="py-2 px-3 font-mono text-center text-indigo-800 font-bold tabular-nums">
                       {dept.facultyCount}
                     </td>
 
-                    <td className="p-3.5 font-mono text-center text-purple-700 font-bold">
+                    <td className="py-2 px-3 font-mono text-center text-purple-800 font-bold tabular-nums">
                       {dept.coursesCount}
                     </td>
 
-                    <td className="p-3.5">
+                    <td className="py-2 px-3">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono border font-semibold ${
+                        className={`px-2 py-0.5 rounded-[2px] text-[10px] font-mono border font-bold uppercase ${
                           dept.status === 'Active'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : 'bg-slate-100 text-slate-600 border-slate-200'
+                            ? 'bg-[#E8F8F5] text-[#117A65] border-[#A3E4D7]'
+                            : 'bg-slate-100 text-slate-600 border-slate-300'
                         }`}
                       >
                         {dept.status}
                       </span>
                     </td>
 
-                    <td className="p-3.5 text-right" onClick={(e) => e.stopPropagation()}>
+                    <td className="py-2 px-3 text-right pr-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1.5 font-medium">
                         <button
                           onClick={() => handleOpenEdit(dept)}
-                          className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 text-xs cursor-pointer"
+                          className="px-2 py-0.5 bg-white hover:bg-slate-100 text-blue-700 rounded-[2px] border border-slate-300 text-xs cursor-pointer"
                           title="Edit"
                         >
                           Edit
@@ -483,7 +485,7 @@ export const DepartmentManagementView: React.FC = () => {
 
                         <button
                           onClick={() => handleOpenDelete(dept)}
-                          className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 text-xs cursor-pointer"
+                          className="px-2 py-0.5 bg-white hover:bg-rose-50 text-rose-700 rounded-[2px] border border-rose-300 text-xs cursor-pointer"
                           title="Delete"
                         >
                           Delete
@@ -499,28 +501,28 @@ export const DepartmentManagementView: React.FC = () => {
       )}
 
       {/* Pagination Bar */}
-      <div className="p-4 bg-white border border-slate-200/90 rounded-2xl flex items-center justify-between text-xs text-slate-600 font-medium shadow-xs">
+      <div className="p-3 bg-white border border-[#D2D6DE] rounded-[3px] flex items-center justify-between text-xs text-[#546E7A] font-medium shadow-xs">
         <div>
           Showing {departments.length} of {pagination.totalItems} departments
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.max(1, prev.currentPage - 1) }))}
             disabled={pagination.currentPage === 1}
-            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="font-mono">
+          <span className="font-mono px-2 py-0.5 bg-slate-100 border border-slate-300 rounded-[2px] text-[#263238] font-bold">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
 
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.min(prev.totalPages, prev.currentPage + 1) }))}
             disabled={pagination.currentPage >= pagination.totalPages}
-            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

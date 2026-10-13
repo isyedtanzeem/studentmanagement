@@ -1018,20 +1018,20 @@ export const SettingsManagementView: React.FC = () => {
           </div>
 
           {/* Users Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div className="bg-white rounded-[3px] border border-[#D2D6DE] overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    <th className="py-3.5 px-4">User</th>
-                    <th className="py-3.5 px-4">Email</th>
-                    <th className="py-3.5 px-4">Role</th>
-                    <th className="py-3.5 px-4">Department</th>
-                    <th className="py-3.5 px-4">Status</th>
-                    <th className="py-3.5 px-4 text-right">Actions</th>
+                  <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-xs font-bold text-[#4B646F] uppercase tracking-wider">
+                    <th className="py-2.5 px-3">User</th>
+                    <th className="py-2.5 px-3">Email</th>
+                    <th className="py-2.5 px-3">Role</th>
+                    <th className="py-2.5 px-3">Department</th>
+                    <th className="py-2.5 px-3">Status</th>
+                    <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+                <tbody className="divide-y divide-[#E4E7EB] text-slate-800">
                   {usersList.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-12 text-center text-slate-500">
@@ -1342,19 +1342,19 @@ export const SettingsManagementView: React.FC = () => {
             )}
 
             {/* Matrix Table */}
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-              <table className="w-full text-left border-collapse">
+            <div className="bg-white rounded-[3px] border border-[#D2D6DE] overflow-hidden shadow-xs">
+              <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                    <th className="py-3.5 px-4">System Module</th>
-                    <th className="py-3.5 px-4 text-center">View</th>
-                    <th className="py-3.5 px-4 text-center">Create</th>
-                    <th className="py-3.5 px-4 text-center">Edit</th>
-                    <th className="py-3.5 px-4 text-center">Delete</th>
-                    <th className="py-3.5 px-4 text-center">Export</th>
+                  <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-xs font-bold text-[#4B646F] uppercase tracking-wider">
+                    <th className="py-2.5 px-3">System Module</th>
+                    <th className="py-2.5 px-3 text-center">View</th>
+                    <th className="py-2.5 px-3 text-center">Create</th>
+                    <th className="py-2.5 px-3 text-center">Edit</th>
+                    <th className="py-2.5 px-3 text-center">Delete</th>
+                    <th className="py-2.5 px-3 text-center">Export</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+                <tbody className="divide-y divide-[#E4E7EB] text-slate-800">
                   {rolePermissions
                     .find(r => r.role === selectedRole)
                     ?.permissions.map(p => (

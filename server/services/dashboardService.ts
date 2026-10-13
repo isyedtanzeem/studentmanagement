@@ -375,4 +375,97 @@ export class DashboardService {
 
     return newNotif;
   }
+
+  public async globalSearch(rawQuery: string) {
+    const query = (rawQuery || '').trim().toLowerCase();
+    if (!query) {
+      return {
+        students: [],
+        courses: [],
+        departments: [],
+        admissions: []
+      };
+    }
+
+    const [students, courses, departments, admissions] = await Promise.all([
+      this.readCollection<StudentRecord>('students'),
+      this.readCollection<CourseRecord>('courses'),
+      this.readCollection<DepartmentRecord>('departments'),
+      this.readCollection<AdmissionRecord>('admissions')
+    ]);
+
+    const matchedStudents = students
+      .filter(s =>
+        (s.fullName && s.fullName.toLowerCase().includes(query)) ||
+        (s.studentId && s.studentId.toLowerCase().includes(query)) ||
+        (s.email && s.email.toLowerCase().includes(query)) ||
+        (s.department && s.department.toLowerCase().includes(query))
+      )
+      .slice(0, 6)
+      .map(s => ({
+        id: s.id,
+        name: s.fullName,
+        roll: s.studentId,
+        dept: s.department,
+        email: s.email,
+        status: s.status
+      }));
+
+    const matchedCourses = courses
+      .filter(c =>
+        (c.title && c.title.toLowerCase().includes(query)) ||
+        (c.code && c.code.toLowerCase().includes(query)) ||
+        (c.department && c.department.toLowerCase().includes(query)) ||
+        (c.instructorName && c.instructorName.toLowerCase().includes(query))
+      )
+      .slice(0, 6)
+      .map(c => ({
+        id: c.id,
+        code: c.code,
+        title: c.title,
+        dept: c.department,
+        credits: c.credits,
+        level: c.level
+      }));
+
+    const matchedDepartments = departments
+      .filter(d =>
+        (d.name && d.name.toLowerCase().includes(query)) ||
+        (d.code && d.code.toLowerCase().includes(query)) ||
+        (d.buildingLocation && d.buildingLocation.toLowerCase().includes(query))
+      )
+      .slice(0, 6)
+      .map(d => ({
+        id: d.id,
+        code: d.code,
+        name: d.name,
+        buildingLocation: d.buildingLocation,
+        status: d.status
+      }));
+
+    const matchedAdmissions = admissions
+      .filter(a =>
+        (a.applicantName && a.applicantName.toLowerCase().includes(query)) ||
+        (a.applicationNumber && a.applicationNumber.toLowerCase().includes(query)) ||
+        (a.email && a.email.toLowerCase().includes(query)) ||
+        (a.department && a.department.toLowerCase().includes(query)) ||
+        (a.phone && a.phone.includes(query))
+      )
+      .slice(0, 6)
+      .map(a => ({
+        id: a.id,
+        appNo: a.applicationNumber,
+        name: a.applicantName,
+        status: a.status,
+        department: a.department,
+        email: a.email
+      }));
+
+    return {
+      students: matchedStudents,
+      courses: matchedCourses,
+      departments: matchedDepartments,
+      admissions: matchedAdmissions
+    };
+  }
 }

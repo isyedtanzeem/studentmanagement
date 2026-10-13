@@ -490,62 +490,62 @@ export const IdCardManagementView: React.FC = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
-                  <th className="py-3 px-4 w-10">
+                <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold uppercase text-[11px] tracking-wider">
+                  <th className="py-2.5 px-3 w-10">
                     <input
                       type="checkbox"
                       checked={cards.length > 0 && selectedCardIds.length === cards.length}
                       onChange={e => handleSelectAll(e.target.checked)}
-                      className="w-4 h-4 text-indigo-600 rounded"
+                      className="w-4 h-4 text-blue-600 rounded-[2px] border-slate-300"
                     />
                   </th>
-                  <th className="py-3 px-4">Card No & Student</th>
-                  <th className="py-3 px-4">Department</th>
-                  <th className="py-3 px-4">Layout Style</th>
-                  <th className="py-3 px-4">Valid Until</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Prints</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-2.5 px-3">Card No & Student</th>
+                  <th className="py-2.5 px-3">Department</th>
+                  <th className="py-2.5 px-3">Layout Style</th>
+                  <th className="py-2.5 px-3">Valid Until</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3">Prints</th>
+                  <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                 {cards.map(card => (
-                  <tr key={card.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-4">
+                  <tr key={card.id} className="hover:bg-[#EBF5FB] transition-colors odd:bg-white even:bg-[#F9FAFC]">
+                    <td className="py-2 px-3">
                       <input
                         type="checkbox"
                         checked={selectedCardIds.includes(card.id)}
                         onChange={() => toggleSelectCard(card.id)}
-                        className="w-4 h-4 text-indigo-600 rounded"
+                        className="w-4 h-4 text-blue-600 rounded-[2px] border-slate-300"
                       />
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 px-3">
                       <div>
-                        <p className="font-bold text-slate-900">{card.studentName}</p>
-                        <p className="font-mono text-[10px] text-indigo-600 font-bold">{card.cardNumber} • {card.studentRollNo}</p>
+                        <p className="font-bold text-[#1F2D3D]">{card.studentName}</p>
+                        <p className="font-mono text-[10px] text-blue-700 font-bold">{card.cardNumber} • {card.studentRollNo}</p>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-slate-700 font-semibold">{card.department}</td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px] uppercase font-bold border">
+                    <td className="py-2 px-3 text-[#37474F] font-semibold">{card.department}</td>
+                    <td className="py-2 px-3">
+                      <span className="px-2 py-0.5 rounded-[2px] bg-slate-100 text-[#546E7A] font-mono text-[10px] uppercase font-bold border border-slate-300">
                         {card.layoutTemplate}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-mono font-bold text-emerald-700">{card.validUntil}</td>
-                    <td className="py-3 px-4">{getStatusBadge(card.status)}</td>
-                    <td className="py-3 px-4 font-mono font-bold text-slate-700">{card.printCount}x</td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-2 px-3 font-mono font-bold text-emerald-800">{card.validUntil}</td>
+                    <td className="py-2 px-3">{getStatusBadge(card.status)}</td>
+                    <td className="py-2 px-3 font-mono font-bold text-[#546E7A]">{card.printCount}x</td>
+                    <td className="py-2 px-3 text-right pr-4">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setPreviewPrintCards([card])}
-                          className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg"
+                          className="p-1 text-blue-700 hover:bg-slate-100 rounded-[2px] border border-slate-300"
                           title="Print / Save PDF"
                         >
-                          <Printer className="w-4 h-4" />
+                          <Printer className="w-3.5 h-3.5" />
                         </button>
 
                         <button
@@ -553,19 +553,19 @@ export const IdCardManagementView: React.FC = () => {
                             setEditingCard(card);
                             setIsGeneratorOpen(true);
                           }}
-                          className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
+                          className="p-1 text-[#546E7A] hover:text-indigo-700 hover:bg-slate-100 rounded-[2px] border border-slate-300"
                           title="Edit"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5" />
                         </button>
 
                         {card.status === 'Active' && (
                           <button
                             onClick={() => handleRevokeCard(card)}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                            className="p-1 text-rose-700 hover:bg-rose-50 rounded-[2px] border border-rose-300"
                             title="Revoke"
                           >
-                            <XCircle className="w-4 h-4" />
+                            <XCircle className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
@@ -580,27 +580,27 @@ export const IdCardManagementView: React.FC = () => {
 
       {/* Pagination Footer */}
       {!loading && cards.length > 0 && (
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div className="bg-white p-3 rounded-[3px] border border-[#D2D6DE] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#546E7A]">
           <div>
-            Showing <strong className="text-slate-900">{cards.length}</strong> of{' '}
-            <strong className="text-slate-900">{totalItems}</strong> student ID cards
+            Showing <strong className="text-[#263238]">{cards.length}</strong> of{' '}
+            <strong className="text-[#263238]">{totalItems}</strong> student ID cards
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-40 transition-colors"
+              className="p-1 border border-slate-300 rounded-[2px] bg-white hover:bg-slate-100 disabled:opacity-40 transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-semibold text-slate-800">
+            <span className="font-mono px-2 py-0.5 bg-slate-100 border border-slate-300 rounded-[2px] text-[#263238] font-bold">
               Page {page} of {totalPages}
             </span>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-40 transition-colors"
+              className="p-1 border border-slate-300 rounded-[2px] bg-white hover:bg-slate-100 disabled:opacity-40 transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

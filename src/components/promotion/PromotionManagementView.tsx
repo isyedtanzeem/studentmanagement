@@ -501,7 +501,7 @@ export const PromotionManagementView: React.FC = () => {
           </div>
 
           {/* Student Batch Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
             {loading ? (
               <div className="p-12 text-center">
                 <RefreshCw className="w-6 h-6 text-indigo-600 animate-spin mx-auto" />
@@ -515,28 +515,28 @@ export const PromotionManagementView: React.FC = () => {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                      <th className="p-3.5 w-10 text-center">
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold uppercase text-[11px] tracking-wider">
+                      <th className="py-2.5 px-3 w-10 text-center">
                         <input
                           type="checkbox"
                           checked={selectedDbIds.length === studentsData.length && studentsData.length > 0}
                           onChange={toggleSelectAll}
-                          className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4"
+                          className="rounded-[2px] text-blue-600 border-slate-300 h-4 w-4"
                         />
                       </th>
-                      <th className="p-3.5">Student Details</th>
-                      <th className="p-3.5">Current Status</th>
-                      <th className="p-3.5">Target Step</th>
-                      <th className="p-3.5 text-center">Attendance</th>
-                      <th className="p-3.5 text-center">Backlogs</th>
-                      <th className="p-3.5 text-center">Fees</th>
-                      <th className="p-3.5 text-center">Validation</th>
-                      <th className="p-3.5 text-right">Quick Action</th>
+                      <th className="py-2.5 px-3">Student Details</th>
+                      <th className="py-2.5 px-3">Current Status</th>
+                      <th className="py-2.5 px-3">Target Step</th>
+                      <th className="py-2.5 px-3 text-center">Attendance</th>
+                      <th className="py-2.5 px-3 text-center">Backlogs</th>
+                      <th className="py-2.5 px-3 text-center">Fees</th>
+                      <th className="py-2.5 px-3 text-center">Validation</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Quick Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                     {studentsData.map(item => {
                       const isSelected = selectedDbIds.includes(item.student.id);
                       return (
@@ -1037,7 +1037,7 @@ export const PromotionManagementView: React.FC = () => {
           </div>
 
           {/* History Log Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
             {historyData.length === 0 ? (
               <div className="p-12 text-center">
                 <Clock className="w-10 h-10 text-slate-300 mx-auto" />
@@ -1048,18 +1048,18 @@ export const PromotionManagementView: React.FC = () => {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                      <th className="p-3.5">Student</th>
-                      <th className="p-3.5">Promotion Details</th>
-                      <th className="p-3.5">Session / Date</th>
-                      <th className="p-3.5 text-center">Outcome Status</th>
-                      <th className="p-3.5">Promoted By</th>
-                      <th className="p-3.5 text-right">Actions</th>
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold uppercase text-[11px] tracking-wider">
+                      <th className="py-2.5 px-3">Student</th>
+                      <th className="py-2.5 px-3">Promotion Details</th>
+                      <th className="py-2.5 px-3">Session / Date</th>
+                      <th className="py-2.5 px-3 text-center">Outcome Status</th>
+                      <th className="py-2.5 px-3">Promoted By</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                     {historyData.map(record => (
                       <tr key={record.id} className="hover:bg-slate-50/80 transition">
                         <td className="p-3.5">

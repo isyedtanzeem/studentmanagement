@@ -149,16 +149,16 @@ export const SynopsisReaderView: React.FC<SynopsisReaderViewProps> = ({
                 <h3>Document Index & Table of Contents</h3>
               </div>
 
-              <div className="overflow-x-auto rounded-xl border border-slate-200">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-blue-950 text-white font-semibold">
+              <div className="overflow-x-auto rounded-[3px] border border-[#D2D6DE] shadow-xs">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-[#F4F6F9] text-[#4B646F] font-bold border-b-2 border-[#D2D6DE] uppercase text-[11px] tracking-wider">
                     <tr>
-                      <th className="p-3 w-16">Index</th>
-                      <th className="p-3 w-1/3">Chapter / Section</th>
-                      <th className="p-3">Deliverables & Technical Scope Covered</th>
+                      <th className="py-2.5 px-3 w-16">Index</th>
+                      <th className="py-2.5 px-3 w-1/3">Chapter / Section</th>
+                      <th className="py-2.5 px-3">Deliverables & Technical Scope Covered</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                     {[
                       { idx: '1.0', title: 'Executive Summary & Abstract', desc: 'Institutional background, core problem addressed, and strategic academic outcomes.' },
                       { idx: '2.0', title: 'Problem Statement & Motivation', desc: 'Bottlenecks of manual spreadsheets, fragmented fee records, and unaudited attendance updates.' },
@@ -345,19 +345,19 @@ export const SynopsisReaderView: React.FC<SynopsisReaderViewProps> = ({
 
             {/* Data Dictionary Table */}
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-slate-900">5.2 Relational Data Dictionary & Schema Definitions</h4>
-              <div className="overflow-x-auto rounded-xl border border-slate-200">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-900 text-white font-semibold">
+              <h4 className="font-bold text-sm text-[#1F2D3D]">5.2 Relational Data Dictionary & Schema Definitions</h4>
+              <div className="overflow-x-auto rounded-[3px] border border-[#D2D6DE] shadow-xs">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-[#F4F6F9] text-[#4B646F] font-bold border-b-2 border-[#D2D6DE] uppercase text-[11px] tracking-wider">
                     <tr>
-                      <th className="p-3">Entity Name</th>
-                      <th className="p-3">Primary Key</th>
-                      <th className="p-3">Foreign Keys</th>
-                      <th className="p-3">Key Attributes & Data Types</th>
-                      <th className="p-3">Cardinality</th>
+                      <th className="py-2.5 px-3">Entity Name</th>
+                      <th className="py-2.5 px-3">Primary Key</th>
+                      <th className="py-2.5 px-3">Foreign Keys</th>
+                      <th className="py-2.5 px-3">Key Attributes & Data Types</th>
+                      <th className="py-2.5 px-3">Cardinality</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                     {[
                       { name: 'STUDENT', pk: 'id (UUID)', fk: 'department_id', attrs: 'studentId (VARCHAR), fullName, email, gpa (FLOAT), attendance (FLOAT), status', card: '1 : N with SemesterRecords, Fees' },
                       { name: 'SEMESTER_RECORD', pk: 'id (UUID)', fk: 'student_id', attrs: 'semester (INT 1-8), academicTerm, sgpa (FLOAT), cgpa, attendancePct, backlogs', card: 'N : 1 with Student' },
@@ -431,20 +431,20 @@ export const SynopsisReaderView: React.FC<SynopsisReaderViewProps> = ({
               <h3 className="text-xl font-bold">7.0 Security Architecture & Role-Based Access Control (RBAC)</h3>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-slate-200">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-blue-950 text-white font-semibold">
+            <div className="overflow-x-auto rounded-[3px] border border-[#D2D6DE] shadow-xs">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-[#F4F6F9] text-[#4B646F] font-bold border-b-2 border-[#D2D6DE] uppercase text-[11px] tracking-wider">
                   <tr>
-                    <th className="p-3">User Role</th>
-                    <th className="p-3">Dashboard</th>
-                    <th className="p-3">Student Profiles</th>
-                    <th className="p-3">Grades / SGPA</th>
-                    <th className="p-3">Fee Collection</th>
-                    <th className="p-3">Attendance & Audit Logs</th>
-                    <th className="p-3">Settings</th>
+                    <th className="py-2.5 px-3">User Role</th>
+                    <th className="py-2.5 px-3">Dashboard</th>
+                    <th className="py-2.5 px-3">Student Profiles</th>
+                    <th className="py-2.5 px-3">Grades / SGPA</th>
+                    <th className="py-2.5 px-3">Fee Collection</th>
+                    <th className="py-2.5 px-3">Attendance & Audit Logs</th>
+                    <th className="py-2.5 px-3">Settings</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                   {[
                     { role: 'Super Admin', dash: 'Full Access', st: 'Full CRUD', gr: 'Full Access', fee: 'Full Access', att: 'Full Access & View All Logs', set: 'Full Access' },
                     { role: 'Academic Dean', dash: 'Full Access', st: 'Read & Approve', gr: 'Read & Approve', fee: 'Read Only', att: 'Read & Approve Condonation', set: 'Restricted' },

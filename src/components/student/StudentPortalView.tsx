@@ -435,27 +435,27 @@ export const StudentPortalView: React.FC<StudentPortalViewProps> = () => {
           </div>
 
           {/* Weekly Timetable Grid */}
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-600" />
+          <div className="bg-white border border-[#D2D6DE] p-5 rounded-[3px] shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-[#E4E7EB] pb-2.5">
+              <h3 className="text-sm font-bold text-[#1F2D3D] flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-blue-700" />
                 Weekly Academic Time-Table Schedule
               </h3>
-              <span className="text-xs text-slate-500 font-mono">Spring 2026 Session</span>
+              <span className="text-xs text-[#546E7A] font-mono">Spring 2026 Session</span>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto border border-[#D2D6DE] rounded-[3px]">
               <table className="w-full text-left font-mono text-xs">
-                <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] border-b border-slate-200">
+                <thead className="bg-[#F4F6F9] text-[#4B646F] uppercase text-[11px] font-bold border-b-2 border-[#D2D6DE]">
                   <tr>
-                    <th className="p-3">Day</th>
-                    <th className="p-3">Time Slot</th>
-                    <th className="p-3">Course / Subject</th>
-                    <th className="p-3">Classroom / Lab</th>
-                    <th className="p-3">Faculty Instructor</th>
+                    <th className="py-2.5 px-3">Day</th>
+                    <th className="py-2.5 px-3">Time Slot</th>
+                    <th className="py-2.5 px-3">Course / Subject</th>
+                    <th className="py-2.5 px-3">Classroom / Lab</th>
+                    <th className="py-2.5 px-3">Faculty Instructor</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
+                <tbody className="divide-y divide-[#E4E7EB] text-[#263238] bg-white">
                   {weeklySchedule.map((item: any, idx: number) => (
                     <tr key={idx} className="hover:bg-slate-50 transition-colors">
                       <td className="p-3 font-semibold text-blue-700">{item.day}</td>

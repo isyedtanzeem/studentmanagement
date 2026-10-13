@@ -218,19 +218,19 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
                     <span className="text-emerald-700 font-mono text-[11px] font-semibold">Ready for import</span>
                   </div>
 
-                  <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto font-mono text-[11px]">
-                    <table className="w-full text-left">
-                      <thead className="bg-slate-100 text-slate-600 uppercase text-[10px]">
+                  <div className="border border-[#D2D6DE] rounded-[3px] overflow-hidden max-h-48 overflow-y-auto font-mono text-[11px] shadow-xs">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-[#F4F6F9] text-[#4B646F] border-b-2 border-[#D2D6DE] uppercase text-[10px] font-bold tracking-wider">
                         <tr>
-                          <th className="p-2">#</th>
-                          <th className="p-2">Full Name</th>
-                          <th className="p-2">Email</th>
-                          <th className="p-2">Department</th>
-                          <th className="p-2">Year</th>
-                          <th className="p-2">GPA</th>
+                          <th className="py-2 px-2.5">#</th>
+                          <th className="py-2 px-2.5">Full Name</th>
+                          <th className="py-2 px-2.5">Email</th>
+                          <th className="py-2 px-2.5">Department</th>
+                          <th className="py-2 px-2.5">Year</th>
+                          <th className="py-2 px-2.5">GPA</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700 bg-white">
+                      <tbody className="divide-y divide-[#E4E7EB] text-[#263238] bg-white">
                         {parsedStudents.map((s, idx) => (
                           <tr key={idx} className="hover:bg-slate-50">
                             <td className="p-2 text-slate-400">{idx + 1}</td>

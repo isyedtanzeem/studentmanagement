@@ -475,23 +475,23 @@ export const CourseManagementView: React.FC = () => {
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-white border border-slate-200/90 rounded-[4px] overflow-hidden shadow-xs">
+        <div className="bg-white border border-[#D2D6DE] rounded-[3px] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-poppins text-[11px] uppercase border-b border-slate-200 font-semibold">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#F4F6F9] text-[#4B646F] uppercase text-[11px] border-b-2 border-[#D2D6DE] font-bold tracking-wider">
                 <tr>
-                  <th className="p-3.5">Code</th>
-                  <th className="p-3.5">Course Title & Program</th>
-                  <th className="p-3.5">Department</th>
-                  <th className="p-3.5">Duration</th>
-                  <th className="p-3.5 text-right">Semester Fee</th>
-                  <th className="p-3.5 text-center">Credits</th>
-                  <th className="p-3.5 text-center">Enrolled</th>
-                  <th className="p-3.5">Status</th>
-                  <th className="p-3.5 text-right">Actions</th>
+                  <th className="py-2.5 px-3">Code</th>
+                  <th className="py-2.5 px-3">Course Title & Program</th>
+                  <th className="py-2.5 px-3">Department</th>
+                  <th className="py-2.5 px-3">Duration</th>
+                  <th className="py-2.5 px-3 text-right">Semester Fee</th>
+                  <th className="py-2.5 px-3 text-center">Credits</th>
+                  <th className="py-2.5 px-3 text-center">Enrolled</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                 {courses.map((crs) => {
                   const courseFee = crs.courseFee || 0;
                   const labFee = crs.labFee || 0;
@@ -501,59 +501,61 @@ export const CourseManagementView: React.FC = () => {
                     <tr
                       key={crs.id}
                       onClick={() => handleOpenDrawer(crs)}
-                      className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                      className="hover:bg-[#EBF5FB] transition-colors group cursor-pointer odd:bg-white even:bg-[#F9FAFC]"
                     >
-                      <td className="p-3.5 font-poppins text-blue-700 font-bold">
-                        {crs.code}
+                      <td className="py-2 px-3 font-poppins text-blue-800 font-bold">
+                        <span className="bg-[#EBF5FB] border border-[#A9CCE3] px-1.5 py-0.5 rounded-[2px]">
+                          {crs.code}
+                        </span>
                       </td>
 
-                      <td className="p-3.5">
-                        <div className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <td className="py-2 px-3">
+                        <div className="font-bold text-[#1F2D3D] group-hover:text-blue-700 transition-colors">
                           {crs.title}
                         </div>
-                        <div className="text-[10px] text-slate-500 font-poppins">
+                        <div className="text-[10px] text-[#546E7A] font-poppins">
                           {crs.degreeProgram || 'Degree Course'} • {crs.level || 'UG'}
                         </div>
                       </td>
 
-                      <td className="p-3.5 text-slate-700 font-medium">
+                      <td className="py-2 px-3 text-[#37474F] font-medium">
                         {crs.department}
                       </td>
 
-                      <td className="p-3.5 text-slate-800 font-medium">
+                      <td className="py-2 px-3 text-[#263238] font-medium">
                         {crs.duration || '4 Years / 8 Semesters'}
                       </td>
 
-                      <td className="p-3.5 font-poppins text-right text-slate-900 font-bold">
+                      <td className="py-2 px-3 font-poppins text-right text-[#1F2D3D] font-bold">
                         ₹{totalFee.toLocaleString('en-IN')}
                       </td>
 
-                      <td className="p-3.5 font-poppins text-center text-purple-700 font-bold">
+                      <td className="py-2 px-3 font-poppins text-center text-purple-800 font-bold tabular-nums">
                         {crs.credits}
                       </td>
 
-                      <td className="p-3.5 font-poppins text-center text-blue-700 font-bold">
+                      <td className="py-2 px-3 font-poppins text-center text-blue-800 font-bold tabular-nums">
                         {crs.enrolledStudents}
                       </td>
 
-                      <td className="p-3.5">
+                      <td className="py-2 px-3">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-poppins border font-semibold ${
+                          className={`px-2 py-0.5 rounded-[2px] text-[10px] font-poppins border font-bold uppercase ${
                             crs.status === 'Active'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : 'bg-slate-100 text-slate-600 border-slate-200'
+                              ? 'bg-[#E8F8F5] text-[#117A65] border-[#A3E4D7]'
+                              : 'bg-slate-100 text-slate-600 border-slate-300'
                           }`}
                         >
                           {crs.status || 'Active'}
                         </span>
                       </td>
 
-                      <td className="p-3.5 text-right" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-2 px-3 text-right pr-4" onClick={(e) => e.stopPropagation()}>
                         {!isStudent ? (
-                          <div className="flex items-center justify-end gap-1.5 font-medium">
+                          <div className="flex items-center justify-end gap-1 font-medium">
                             <button
                               onClick={() => handleOpenEdit(crs)}
-                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-[3px] border border-blue-200 text-xs cursor-pointer"
+                              className="px-2 py-0.5 bg-white hover:bg-slate-100 text-blue-700 rounded-[2px] border border-slate-300 text-xs cursor-pointer"
                               title="Edit"
                             >
                               Edit
@@ -561,7 +563,7 @@ export const CourseManagementView: React.FC = () => {
 
                             <button
                               onClick={() => handleOpenDelete(crs)}
-                              className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-[3px] border border-rose-200 text-xs cursor-pointer"
+                              className="px-2 py-0.5 bg-white hover:bg-rose-50 text-rose-700 rounded-[2px] border border-rose-300 text-xs cursor-pointer"
                               title="Delete"
                             >
                               Delete
@@ -570,7 +572,7 @@ export const CourseManagementView: React.FC = () => {
                         ) : (
                           <button
                             onClick={() => handleOpenDrawer(crs)}
-                            className="text-[11px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-1 rounded-[3px] hover:bg-blue-100 transition-colors cursor-pointer"
+                            className="text-[11px] font-bold text-blue-800 bg-[#EBF5FB] border border-[#A9CCE3] px-2 py-0.5 rounded-[2px] hover:bg-[#D4E6F1] transition-colors cursor-pointer"
                           >
                             Details →
                           </button>
@@ -586,28 +588,28 @@ export const CourseManagementView: React.FC = () => {
       )}
 
       {/* Pagination Bar */}
-      <div className="p-4 bg-white border border-slate-200/90 rounded-[4px] flex items-center justify-between text-xs text-slate-600 font-medium shadow-xs">
+      <div className="p-3 bg-white border border-[#D2D6DE] rounded-[3px] flex items-center justify-between text-xs text-[#546E7A] font-medium shadow-xs">
         <div>
           Showing {courses.length} of {pagination.totalItems} courses
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.max(1, prev.currentPage - 1) }))}
             disabled={pagination.currentPage === 1}
-            className="p-1.5 rounded-[3px] bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="font-poppins">
+          <span className="font-poppins px-2 py-0.5 bg-slate-100 border border-slate-300 rounded-[2px] text-[#263238] font-bold">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
 
           <button
             onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.min(prev.totalPages, prev.currentPage + 1) }))}
             disabled={pagination.currentPage >= pagination.totalPages}
-            className="p-1.5 rounded-[3px] bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-800 transition-colors cursor-pointer"
+            className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

@@ -149,4 +149,21 @@ export class DashboardController {
       });
     }
   }
+
+  public static async globalSearch(req: Request, res: Response): Promise<void> {
+    try {
+      const q = (req.query.q as string) || '';
+      const results = await dashboardService.globalSearch(q);
+      res.status(200).json({
+        success: true,
+        data: results
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to execute global search',
+        error: error.message
+      });
+    }
+  }
 }

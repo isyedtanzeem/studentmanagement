@@ -669,34 +669,34 @@ export const NotificationManagementView: React.FC = () => {
 
       {/* TAB 2: EMAIL LOGS */}
       {activeTab === 'emails' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
-          <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+        <div className="bg-white rounded-[3px] border border-[#D2D6DE] p-5 shadow-xs space-y-4">
+          <div className="flex justify-between items-center border-b border-[#E4E7EB] pb-3">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Email Dispatch Queue & Service Logs</h3>
-              <p className="text-xs text-slate-500">Track outgoing automated & direct email notices.</p>
+              <h3 className="text-sm font-bold text-[#1F2D3D]">Email Dispatch Queue & Service Logs</h3>
+              <p className="text-xs text-[#546E7A]">Track outgoing automated & direct email notices.</p>
             </div>
             <button
               onClick={() => setShowEmailModal(true)}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-sm transition-all"
+              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-[2px] flex items-center gap-1.5 shadow-xs transition-colors"
             >
-              <SendHorizontal className="w-4 h-4" />
+              <SendHorizontal className="w-3.5 h-3.5" />
               <span>Send Direct Email</span>
             </button>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto border border-[#D2D6DE] rounded-[3px]">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase tracking-wider font-semibold">
-                  <th className="p-3">Recipient</th>
-                  <th className="p-3">Subject</th>
-                  <th className="p-3">Template / Type</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Dispatched At</th>
+                <tr className="bg-[#F4F6F9] text-[#4B646F] border-b-2 border-[#D2D6DE] uppercase tracking-wider font-bold text-[11px]">
+                  <th className="py-2.5 px-3">Recipient</th>
+                  <th className="py-2.5 px-3">Subject</th>
+                  <th className="py-2.5 px-3">Template / Type</th>
+                  <th className="py-2.5 px-3">Category</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3">Dispatched At</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                 {emailLogs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="text-center py-8 text-slate-500">

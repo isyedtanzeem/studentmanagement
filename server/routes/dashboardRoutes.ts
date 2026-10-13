@@ -12,6 +12,7 @@ router.use(protect);
 router.get('/stats', DashboardController.getStats);
 router.get('/charts', DashboardController.getChartData);
 router.get('/activities', DashboardController.getActivities);
+router.get('/search', DashboardController.globalSearch);
 
 // Dashboard Notifications
 router.get('/notifications', DashboardController.getNotifications);

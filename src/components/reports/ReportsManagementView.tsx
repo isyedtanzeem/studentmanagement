@@ -748,24 +748,24 @@ export const ReportsManagementView: React.FC = () => {
               </div>
 
               {/* Detailed Roster Table */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-slate-200 bg-slate-50 font-bold text-slate-800 text-xs">
+              <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
+                <div className="py-2.5 px-3 border-b-2 border-[#D2D6DE] bg-[#F4F6F9] font-bold text-[#4B646F] text-xs uppercase tracking-wider">
                   Detailed Student Records ({studentReport.studentRecords.length} Filtered)
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200 text-[11px] text-slate-500 font-semibold uppercase">
-                        <th className="p-3">Student ID</th>
-                        <th className="p-3">Full Name</th>
-                        <th className="p-3">Department</th>
-                        <th className="p-3">Batch & Sem</th>
-                        <th className="p-3">CGPA</th>
-                        <th className="p-3">Fee Status</th>
-                        <th className="p-3">Status</th>
+                      <tr className="bg-[#F4F6F9] border-b border-[#D2D6DE] text-[11px] text-[#4B646F] font-bold uppercase tracking-wider">
+                        <th className="py-2.5 px-3">Student ID</th>
+                        <th className="py-2.5 px-3">Full Name</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">Batch & Sem</th>
+                        <th className="py-2.5 px-3">CGPA</th>
+                        <th className="py-2.5 px-3">Fee Status</th>
+                        <th className="py-2.5 px-3">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                       {studentReport.studentRecords.map(s => (
                         <tr key={s.id} className="hover:bg-slate-50">
                           <td className="p-3 font-mono font-bold text-slate-900">{s.studentId}</td>
@@ -885,25 +885,25 @@ export const ReportsManagementView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-slate-200 bg-slate-50 font-bold text-slate-800 text-xs">
+              <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
+                <div className="py-2.5 px-3 border-b-2 border-[#D2D6DE] bg-[#F4F6F9] font-bold text-[#4B646F] text-xs uppercase tracking-wider">
                   Departmental Metrics & Seat Occupancy
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200 text-[11px] text-slate-500 font-semibold uppercase">
-                        <th className="p-3">Code</th>
-                        <th className="p-3">Department</th>
-                        <th className="p-3">HOD</th>
-                        <th className="p-3">Capacity</th>
-                        <th className="p-3">Enrolled</th>
-                        <th className="p-3">Seat Occupancy</th>
-                        <th className="p-3">Faculty</th>
-                        <th className="p-3">Avg GPA</th>
+                      <tr className="bg-[#F4F6F9] border-b border-[#D2D6DE] text-[11px] text-[#4B646F] font-bold uppercase tracking-wider">
+                        <th className="py-2.5 px-3">Code</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">HOD</th>
+                        <th className="py-2.5 px-3">Capacity</th>
+                        <th className="py-2.5 px-3">Enrolled</th>
+                        <th className="py-2.5 px-3">Seat Occupancy</th>
+                        <th className="py-2.5 px-3">Faculty</th>
+                        <th className="py-2.5 px-3">Avg GPA</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                       {departmentReport.departments.map(d => (
                         <tr key={d.id} className="hover:bg-slate-50">
                           <td className="p-3 font-mono font-bold text-slate-800">{d.code}</td>
@@ -1015,23 +1015,23 @@ export const ReportsManagementView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-slate-200 bg-slate-50 font-bold text-slate-800 text-xs">
+              <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
+                <div className="py-2.5 px-3 border-b-2 border-[#D2D6DE] bg-[#F4F6F9] font-bold text-[#4B646F] text-xs uppercase tracking-wider">
                   Alumni Placement Roster
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200 text-[11px] text-slate-500 font-semibold uppercase">
-                        <th className="p-3">Roll ID</th>
-                        <th className="p-3">Full Name</th>
-                        <th className="p-3">Graduation Year</th>
-                        <th className="p-3">Department</th>
-                        <th className="p-3">Employment Status</th>
-                        <th className="p-3">Company & Role</th>
+                      <tr className="bg-[#F4F6F9] border-b border-[#D2D6DE] text-[11px] text-[#4B646F] font-bold uppercase tracking-wider">
+                        <th className="py-2.5 px-3">Roll ID</th>
+                        <th className="py-2.5 px-3">Full Name</th>
+                        <th className="py-2.5 px-3">Graduation Year</th>
+                        <th className="py-2.5 px-3">Department</th>
+                        <th className="py-2.5 px-3">Employment Status</th>
+                        <th className="py-2.5 px-3">Company & Role</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
                       {alumniReport.alumniRecords.map(a => (
                         <tr key={a.id} className="hover:bg-slate-50">
                           <td className="p-3 font-mono font-bold text-slate-800">{a.studentId}</td>

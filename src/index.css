@@ -150,4 +150,47 @@
   background: #607D8B;
 }
 
+/* 2015 Flat Design & Material Table Tokens */
+.table-container-2015 {
+  background-color: #FFFFFF;
+  border: 1px solid #CFD8DC;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.table-2015 {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.75rem;
+  color: #263238;
+}
+
+.table-2015 thead th {
+  background-color: #ECEFF1;
+  color: #37474F;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 11px 14px;
+  border-bottom: 2px solid #B0BEC5;
+  white-space: nowrap;
+}
+
+.table-2015 tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #ECEFF1;
+  vertical-align: middle;
+}
+
+.table-2015 tbody tr:nth-child(even) {
+  background-color: #FAFAFA;
+}
+
+.table-2015 tbody tr:hover {
+  background-color: #ECEFF1;
+}
+
 

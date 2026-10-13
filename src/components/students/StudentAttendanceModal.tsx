@@ -361,19 +361,19 @@ export const StudentAttendanceModal: React.FC<StudentAttendanceModalProps> = ({
           {/* TAB 1: Semester Wise Table */}
           {activeTab === 'semesters' && (
             <div className="space-y-4">
-              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
+              <div className="border border-[#D2D6DE] rounded-[3px] overflow-hidden bg-white shadow-xs">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-mono text-[11px]">
-                      <th className="p-3 pl-4">Semester</th>
-                      <th className="p-3">Academic Session</th>
-                      <th className="p-3">Attendance %</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Eligibility Note</th>
-                      <th className="p-3 text-right pr-4">Quick Edit</th>
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold text-[11px] uppercase tracking-wider">
+                      <th className="py-2.5 px-3 pl-4">Semester</th>
+                      <th className="py-2.5 px-3">Academic Session</th>
+                      <th className="py-2.5 px-3">Attendance %</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3">Eligibility Note</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Quick Edit</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-800 font-mono">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238] font-mono">
                     {semesters.map(s => {
                       const isLow = s.attendancePercentage > 0 && s.attendancePercentage < 75;
                       const hasData = s.attendancePercentage > 0;

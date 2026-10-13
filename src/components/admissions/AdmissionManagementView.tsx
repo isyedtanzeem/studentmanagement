@@ -312,21 +312,21 @@ export const AdmissionManagementView: React.FC = () => {
       </div>
 
       {/* Applications Data Table */}
-      <div className="bg-white border border-slate-200 rounded-[4px] overflow-hidden shadow-sm">
+      <div className="bg-white border border-[#D2D6DE] rounded-[3px] overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-poppins text-[11px] uppercase border-b border-slate-200">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-[#F4F6F9] text-[#4B646F] font-bold text-[11px] uppercase border-b-2 border-[#D2D6DE] tracking-wider">
               <tr>
-                <th className="p-3.5">Application #</th>
-                <th className="p-3.5">Applicant Name</th>
-                <th className="p-3.5">Department & Degree</th>
-                <th className="p-3.5">Class XII / Entrance</th>
-                <th className="p-3.5">Category</th>
-                <th className="p-3.5">Status & Enrolled Roll No</th>
-                <th className="p-3.5 text-right">Actions</th>
+                <th className="py-2.5 px-3">Application #</th>
+                <th className="py-2.5 px-3">Applicant Name</th>
+                <th className="py-2.5 px-3">Department & Degree</th>
+                <th className="py-2.5 px-3">Class XII / Entrance</th>
+                <th className="py-2.5 px-3">Category</th>
+                <th className="py-2.5 px-3">Status & Enrolled Roll No</th>
+                <th className="py-2.5 px-3 text-right pr-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-slate-700 font-poppins bg-white">
+            <tbody className="divide-y divide-[#E4E7EB] text-[#263238]">
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="p-8 text-center text-slate-500 font-poppins">
@@ -342,64 +342,66 @@ export const AdmissionManagementView: React.FC = () => {
               ) : (
                 applications.map((app) => {
                   const statusColors = {
-                    Pending: 'bg-amber-50 text-amber-700 border-amber-200',
-                    'Under Review': 'bg-blue-50 text-blue-700 border-blue-200',
-                    'Document Verification': 'bg-purple-50 text-purple-700 border-purple-200',
-                    Approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                    Rejected: 'bg-rose-50 text-rose-700 border-rose-200'
-                  }[app.status] || 'bg-slate-100 text-slate-700 border-slate-200';
+                    Pending: 'bg-amber-50 text-amber-800 border-amber-300',
+                    'Under Review': 'bg-blue-50 text-blue-800 border-blue-300',
+                    'Document Verification': 'bg-purple-50 text-purple-800 border-purple-300',
+                    Approved: 'bg-[#E8F8F5] text-[#117A65] border-[#A3E4D7]',
+                    Rejected: 'bg-rose-50 text-rose-800 border-rose-300'
+                  }[app.status] || 'bg-slate-100 text-slate-700 border-slate-300';
 
                   return (
                     <tr
                       key={app.id}
-                      className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                      className="hover:bg-[#EBF5FB] transition-colors group cursor-pointer odd:bg-white even:bg-[#F9FAFC]"
                       onClick={() => handleOpenDrawer(app)}
                     >
-                      <td className="p-3.5 font-poppins text-slate-900 font-bold">
-                        {app.applicationNumber}
+                      <td className="py-2 px-3 font-poppins text-blue-800 font-bold">
+                        <span className="bg-[#EBF5FB] border border-[#A9CCE3] px-1.5 py-0.5 rounded-[2px]">
+                          {app.applicationNumber}
+                        </span>
                       </td>
 
-                      <td className="p-3.5">
-                        <div className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <td className="py-2 px-3">
+                        <div className="font-bold text-[#1F2D3D] group-hover:text-blue-700 transition-colors">
                           {app.applicantName}
                         </div>
-                        <div className="text-[11px] text-slate-500">{app.email}</div>
+                        <div className="text-[11px] text-[#546E7A]">{app.email}</div>
                       </td>
 
-                      <td className="p-3.5">
-                        <div className="text-slate-900 font-medium">{app.department}</div>
-                        <div className="text-[11px] text-blue-700 font-poppins">{app.degree || 'B.Tech'} • {app.academicTerm}</div>
+                      <td className="py-2 px-3">
+                        <div className="text-[#263238] font-semibold">{app.department}</div>
+                        <div className="text-[11px] text-blue-800 font-poppins">{app.degree || 'B.Tech'} • {app.academicTerm}</div>
                       </td>
 
-                      <td className="p-3.5 font-poppins">
-                        <div><span className="text-slate-500">Class XII:</span> <strong className="text-slate-900">{app.classXIIPercentage ? `${app.classXIIPercentage}%` : 'N/A'}</strong></div>
-                        <div className="text-[10px] text-slate-500">{app.entranceExamScore || 'No entrance score'}</div>
+                      <td className="py-2 px-3 font-poppins">
+                        <div><span className="text-[#546E7A]">Class XII:</span> <strong className="text-[#1F2D3D]">{app.classXIIPercentage ? `${app.classXIIPercentage}%` : 'N/A'}</strong></div>
+                        <div className="text-[10px] text-[#78909C]">{app.entranceExamScore || 'No entrance score'}</div>
                       </td>
 
-                      <td className="p-3.5 font-poppins">
-                        <span className="bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-slate-700">
+                      <td className="py-2 px-3 font-poppins">
+                        <span className="bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-[2px] text-slate-700 font-medium text-[11px]">
                           {app.category || 'General'}
                         </span>
                       </td>
 
-                      <td className="p-3.5">
+                      <td className="py-2 px-3">
                         <div className="flex flex-col items-start gap-1">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-poppins border font-semibold ${statusColors}`}>
+                          <span className={`px-2 py-0.5 rounded-[2px] text-[10px] font-poppins border font-bold uppercase ${statusColors}`}>
                             {app.status}
                           </span>
                           {app.generatedStudentId && (
-                            <span className="text-[10px] font-poppins text-emerald-700 font-bold">
+                            <span className="text-[10px] font-poppins text-emerald-800 font-bold">
                               Roll: {app.generatedStudentId}
                             </span>
                           )}
                         </div>
                       </td>
 
-                      <td className="p-3.5 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-2 px-3 text-right pr-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => handleOpenVerify(app)}
-                            className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-[3px] border border-blue-200 text-[10px] font-poppins font-medium cursor-pointer"
+                            className="px-2 py-0.5 bg-white hover:bg-slate-100 text-blue-700 rounded-[2px] border border-slate-300 text-[10px] font-poppins font-semibold cursor-pointer"
                             title="Verify Documents"
                           >
                             Verify
@@ -407,7 +409,7 @@ export const AdmissionManagementView: React.FC = () => {
 
                           <button
                             onClick={() => handleOpenApprove(app)}
-                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-[3px] border border-emerald-200 text-[10px] font-poppins font-medium cursor-pointer"
+                            className="px-2 py-0.5 bg-white hover:bg-emerald-50 text-emerald-800 rounded-[2px] border border-emerald-300 text-[10px] font-poppins font-semibold cursor-pointer"
                             title="Approve & Enroll"
                           >
                             Approve
@@ -415,7 +417,7 @@ export const AdmissionManagementView: React.FC = () => {
 
                           <button
                             onClick={() => handleOpenReject(app)}
-                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-[3px] border border-rose-200 text-[10px] font-poppins font-medium cursor-pointer"
+                            className="px-2 py-0.5 bg-white hover:bg-rose-50 text-rose-700 rounded-[2px] border border-rose-300 text-[10px] font-poppins font-semibold cursor-pointer"
                             title="Reject Application"
                           >
                             Reject
@@ -431,28 +433,28 @@ export const AdmissionManagementView: React.FC = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs font-poppins text-slate-600">
+        <div className="p-3 border-t border-[#D2D6DE] bg-white flex items-center justify-between text-xs font-poppins text-[#546E7A] shadow-xs">
           <div>
             Showing {applications.length} of {pagination.totalItems} admission records
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.max(1, prev.currentPage - 1) }))}
               disabled={pagination.currentPage === 1}
-              className="p-1.5 rounded-[3px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
+              className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span>
+            <span className="font-poppins px-2 py-0.5 bg-slate-100 border border-slate-300 rounded-[2px] text-[#263238] font-bold">
               Page {pagination.currentPage} of {pagination.totalPages}
             </span>
 
             <button
               onClick={() => setPagination((prev) => ({ ...prev, currentPage: Math.min(prev.totalPages, prev.currentPage + 1) }))}
               disabled={pagination.currentPage >= pagination.totalPages}
-              className="p-1.5 rounded-[3px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
+              className="p-1 rounded-[2px] bg-white border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white text-slate-700 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

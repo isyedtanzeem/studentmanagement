@@ -367,23 +367,23 @@ export const StudentFeesModal: React.FC<StudentFeesModalProps> = ({
           {/* TAB 1: Semester Fee Breakdown */}
           {activeTab === 'breakdown' && (
             <div className="space-y-4">
-              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
+              <div className="border border-[#D2D6DE] rounded-[3px] overflow-hidden bg-white shadow-xs">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-mono text-[11px]">
-                      <th className="p-3 pl-4">Semester</th>
-                      <th className="p-3">Tuition Fee</th>
-                      <th className="p-3">Exam Fee</th>
-                      <th className="p-3">Lib/Lab Fee</th>
-                      <th className="p-3">Hostel/Other</th>
-                      <th className="p-3">Total Fee</th>
-                      <th className="p-3">Amount Paid</th>
-                      <th className="p-3">Balance Due</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3 text-right pr-4">Action</th>
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold text-[11px] uppercase tracking-wider">
+                      <th className="py-2.5 px-3 pl-4">Semester</th>
+                      <th className="py-2.5 px-3">Tuition Fee</th>
+                      <th className="py-2.5 px-3">Exam Fee</th>
+                      <th className="py-2.5 px-3">Lib/Lab Fee</th>
+                      <th className="py-2.5 px-3">Hostel/Other</th>
+                      <th className="py-2.5 px-3">Total Fee</th>
+                      <th className="py-2.5 px-3">Amount Paid</th>
+                      <th className="py-2.5 px-3">Balance Due</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-800 font-mono">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238] font-mono">
                     {feeStructures.map(f => (
                       <tr key={f.semester} className="hover:bg-slate-50/80 transition-colors">
                         <td className="p-3 pl-4 font-bold text-blue-700">Sem {f.semester}</td>
@@ -432,21 +432,21 @@ export const StudentFeesModal: React.FC<StudentFeesModalProps> = ({
           {/* TAB 2: Payment Receipts History Ledger */}
           {activeTab === 'payments' && (
             <div className="space-y-4">
-              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
+              <div className="border border-[#D2D6DE] rounded-[3px] overflow-hidden bg-white shadow-xs">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-mono text-[11px]">
-                      <th className="p-3 pl-4">Receipt No</th>
-                      <th className="p-3">Payment Date</th>
-                      <th className="p-3">Semester</th>
-                      <th className="p-3">Category</th>
-                      <th className="p-3">Payment Mode</th>
-                      <th className="p-3">Txn Reference</th>
-                      <th className="p-3">Amount Paid</th>
-                      <th className="p-3 text-right pr-4">Receipt Action</th>
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[#4B646F] font-bold text-[11px] uppercase tracking-wider">
+                      <th className="py-2.5 px-3 pl-4">Receipt No</th>
+                      <th className="py-2.5 px-3">Payment Date</th>
+                      <th className="py-2.5 px-3">Semester</th>
+                      <th className="py-2.5 px-3">Category</th>
+                      <th className="py-2.5 px-3">Payment Mode</th>
+                      <th className="py-2.5 px-3">Txn Reference</th>
+                      <th className="py-2.5 px-3">Amount Paid</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Receipt Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-800 font-mono">
+                  <tbody className="divide-y divide-[#E4E7EB] text-[#263238] font-mono">
                     {payments.length > 0 ? (
                       payments.map(p => (
                         <tr key={p.id} className="hover:bg-slate-50 transition-colors">

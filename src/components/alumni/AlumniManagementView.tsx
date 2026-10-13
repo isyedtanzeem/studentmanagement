@@ -657,82 +657,82 @@ export const AlumniManagementView: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-[4px] border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-[3px] border border-[#D2D6DE] shadow-xs overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                      <th className="p-3.5">Alumni Details</th>
-                      <th className="p-3.5">Graduation & Degree</th>
-                      <th className="p-3.5">Current Role & Company</th>
-                      <th className="p-3.5">Location</th>
-                      <th className="p-3.5 text-center">Status</th>
-                      <th className="p-3.5 text-center">Mentor</th>
-                      <th className="p-3.5 text-right">Actions</th>
+                    <tr className="bg-[#F4F6F9] border-b-2 border-[#D2D6DE] text-[11px] font-bold text-[#4B646F] uppercase tracking-wider">
+                      <th className="py-2.5 px-3">Alumni Details</th>
+                      <th className="py-2.5 px-3">Graduation & Degree</th>
+                      <th className="py-2.5 px-3">Current Role & Company</th>
+                      <th className="py-2.5 px-3">Location</th>
+                      <th className="py-2.5 px-3 text-center">Status</th>
+                      <th className="py-2.5 px-3 text-center">Mentor</th>
+                      <th className="py-2.5 px-3 text-right pr-4">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                  <tbody className="divide-y divide-[#E4E7EB] text-xs text-[#263238]">
                     {alumniList.map(alumni => (
-                      <tr key={alumni.id} className="hover:bg-slate-50 transition">
-                        <td className="p-3.5">
-                          <div className="flex items-center space-x-3">
+                      <tr key={alumni.id} className="hover:bg-[#EBF5FB] transition-colors odd:bg-white even:bg-[#F9FAFC]">
+                        <td className="py-2 px-3">
+                          <div className="flex items-center space-x-2.5">
                             <img
                               src={
                                 alumni.photoUrl ||
                                 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
                               }
                               alt={alumni.fullName}
-                              className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                              className="w-8 h-8 rounded-[3px] object-cover border border-[#D2D6DE]"
                             />
                             <div>
-                              <div className="font-bold text-slate-900">{alumni.fullName}</div>
-                              <div className="text-[11px] text-slate-500 font-poppins">{alumni.studentId} • {alumni.email}</div>
+                              <div className="font-bold text-[#1F2D3D]">{alumni.fullName}</div>
+                              <div className="text-[11px] text-[#546E7A] font-poppins">{alumni.studentId} • {alumni.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="p-3.5">
-                          <div className="font-semibold text-slate-800">Class of {alumni.graduationYear}</div>
-                          <div className="text-slate-500 text-[11px]">{alumni.degree} ({alumni.department})</div>
+                        <td className="py-2 px-3">
+                          <div className="font-bold text-[#1F2D3D]">Class of {alumni.graduationYear}</div>
+                          <div className="text-[#546E7A] text-[11px]">{alumni.degree} ({alumni.department})</div>
                         </td>
-                        <td className="p-3.5">
-                          <div className="font-semibold text-slate-900">{alumni.designation || '—'}</div>
-                          <div className="text-slate-500 text-[11px]">{alumni.currentCompany || '—'}</div>
+                        <td className="py-2 px-3">
+                          <div className="font-semibold text-[#1F2D3D]">{alumni.designation || '—'}</div>
+                          <div className="text-[#546E7A] text-[11px]">{alumni.currentCompany || '—'}</div>
                         </td>
-                        <td className="p-3.5 font-medium text-slate-700">
+                        <td className="py-2 px-3 font-medium text-[#37474F]">
                           {alumni.workLocation || alumni.currentCity || '—'}
                         </td>
-                        <td className="p-3.5 text-center">
+                        <td className="py-2 px-3 text-center">
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                            className={`px-2 py-0.5 rounded-[2px] text-[10px] font-bold uppercase border ${
                               alumni.employmentStatus === 'Employed'
-                                ? 'bg-emerald-50 text-emerald-700'
+                                ? 'bg-[#E8F8F5] text-[#117A65] border-[#A3E4D7]'
                                 : alumni.employmentStatus === 'Self-Employed / Founder'
-                                ? 'bg-amber-50 text-amber-700'
+                                ? 'bg-amber-50 text-amber-800 border-amber-300'
                                 : alumni.employmentStatus === 'Higher Studies'
-                                ? 'bg-purple-50 text-purple-700'
-                                : 'bg-slate-100 text-slate-700'
+                                ? 'bg-purple-50 text-purple-800 border-purple-300'
+                                : 'bg-slate-100 text-slate-700 border-slate-300'
                             }`}
                           >
                             {alumni.employmentStatus}
                           </span>
                         </td>
-                        <td className="p-3.5 text-center">
+                        <td className="py-2 px-3 text-center">
                           {alumni.networkingOptIn ? (
-                            <span className="text-emerald-600 font-bold">Yes</span>
+                            <span className="text-emerald-800 font-bold bg-[#E8F8F5] border border-[#A3E4D7] px-1.5 py-0.5 rounded-[2px] text-[10px]">Yes</span>
                           ) : (
-                            <span className="text-slate-400">No</span>
+                            <span className="text-slate-400 font-medium">No</span>
                           )}
                         </td>
-                        <td className="p-3.5 text-right space-x-2">
+                        <td className="py-2 px-3 text-right pr-4 space-x-1.5">
                           <button
                             onClick={() => setSelectedAlumni(alumni)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-xs font-medium rounded-[3px] transition"
+                            className="px-2 py-0.5 bg-white border border-slate-300 hover:bg-slate-100 text-blue-700 text-xs font-semibold rounded-[2px] transition-colors"
                           >
                             Inspect
                           </button>
                           <button
                             onClick={() => handleOpenEdit(alumni)}
-                            className="p-1 text-slate-400 hover:text-slate-700 transition"
+                            className="p-1 text-slate-500 hover:text-slate-800 border border-slate-300 rounded-[2px] hover:bg-slate-100 transition-colors"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>

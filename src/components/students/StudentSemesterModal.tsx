@@ -561,27 +561,27 @@ export const StudentSemesterModal: React.FC<StudentSemesterModalProps> = ({
           )}
 
           {/* Course Grades Table */}
-          <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
-            <div className="p-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
-              <h4 className="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-blue-600" />
+          <div className="border border-[#D2D6DE] rounded-[3px] overflow-hidden bg-white shadow-xs">
+            <div className="p-2.5 bg-[#F4F6F9] border-b-2 border-[#D2D6DE] flex items-center justify-between">
+              <h4 className="font-bold text-xs text-[#1F2D3D] flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-blue-700" />
                 <span>Semester {selectedSemester} Course Grade Sheet ({currentRec?.courses?.length || 0} Subjects)</span>
               </h4>
-              <span className="text-[11px] font-mono text-slate-500">Grading System: 10-Point Letter Scale</span>
+              <span className="text-[11px] font-mono text-[#546E7A]">Grading System: 10-Point Letter Scale</span>
             </div>
 
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-mono text-[11px]">
-                  <th className="p-3 pl-4">Course Code</th>
-                  <th className="p-3">Course Title</th>
-                  <th className="p-3">Credits</th>
-                  <th className="p-3">Marks</th>
-                  <th className="p-3">Letter Grade</th>
-                  <th className="p-3 text-right pr-4">Grade Points</th>
+                <tr className="bg-[#F4F6F9] border-b border-[#D2D6DE] text-[#4B646F] font-bold uppercase text-[11px] tracking-wider">
+                  <th className="py-2.5 px-3 pl-4">Course Code</th>
+                  <th className="py-2.5 px-3">Course Title</th>
+                  <th className="py-2.5 px-3">Credits</th>
+                  <th className="py-2.5 px-3">Marks</th>
+                  <th className="py-2.5 px-3">Letter Grade</th>
+                  <th className="py-2.5 px-3 text-right pr-4">Grade Points</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-800 font-mono">
+              <tbody className="divide-y divide-[#E4E7EB] text-[#263238] font-mono">
                 {currentRec?.courses && currentRec.courses.length > 0 ? (
                   currentRec.courses.map((c, idx) => {
                     const gradePointMap: Record<string, number> = {
