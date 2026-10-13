@@ -3,6 +3,7 @@ export interface Course {
   code: string;
   title: string;
   department: string;
+  departmentId?: string;
   degreeProgram?: string;
   level?: 'Undergraduate' | 'Postgraduate' | 'Diploma' | 'Doctoral';
   duration?: string; // e.g., "4 Years / 8 Semesters" or "1 Semester"
@@ -27,6 +28,7 @@ export interface CourseQueryParams {
   limit?: number;
   search?: string;
   department?: string;
+  departmentId?: string;
   level?: string;
   status?: string;
   sortBy?: string;
@@ -52,6 +54,7 @@ export interface CourseFormData {
   code: string;
   title: string;
   department: string;
+  departmentId?: string;
   degreeProgram: string;
   level: 'Undergraduate' | 'Postgraduate' | 'Diploma' | 'Doctoral';
   duration: string;

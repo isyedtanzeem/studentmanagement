@@ -340,17 +340,24 @@ export const DepartmentManagementView: React.FC = () => {
                 </span>
               </div>
 
-              {/* HOD Section */}
-              <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 text-xs font-bold shrink-0">
-                  <UserCheck className="w-4 h-4" />
+              {/* HOD Section (Optional / Display if assigned) */}
+              {dept.headOfDepartment ? (
+                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-[3px] flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-[3px] bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 text-xs font-bold shrink-0">
+                    <UserCheck className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">Head of Department (HOD)</span>
+                    <div className="text-xs font-semibold text-slate-900 truncate">{dept.headOfDepartment}</div>
+                    <div className="text-[10px] text-blue-700 font-medium truncate">{dept.hodDesignation || 'Professor & HOD'}</div>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <span className="text-[10px] text-slate-400 uppercase font-mono font-semibold block">Head of Department (HOD)</span>
-                  <div className="text-xs font-semibold text-slate-900 truncate">{dept.headOfDepartment}</div>
-                  <div className="text-[10px] text-blue-700 font-medium truncate">{dept.hodDesignation || 'Professor & HOD'}</div>
+              ) : (
+                <div className="bg-slate-50 border border-dashed border-slate-200 p-2.5 rounded-[3px] flex items-center justify-between text-[11px] text-slate-500">
+                  <span>HOD: Not Assigned</span>
+                  <span className="text-[10px] text-blue-600 font-medium">Department Active</span>
                 </div>
-              </div>
+              )}
 
               {/* Metrics Pills */}
               <div className="grid grid-cols-3 gap-2 font-mono text-[11px]">
@@ -432,8 +439,8 @@ export const DepartmentManagementView: React.FC = () => {
                     </td>
 
                     <td className="p-3.5">
-                      <div className="text-slate-900 font-medium">{dept.headOfDepartment}</div>
-                      <div className="text-[10px] text-slate-500">{dept.hodDesignation || 'Professor & HOD'}</div>
+                      <div className="text-slate-900 font-medium">{dept.headOfDepartment || <span className="text-slate-400 italic">Not Assigned</span>}</div>
+                      {dept.headOfDepartment && <div className="text-[10px] text-slate-500">{dept.hodDesignation || 'Professor & HOD'}</div>}
                     </td>
 
                     <td className="p-3.5 text-slate-700 font-medium">

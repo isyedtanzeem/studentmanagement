@@ -110,22 +110,23 @@ export class DepartmentService {
 
     const students = Array.from(dbStore.students.values()).filter(s => s.department === dept.name);
     const faculty = Array.from(dbStore.faculty.values()).filter(f => f.department === dept.name);
-    const courses = Array.from(dbStore.courses.values()).filter(c => c.department === dept.name);
+    const courses = Array.from(dbStore.courses.values()).filter(c => c.department === dept.name || c.departmentId === dept.id);
 
     return {
       ...dept,
       studentCount: students.length > 0 ? students.length : dept.studentCount,
       facultyCount: faculty.length > 0 ? faculty.length : dept.facultyCount,
       coursesCount: courses.length > 0 ? courses.length : dept.coursesCount,
+      coursesList: courses,
       associatedStudents: students.slice(0, 5).map(s => ({ id: s.id, studentId: s.studentId, fullName: s.fullName, status: s.status })),
       associatedFaculty: faculty.slice(0, 5).map(f => ({ id: f.id, fullName: f.fullName, designation: f.designation, email: f.email })),
-      associatedCourses: courses.slice(0, 5).map(c => ({ id: c.id, code: c.code, title: c.title, credits: c.credits }))
+      associatedCourses: courses.map(c => ({ id: c.id, code: c.code, title: c.title, credits: c.credits, level: c.level, fee: c.totalFee }))
     };
   }
 
   public async createDepartment(data: Partial<DepartmentRecord>, actorName = 'System Admin') {
-    if (!data.code || !data.name || !data.headOfDepartment) {
-      throw new Error('Department Code, Name, and Head of Department are required.');
+    if (!data.code || !data.name) {
+      throw new Error('Department Code and Name are required.');
     }
 
     const codeUpper = data.code.trim().toUpperCase();
@@ -147,10 +148,10 @@ export class DepartmentService {
       id: newId,
       code: codeUpper,
       name: nameTrimmed,
-      headOfDepartment: data.headOfDepartment.trim(),
+      headOfDepartment: data.headOfDepartment?.trim() || '',
       hodEmail: data.hodEmail?.trim() || '',
       hodPhone: data.hodPhone?.trim() || '',
-      hodDesignation: data.hodDesignation?.trim() || 'Head of Department',
+      hodDesignation: data.hodDesignation?.trim() || '',
       studentCount: Number(data.studentCount) || 0,
       facultyCount: Number(data.facultyCount) || 0,
       coursesCount: Number(data.coursesCount) || 0,
@@ -162,7 +163,9 @@ export class DepartmentService {
       updatedAt: now
     };
 
-    this.syncDepartmentHod(nameTrimmed, data);
+    if (data.headOfDepartment?.trim()) {
+      this.syncDepartmentHod(nameTrimmed, data);
+    }
 
     dbStore.departments.set(newId, newDepartment);
     await saveDoc('departments', newId, newDepartment);
@@ -171,7 +174,7 @@ export class DepartmentService {
     const act = {
       id: `act-${Date.now()}`,
       title: 'New Department Created',
-      description: `Department '${newDepartment.name}' (${newDepartment.code}) was created under HOD ${newDepartment.headOfDepartment}.`,
+      description: `Department '${newDepartment.name}' (${newDepartment.code}) was created.`,
       category: 'Academic' as const,
       actorName,
       actorRole: 'Registrar',
@@ -308,6 +311,17 @@ export class DepartmentService {
     const existing = dbStore.departments.get(id);
     if (!existing) {
       throw new Error('Department not found.');
+    }
+
+    // Check associated courses
+    const associatedCourses = Array.from(dbStore.courses.values()).filter(
+      c => c.department === existing.name || c.departmentId === existing.id
+    );
+
+    if (associatedCourses.length > 0) {
+      throw new Error(
+        `Cannot delete department '${existing.name}'. There are ${associatedCourses.length} active course(s) (${associatedCourses.map(c => c.code).join(', ')}) linked to this department. Please reassign or delete the courses first.`
+      );
     }
 
     // Check associated students

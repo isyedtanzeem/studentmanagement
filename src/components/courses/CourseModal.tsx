@@ -14,8 +14,9 @@ interface CourseModalProps {
 const DEFAULT_FORM: CourseFormData = {
   code: '',
   title: '',
-  department: 'Computer Science & Engineering',
-  degreeProgram: 'B.Tech CSE',
+  department: '',
+  departmentId: '',
+  degreeProgram: 'B.Tech',
   level: 'Undergraduate',
   duration: '4 Years / 8 Semesters',
   credits: 4,
@@ -44,26 +45,6 @@ export const CourseModal: React.FC<CourseModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       fetchDepartmentOptions();
-      if (courseToEdit) {
-        setFormData({
-          code: courseToEdit.code || '',
-          title: courseToEdit.title || '',
-          department: courseToEdit.department || 'Computer Science & Engineering',
-          degreeProgram: courseToEdit.degreeProgram || 'B.Tech',
-          level: courseToEdit.level || 'Undergraduate',
-          duration: courseToEdit.duration || '4 Years / 8 Semesters',
-          credits: courseToEdit.credits || 3,
-          courseFee: courseToEdit.courseFee || 0,
-          labFee: courseToEdit.labFee || 0,
-          status: courseToEdit.status === 'Inactive' ? 'Inactive' : 'Active',
-          instructorName: courseToEdit.instructorName || '',
-          maxCapacity: courseToEdit.maxCapacity || 120,
-          prerequisites: courseToEdit.prerequisites || '',
-          description: courseToEdit.description || ''
-        });
-      } else {
-        setFormData(DEFAULT_FORM);
-      }
       setErrorMessage(null);
     }
   }, [isOpen, courseToEdit]);
@@ -71,8 +52,34 @@ export const CourseModal: React.FC<CourseModalProps> = ({
   const fetchDepartmentOptions = async () => {
     try {
       const res = await courseApi.getDepartmentOptions();
-      if (res.success && res.data.length > 0) {
+      if (res.success && res.data) {
         setDepartmentOptions(res.data);
+        if (courseToEdit) {
+          const matchedDept = res.data.find(d => d.name === courseToEdit.department || d.id === (courseToEdit as any).departmentId);
+          setFormData({
+            code: courseToEdit.code || '',
+            title: courseToEdit.title || '',
+            department: matchedDept ? matchedDept.name : (courseToEdit.department || ''),
+            departmentId: matchedDept ? matchedDept.id : ((courseToEdit as any).departmentId || ''),
+            degreeProgram: courseToEdit.degreeProgram || 'B.Tech',
+            level: courseToEdit.level || 'Undergraduate',
+            duration: courseToEdit.duration || '4 Years / 8 Semesters',
+            credits: courseToEdit.credits || 3,
+            courseFee: courseToEdit.courseFee || 0,
+            labFee: courseToEdit.labFee || 0,
+            status: courseToEdit.status === 'Inactive' ? 'Inactive' : 'Active',
+            instructorName: courseToEdit.instructorName || '',
+            maxCapacity: courseToEdit.maxCapacity || 120,
+            prerequisites: courseToEdit.prerequisites || '',
+            description: courseToEdit.description || ''
+          });
+        } else {
+          setFormData({
+            ...DEFAULT_FORM,
+            department: res.data.length > 0 ? res.data[0].name : '',
+            departmentId: res.data.length > 0 ? res.data[0].id : ''
+          });
+        }
       }
     } catch (err) {
       console.error('Failed to load department options for courses', err);
@@ -85,7 +92,14 @@ export const CourseModal: React.FC<CourseModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
-    if (type === 'number') {
+    if (name === 'department') {
+      const selectedDept = departmentOptions.find(d => d.name === value || d.id === value);
+      setFormData(prev => ({
+        ...prev,
+        department: selectedDept ? selectedDept.name : value,
+        departmentId: selectedDept ? selectedDept.id : ''
+      }));
+    } else if (type === 'number') {
       setFormData((prev) => ({ ...prev, [name]: Number(value) }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -98,8 +112,16 @@ export const CourseModal: React.FC<CourseModalProps> = ({
     setErrorMessage(null);
 
     try {
-      if (!formData.code || !formData.title || !formData.department) {
-        throw new Error('Course Code, Title, and Department Mapping are required fields.');
+      if (!formData.code || !formData.title) {
+        throw new Error('Course Code and Course Title are required.');
+      }
+
+      if (!formData.department || !formData.department.trim()) {
+        throw new Error('Cannot create course without selecting a department. Courses must be linked to an existing department.');
+      }
+
+      if (departmentOptions.length === 0) {
+        throw new Error('No departments available. Courses cannot be created without a department in the database.');
       }
 
       if (isEditing && courseToEdit) {
@@ -199,41 +221,31 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               <div>
                 <label className="block text-slate-700 font-medium text-[11px] mb-1 flex items-center gap-1">
                   <Building2 className="w-3.5 h-3.5 text-blue-600" />
-                  Department Mapping *
+                  Department Mapping <span className="text-rose-500">*</span>
                 </label>
                 <select
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
                   required
-                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium"
+                  disabled={departmentOptions.length === 0}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 text-xs cursor-pointer font-medium disabled:bg-slate-100 disabled:cursor-not-allowed"
                 >
-                  {departmentOptions.length > 0 ? (
+                  {departmentOptions.length === 0 ? (
+                    <option value="">No departments found in database</option>
+                  ) : (
                     departmentOptions.map((d) => (
                       <option key={d.id} value={d.name}>
                         {d.name} ({d.code})
                       </option>
                     ))
-                  ) : (
-                    <>
-                      <option value="Computer Science & Engineering">
-                        Computer Science & Engineering
-                      </option>
-                      <option value="Electronics & Communication">
-                        Electronics & Communication
-                      </option>
-                      <option value="Electrical & Electronics">
-                        Electrical & Electronics
-                      </option>
-                      <option value="Department of Management Studies">
-                        Department of Management Studies
-                      </option>
-                      <option value="Biotechnology & Life Sciences">
-                        Biotechnology & Life Sciences
-                      </option>
-                    </>
                   )}
                 </select>
+                {departmentOptions.length === 0 && (
+                  <p className="text-[11px] text-rose-600 mt-1">
+                    ⚠️ Cannot create course: Please register a Department first.
+                  </p>
+                )}
               </div>
 
               <div>

@@ -150,7 +150,7 @@ export interface DepartmentRecord {
   id: string;
   code: string;
   name: string;
-  headOfDepartment: string;
+  headOfDepartment?: string;
   hodEmail?: string;
   hodPhone?: string;
   hodDesignation?: string;
@@ -170,6 +170,7 @@ export interface CourseRecord {
   code: string;
   title: string;
   department: string;
+  departmentId?: string;
   degreeProgram?: string;
   level?: 'Undergraduate' | 'Postgraduate' | 'Diploma' | 'Doctoral';
   duration?: string; // e.g. "4 Years / 8 Semesters" or "1 Semester"

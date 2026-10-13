@@ -148,6 +148,21 @@ export class CourseService {
       throw new Error('Course Code, Title, and Department mapping are required.');
     }
 
+    const rawDept = (data.department || '').trim();
+    const matchingDept = Array.from(dbStore.departments.values()).find(
+      d => (data.departmentId && d.id === data.departmentId) ||
+           d.name.toLowerCase() === rawDept.toLowerCase() ||
+           d.code.toLowerCase() === rawDept.toLowerCase()
+    );
+
+    if (!matchingDept) {
+      const activeDepts = Array.from(dbStore.departments.values()).map(d => `${d.name} (${d.code})`);
+      if (activeDepts.length === 0) {
+        throw new Error('Cannot create course: No academic departments exist in the database. Please create a department first.');
+      }
+      throw new Error(`Cannot create course without a valid registered department. Department "${rawDept}" was not found. Available: ${activeDepts.join(', ')}`);
+    }
+
     const cleanCode = data.code.trim().toUpperCase();
 
     // Check duplicate code
@@ -167,7 +182,8 @@ export class CourseService {
       id: newId,
       code: cleanCode,
       title: data.title.trim(),
-      department: data.department.trim(),
+      department: matchingDept.name,
+      departmentId: matchingDept.id,
       degreeProgram: data.degreeProgram ? data.degreeProgram.trim() : 'B.Tech',
       level: (data.level as any) || 'Undergraduate',
       duration: data.duration ? data.duration.trim() : '4 Years / 8 Semesters',
@@ -188,12 +204,18 @@ export class CourseService {
     dbStore.courses.set(newId, newCourse);
     await saveDoc('courses', newId, newCourse);
 
+    // Update course count on the parent department
+    matchingDept.coursesCount = Array.from(dbStore.courses.values()).filter(c => c.department === matchingDept.name || c.departmentId === matchingDept.id).length;
+    matchingDept.updatedAt = new Date().toISOString();
+    dbStore.departments.set(matchingDept.id, matchingDept);
+    await saveDoc('departments', matchingDept.id, matchingDept);
+
     // Log Activity
     const actId = `act-${Date.now()}`;
     const act = {
       id: actId,
       title: `New Course Created: ${newCourse.code}`,
-      description: `${newCourse.title} mapped to ${newCourse.department} by ${actorName}. Fee: ₹${totalFee.toLocaleString('en-IN')}`,
+      description: `${newCourse.title} mapped to department '${matchingDept.name}' (${matchingDept.code}) by ${actorName}. Fee: ₹${totalFee.toLocaleString('en-IN')}`,
       category: 'Academic' as const,
       actorName,
       actorRole: 'Administrator',
@@ -224,7 +246,35 @@ export class CourseService {
     }
 
     if (data.title) existing.title = data.title.trim();
-    if (data.department) existing.department = data.department.trim();
+    if (data.department) {
+      const rawDept = data.department.trim();
+      const matchingDept = Array.from(dbStore.departments.values()).find(
+        d => (data.departmentId && d.id === data.departmentId) ||
+             d.name.toLowerCase() === rawDept.toLowerCase() ||
+             d.code.toLowerCase() === rawDept.toLowerCase()
+      );
+      if (!matchingDept) {
+        throw new Error(`Cannot map course to department "${rawDept}". Department does not exist in the database.`);
+      }
+      const previousDeptName = existing.department;
+      existing.department = matchingDept.name;
+      existing.departmentId = matchingDept.id;
+
+      // Update course count on new department
+      matchingDept.coursesCount = Array.from(dbStore.courses.values()).filter(c => c.department === matchingDept.name || c.departmentId === matchingDept.id).length;
+      dbStore.departments.set(matchingDept.id, matchingDept);
+      await saveDoc('departments', matchingDept.id, matchingDept);
+
+      // If department changed, update old department count too
+      if (previousDeptName !== matchingDept.name) {
+        const prevDept = Array.from(dbStore.departments.values()).find(d => d.name === previousDeptName);
+        if (prevDept) {
+          prevDept.coursesCount = Array.from(dbStore.courses.values()).filter(c => c.id !== id && (c.department === prevDept.name || c.departmentId === prevDept.id)).length;
+          dbStore.departments.set(prevDept.id, prevDept);
+          await saveDoc('departments', prevDept.id, prevDept);
+        }
+      }
+    }
     if (data.degreeProgram !== undefined) existing.degreeProgram = data.degreeProgram.trim();
     if (data.level) existing.level = data.level as any;
     if (data.duration !== undefined) existing.duration = data.duration.trim();
@@ -283,6 +333,17 @@ export class CourseService {
     dbStore.courses.delete(id);
     await deleteDoc('courses', id);
 
+    // Update parent department course count
+    const parentDept = Array.from(dbStore.departments.values()).find(
+      d => (existing.departmentId && d.id === existing.departmentId) || d.name === existing.department
+    );
+    if (parentDept) {
+      parentDept.coursesCount = Array.from(dbStore.courses.values()).filter(c => c.department === parentDept.name || c.departmentId === parentDept.id).length;
+      parentDept.updatedAt = new Date().toISOString();
+      dbStore.departments.set(parentDept.id, parentDept);
+      await saveDoc('departments', parentDept.id, parentDept);
+    }
+
     // Log Activity
     const actId = `act-${Date.now()}`;
     const act = {
@@ -302,7 +363,7 @@ export class CourseService {
   }
 
   public async getDepartmentOptions() {
-    const depts = Array.from(dbStore.departments.values());
+    const depts = Array.from(dbStore.departments.values()).filter(d => !d.status || d.status === 'Active');
     return depts.map(d => ({
       id: d.id,
       code: d.code,

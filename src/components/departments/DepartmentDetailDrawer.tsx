@@ -216,35 +216,41 @@ export const DepartmentDetailDrawer: React.FC<DepartmentDetailDrawerProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-wider text-slate-800 font-bold flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4 text-blue-600" />
-                  Accredited Courses ({activeDept.coursesList?.length || activeDept.coursesCount})
+                  Department Courses ({activeDept.coursesList?.length ?? (activeDept.associatedCourses?.length ?? activeDept.coursesCount)})
                 </span>
+                <span className="text-[10px] text-blue-600 font-semibold uppercase">1-to-Many Relation</span>
               </div>
 
-              {activeDept.coursesList && activeDept.coursesList.length > 0 ? (
+              {(activeDept.coursesList && activeDept.coursesList.length > 0) || (activeDept.associatedCourses && activeDept.associatedCourses.length > 0) ? (
                 <div className="space-y-2">
-                  {activeDept.coursesList.map((course: any) => (
+                  {(activeDept.coursesList || activeDept.associatedCourses || []).map((course: any) => (
                     <div
                       key={course.id}
-                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:border-blue-300 transition-colors"
+                      className="p-3 bg-slate-50 border border-slate-200 rounded-[3px] flex items-center justify-between hover:border-blue-300 transition-colors"
                     >
                       <div>
                         <div className="font-bold text-slate-900 font-mono flex items-center gap-2">
-                          <span>{course.code}</span>
-                          <span className="text-[10px] font-normal text-blue-700 px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200">
+                          <span className="text-blue-700">{course.code}</span>
+                          <span className="text-[10px] font-normal text-blue-700 px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 font-sans">
                             {course.credits} Credits
                           </span>
+                          {course.level && (
+                            <span className="text-[10px] text-slate-500 font-sans">
+                              • {course.level}
+                            </span>
+                          )}
                         </div>
-                        <div className="text-slate-700 mt-0.5 font-medium">{course.title}</div>
+                        <div className="text-slate-800 mt-0.5 font-medium">{course.title}</div>
                       </div>
-                      <div className="text-right font-mono text-xs text-slate-500">
-                        {course.enrolledStudents} Enrolled
+                      <div className="text-right font-mono text-xs text-slate-600">
+                        {course.enrolledStudents !== undefined ? `${course.enrolledStudents} Enrolled` : (course.fee ? `₹${Number(course.fee).toLocaleString('en-IN')}` : '')}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-500 font-medium">
-                  Standard curriculum courses assigned.
+                <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-[3px] text-center text-slate-500 font-medium">
+                  No courses are currently created for this department. Use the Courses module to add courses linked to this department.
                 </div>
               )}
             </div>

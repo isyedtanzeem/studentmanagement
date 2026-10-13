@@ -10,7 +10,10 @@ export interface Department {
   facultyCount: number;
   coursesCount: number;
   coursesList?: any[];
+  associatedCourses?: any[];
   facultyList?: any[];
+  associatedFaculty?: any[];
+  associatedStudents?: any[];
   establishedYear?: number;
   buildingLocation?: string;
   status: 'Active' | 'Inactive';
@@ -22,7 +25,7 @@ export interface Department {
 export interface CreateDepartmentDto {
   code: string;
   name: string;
-  headOfDepartment: string;
+  headOfDepartment?: string;
   facultyId?: string;
   hodEmail?: string;
   hodPhone?: string;
