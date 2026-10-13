@@ -105,10 +105,31 @@ export class StudentService {
   }
 
   public createStudent(data: Partial<StudentRecord>, user: any): StudentRecord {
+    const rawDept = (data.department || '').trim();
+    if (!rawDept) {
+      throw new Error('Department is mandatory. Please select a valid academic department.');
+    }
+
+    // Verify department exists in dbStore
+    const matchingDept = Array.from(dbStore.departments.values()).find(
+      (d) => d.name.toLowerCase() === rawDept.toLowerCase() || d.code.toLowerCase() === rawDept.toLowerCase()
+    );
+
+    if (!matchingDept) {
+      const availableNames = Array.from(dbStore.departments.values()).map(d => d.name);
+      if (availableNames.length === 0) {
+        throw new Error('No academic departments are currently registered in the database. Please add an active department first.');
+      }
+      throw new Error(`Department "${rawDept}" is not recognized or present in the database. Please select from available departments: ${availableNames.join(', ')}`);
+    }
+
+    const canonicalDepartment = matchingDept.name;
+
     // Generate Student ID if not provided
     const year = data.enrollmentYear || new Date().getFullYear();
+    const deptCode = matchingDept.code || 'STU';
     const randomNum = Math.floor(100 + Math.random() * 900);
-    const studentId = data.studentId || `STU-${year}-${randomNum}`;
+    const studentId = data.studentId || `${year}${deptCode}${randomNum}`;
     const id = `std-${Date.now()}`;
 
     const newStudent: StudentRecord = {
@@ -117,7 +138,7 @@ export class StudentService {
       fullName: data.fullName || 'Unnamed Student',
       email: data.email || `${studentId.toLowerCase()}@scholarcore.edu`,
       phone: data.phone || '',
-      department: data.department || 'Computer Science & Engineering',
+      department: canonicalDepartment,
       gender: data.gender || 'Male',
       status: data.status || 'Active',
       enrollmentYear: Number(data.enrollmentYear) || year,
@@ -170,9 +191,26 @@ export class StudentService {
       throw new Error(`Student with ID ${id} not found.`);
     }
 
+    let canonicalDepartment = existing.department;
+    if (data.department !== undefined) {
+      const rawDept = (data.department || '').trim();
+      if (!rawDept) {
+        throw new Error('Department is mandatory. Please select a valid academic department.');
+      }
+      const matchingDept = Array.from(dbStore.departments.values()).find(
+        (d) => d.name.toLowerCase() === rawDept.toLowerCase() || d.code.toLowerCase() === rawDept.toLowerCase()
+      );
+      if (!matchingDept) {
+        const availableNames = Array.from(dbStore.departments.values()).map(d => d.name);
+        throw new Error(`Department "${rawDept}" is not recognized or present in the database. Please select from available departments: ${availableNames.join(', ')}`);
+      }
+      canonicalDepartment = matchingDept.name;
+    }
+
     const updatedStudent: StudentRecord = {
       ...existing,
       ...data,
+      department: canonicalDepartment,
       id: existing.id, // Preserve immutable ID
       studentId: existing.studentId // Preserve immutable Student ID
     };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Student } from '../../types/student';
 import { X, Upload, Camera, Sparkles, User, Mail, Phone, Building2, Calendar, MapPin, Shield, BookOpen } from 'lucide-react';
+import { departmentApi } from '../../api/departmentApi';
 
 interface StudentFormModalProps {
   isOpen: boolean;
@@ -10,16 +11,6 @@ interface StudentFormModalProps {
   isEditing?: boolean;
 }
 
-const DEPARTMENTS = [
-  'Computer Science & Engineering',
-  'Electronics & Communication',
-  'Electrical & Electronics',
-  'Mechanical Engineering',
-  'Biotechnology & Life Sciences',
-  'Department of Management Studies',
-  'Civil Engineering'
-];
-
 export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   isOpen,
   onClose,
@@ -27,11 +18,12 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
   initialData,
   isEditing = false
 }) => {
+  const [departmentsList, setDepartmentsList] = useState<string[]>([]);
   const [formData, setFormData] = useState<Partial<Student>>({
     fullName: '',
     email: '',
     phone: '',
-    department: DEPARTMENTS[0],
+    department: '',
     gender: 'Male',
     status: 'Active',
     enrollmentYear: new Date().getFullYear(),
@@ -45,6 +37,29 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch departments from database
+  useEffect(() => {
+    if (isOpen) {
+      departmentApi.getDepartments({ limit: 100, status: 'Active' })
+        .then(res => {
+          if (res.success && res.data) {
+            const list = res.data.map(d => d.name);
+            setDepartmentsList(list);
+            if (!initialData) {
+              setFormData(prev => ({
+                ...prev,
+                department: list.length > 0 ? (list.includes(prev.department || '') ? prev.department : list[0]) : ''
+              }));
+            }
+          }
+        })
+        .catch(err => {
+          console.warn('Failed to load database departments for student form:', err);
+        });
+    }
+  }, [isOpen, initialData]);
+
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -55,7 +70,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         fullName: '',
         email: '',
         phone: '',
-        department: DEPARTMENTS[0],
+        department: departmentsList.length > 0 ? departmentsList[0] : '',
         gender: 'Male',
         status: 'Active',
         enrollmentYear: new Date().getFullYear(),
@@ -68,7 +83,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       });
     }
     setError(null);
-  }, [initialData, isOpen]);
+  }, [initialData, isOpen, departmentsList]);
 
   if (!isOpen) return null;
 
@@ -104,6 +119,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
       return;
     }
 
+    if (!formData.department || !formData.department.trim()) {
+      setError('Department is mandatory. Please select a valid academic department.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -118,11 +138,11 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden my-8 relative flex flex-col max-h-[90vh]">
+      <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-[4px] shadow-xl overflow-hidden my-8 relative flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-10 h-10 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -137,7 +157,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60 transition-all cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-[3px] hover:bg-slate-200/60 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -146,13 +166,13 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
         {/* Modal Form Body */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
           {error && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 font-mono">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-[3px] text-rose-700 font-poppins">
               {error}
             </div>
           )}
 
           {/* Photo Upload Section */}
-          <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div className="space-y-3 bg-slate-50 p-4 rounded-[3px] border border-slate-200">
             <label className="text-slate-800 font-semibold flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <Camera className="w-4 h-4 text-blue-600" />
@@ -161,7 +181,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             </label>
 
             <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl border border-slate-300 overflow-hidden flex-shrink-0 bg-slate-100">
+                <div className="w-14 h-14 rounded-[3px] border border-slate-300 overflow-hidden flex-shrink-0 bg-slate-100">
                   {formData.photoUrl ? (
                     <img src={formData.photoUrl} alt="preview" className="w-full h-full object-cover" />
                   ) : (
@@ -180,7 +200,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                     />
                     <label
                       htmlFor="photo-file-input"
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-slate-700 cursor-pointer transition-all"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-[3px] text-slate-700 cursor-pointer transition-all"
                     >
                       <Upload className="w-3.5 h-3.5 text-blue-600" />
                       Upload Local File
@@ -205,7 +225,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   placeholder="e.g. Aarav Sharma"
                   value={formData.fullName || ''}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -223,7 +243,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   placeholder="e.g. aarav.sharma@scholarcore.edu.in"
                   value={formData.email || ''}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -238,7 +258,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   placeholder="+91 98765 43210"
                   value={formData.phone || ''}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -252,7 +272,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                   name="dateOfBirth"
                   value={formData.dateOfBirth || ''}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -261,19 +281,32 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
           {/* Academic Profile */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
             <div>
-              <label className="block text-slate-700 mb-1 font-medium">Academic Department</label>
+              <label className="block text-slate-700 mb-1 font-medium">
+                Academic Department <span className="text-rose-500">*</span>
+              </label>
               <select
                 name="department"
-                value={formData.department || DEPARTMENTS[0]}
+                value={formData.department || ''}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+                required
+                disabled={departmentsList.length === 0}
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium disabled:bg-slate-100 disabled:cursor-not-allowed"
               >
-                {DEPARTMENTS.map(dept => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
-                ))}
+                {departmentsList.length === 0 ? (
+                  <option value="">No departments found in database</option>
+                ) : (
+                  departmentsList.map(dept => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))
+                )}
               </select>
+              {departmentsList.length === 0 && (
+                <p className="text-[11px] text-rose-600 mt-1">
+                  ⚠️ No departments exist in the database. Please create a department first.
+                </p>
+              )}
             </div>
 
             <div>
@@ -285,7 +318,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 max="2026"
                 value={formData.enrollmentYear || 2024}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               />
             </div>
 
@@ -299,7 +332,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 name="gpa"
                 value={formData.gpa ?? 8.5}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               />
             </div>
 
@@ -309,7 +342,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 name="gender"
                 value={formData.gender || 'Male'}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -323,7 +356,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 name="status"
                 value={formData.status || 'Active'}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
               >
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
@@ -340,7 +373,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 placeholder="e.g. 100 University Drive, Campus Housing Apt 4B"
                 value={formData.address || ''}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
@@ -355,7 +388,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 placeholder="e.g. Robert Vance"
                 value={formData.guardianName || ''}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -367,7 +400,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
                 placeholder="+1 (555) 999-8888"
                 value={formData.guardianPhone || ''}
                 onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
@@ -377,7 +410,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-medium transition-all cursor-pointer"
+              className="px-4 py-2 rounded-[3px] bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-medium transition-all cursor-pointer"
             >
               Cancel
             </button>
@@ -385,7 +418,7 @@ export const StudentFormModal: React.FC<StudentFormModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all flex items-center gap-2 shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2 rounded-[3px] bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all flex items-center gap-2 shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

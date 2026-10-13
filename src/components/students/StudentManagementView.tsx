@@ -11,6 +11,7 @@ import { StudentDocsModal } from './StudentDocsModal';
 import { StudentSemesterModal } from './StudentSemesterModal';
 import { StudentFeesModal } from './StudentFeesModal';
 import { StudentAttendanceModal } from './StudentAttendanceModal';
+import { departmentApi } from '../../api/departmentApi';
 import {
   Users,
   UserCheck,
@@ -29,17 +30,6 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-const DEPARTMENTS = [
-  'ALL',
-  'Computer Science & Engineering',
-  'Electronics & Communication',
-  'Electrical & Electronics',
-  'Mechanical Engineering',
-  'Biotechnology & Life Sciences',
-  'Department of Management Studies',
-  'Civil Engineering'
-];
-
 export const StudentManagementView: React.FC = () => {
   const { user } = useAuth();
   const canEdit = user?.role === 'Super Admin' || user?.role === 'Admin';
@@ -49,6 +39,7 @@ export const StudentManagementView: React.FC = () => {
   // Data state
   const [students, setStudents] = useState<Student[]>([]);
   const [stats, setStats] = useState<StudentStats | null>(null);
+  const [departmentsList, setDepartmentsList] = useState<string[]>([]);
   const [pagination, setPagination] = useState<StudentPagination>({
     totalItems: 0,
     totalPages: 1,
@@ -135,6 +126,18 @@ export const StudentManagementView: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    departmentApi.getDepartments({ limit: 100 })
+      .then(res => {
+        if (res.success && res.data) {
+          setDepartmentsList(res.data.map(d => d.name));
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load departments list:', err);
+      });
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -237,7 +240,7 @@ export const StudentManagementView: React.FC = () => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-10 h-10 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Users className="w-5 h-5" />
             </div>
             <div>
@@ -251,7 +254,7 @@ export const StudentManagementView: React.FC = () => {
           {canDelete && selectedIds.length > 0 && (
             <button
               onClick={() => setIsBulkDeleteOpen(true)}
-              className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-[3px] text-xs font-medium transition-all flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Delete Selected ({selectedIds.length})</span>
@@ -261,7 +264,7 @@ export const StudentManagementView: React.FC = () => {
           {canBulkImport && (
             <button
               onClick={() => setIsImportOpen(true)}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-[3px] text-xs font-medium transition-all flex items-center gap-1.5"
             >
               <FileSpreadsheet className="w-3.5 h-3.5 text-blue-600" />
               <span>Bulk Import</span>
@@ -270,7 +273,7 @@ export const StudentManagementView: React.FC = () => {
 
           <button
             onClick={handleExportCSV}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 rounded-[3px] text-xs font-medium transition-all flex items-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5 text-blue-600" />
             <span>Export CSV</span>
@@ -281,7 +284,7 @@ export const StudentManagementView: React.FC = () => {
               setEditingStudent(null);
               setIsFormOpen(true);
             }}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all flex items-center gap-2 shadow-md shadow-blue-500/20"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[3px] text-xs transition-all flex items-center gap-2 shadow-md shadow-blue-500/20"
           >
             <UserPlus className="w-4 h-4" />
             <span>Add Student</span>
@@ -292,42 +295,42 @@ export const StudentManagementView: React.FC = () => {
       {/* Stats Summary Bar */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-slate-200 p-4 rounded-[3px] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Total Enrolled</span>
-              <span className="text-xl font-bold text-slate-900 font-mono mt-0.5 block">{stats.total}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block">Total Enrolled</span>
+              <span className="text-xl font-bold text-slate-900 font-poppins mt-0.5 block">{stats.total}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-9 h-9 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Users className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-slate-200 p-4 rounded-[3px] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Active Status</span>
-              <span className="text-xl font-bold text-emerald-600 font-mono mt-0.5 block">{stats.active}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block">Active Status</span>
+              <span className="text-xl font-bold text-emerald-600 font-poppins mt-0.5 block">{stats.active}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+            <div className="w-9 h-9 rounded-[3px] bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-slate-200 p-4 rounded-[3px] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Graduated Alumni</span>
-              <span className="text-xl font-bold text-blue-600 font-mono mt-0.5 block">{stats.graduated}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block">Graduated Alumni</span>
+              <span className="text-xl font-bold text-blue-600 font-poppins mt-0.5 block">{stats.graduated}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-9 h-9 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <GraduationCap className="w-4 h-4" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-slate-200 p-4 rounded-[3px] flex items-center justify-between shadow-xs">
             <div>
-              <span className="text-slate-500 text-[10px] uppercase font-mono tracking-wider block">Average CGPA (10.0)</span>
-              <span className="text-xl font-bold text-blue-700 font-mono mt-0.5 block">{stats.avgGpa}</span>
+              <span className="text-slate-500 text-[10px] uppercase font-poppins tracking-wider block">Average CGPA (10.0)</span>
+              <span className="text-xl font-bold text-blue-700 font-poppins mt-0.5 block">{stats.avgGpa}</span>
             </div>
-            <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-9 h-9 rounded-[3px] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
               <Award className="w-4 h-4" />
             </div>
           </div>
@@ -335,7 +338,7 @@ export const StudentManagementView: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-sm">
+      <div className="bg-white border border-slate-200 p-4 rounded-[4px] space-y-3 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {/* Search Box */}
           <div className="relative md:col-span-2">
@@ -345,7 +348,7 @@ export const StudentManagementView: React.FC = () => {
               placeholder="Search by student name, Roll No (e.g. 2024CSE1001), email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-8 py-2 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-8 py-2 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500"
             />
             {search && (
               <button
@@ -365,10 +368,10 @@ export const StudentManagementView: React.FC = () => {
                 setDepartment(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
               <option value="ALL">All Departments</option>
-              {DEPARTMENTS.filter(d => d !== 'ALL').map(d => (
+              {departmentsList.map(d => (
                 <option key={d} value={d}>{d}</option>
               ))}
             </select>
@@ -382,7 +385,7 @@ export const StudentManagementView: React.FC = () => {
                 setStatus(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
               <option value="ALL">All Statuses</option>
               <option value="Active">Active</option>
@@ -400,7 +403,7 @@ export const StudentManagementView: React.FC = () => {
                 setEnrollmentYear(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
+              className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 font-medium"
             >
               <option value="ALL">All Enrollment Years</option>
               <option value="2026">2026</option>
@@ -414,7 +417,7 @@ export const StudentManagementView: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono">
+        <div className="p-4 rounded-[3px] bg-rose-50 border border-rose-200 text-rose-800 text-xs font-poppins">
           {error}
         </div>
       )}
@@ -450,7 +453,7 @@ export const StudentManagementView: React.FC = () => {
       />
 
       {/* Pagination Footer Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-slate-200 p-4 rounded-2xl text-xs font-mono text-slate-600 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-slate-200 p-4 rounded-[4px] text-xs font-poppins text-slate-600 shadow-sm">
         <div className="flex items-center gap-3">
           <span>Showing items {students.length > 0 ? (pagination.currentPage - 1) * limit + 1 : 0} to {Math.min(pagination.currentPage * limit, pagination.totalItems)} of {pagination.totalItems}</span>
           <div className="flex items-center gap-1.5 ml-4">
@@ -461,7 +464,7 @@ export const StudentManagementView: React.FC = () => {
                 setLimit(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="bg-slate-50 border border-slate-300 text-slate-800 rounded-lg px-2 py-1 text-xs focus:outline-none"
+              className="bg-slate-50 border border-slate-300 text-slate-800 rounded-[3px] px-2 py-1 text-xs focus:outline-none"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -474,19 +477,19 @@ export const StudentManagementView: React.FC = () => {
           <button
             disabled={pagination.currentPage <= 1 || loading}
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            className="p-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-[3px] border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-lg text-slate-900 font-semibold">
+          <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-[3px] text-slate-900 font-semibold">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
 
           <button
             disabled={pagination.currentPage >= pagination.totalPages || loading}
             onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
-            className="p-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-[3px] border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -571,9 +574,9 @@ export const StudentManagementView: React.FC = () => {
       {/* Delete Confirmation Modal */}
       {deletingStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs shadow-xl">
+          <div className="bg-white border border-slate-200 p-6 rounded-[4px] max-w-md w-full space-y-4 text-xs shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-[3px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
@@ -582,7 +585,7 @@ export const StudentManagementView: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono text-slate-700">
+            <div className="bg-slate-50 p-3 rounded-[3px] border border-slate-200 font-poppins text-slate-700">
               <div className="text-slate-900 font-bold">{deletingStudent.fullName}</div>
               <div className="text-slate-500">ID: {deletingStudent.studentId} • {deletingStudent.department}</div>
             </div>
@@ -590,13 +593,13 @@ export const StudentManagementView: React.FC = () => {
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setDeletingStudent(null)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-slate-700 font-medium cursor-pointer"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-[3px] text-slate-700 font-medium cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl cursor-pointer"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-[3px] cursor-pointer"
               >
                 Delete Permanently
               </button>
@@ -608,9 +611,9 @@ export const StudentManagementView: React.FC = () => {
       {/* Bulk Delete Modal */}
       {isBulkDeleteOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4">
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl max-w-md w-full space-y-4 text-xs shadow-xl">
+          <div className="bg-white border border-slate-200 p-6 rounded-[4px] max-w-md w-full space-y-4 text-xs shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-[3px] bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
@@ -622,13 +625,13 @@ export const StudentManagementView: React.FC = () => {
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setIsBulkDeleteOpen(false)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl text-slate-700 font-medium cursor-pointer"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-[3px] text-slate-700 font-medium cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmBulkDelete}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl cursor-pointer"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-[3px] cursor-pointer"
               >
                 Delete All Selected
               </button>

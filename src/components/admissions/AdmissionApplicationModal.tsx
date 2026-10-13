@@ -20,8 +20,8 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [departmentsList, setDepartmentsList] = useState<string[]>(DEPARTMENTS);
-  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>(DEPARTMENT_DEGREES);
+  const [departmentsList, setDepartmentsList] = useState<string[]>([]);
+  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>({});
 
   const [formData, setFormData] = useState<CreateAdmissionInput>({
     applicantName: '',
@@ -34,8 +34,8 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
     category: 'General',
     state: INDIAN_STATES[0],
     address: '',
-    department: DEPARTMENTS[0],
-    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]]?.[0] || 'B.Tech',
+    department: '',
+    degree: '',
     academicTerm: '2026-2027 Session',
     classXPercentage: 90.0,
     classXIIPercentage: 88.5,
@@ -49,19 +49,32 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
       admissionApi.getAcademicOptions()
         .then(res => {
           if (res.success && res.data) {
-            if (res.data.departments && res.data.departments.length > 0) {
-              setDepartmentsList(res.data.departments);
-              setDeptDegreesMap(res.data.departmentDegrees);
+            const list = res.data.departments || [];
+            setDepartmentsList(list);
+            setDeptDegreesMap(res.data.departmentDegrees || {});
+            if (list.length > 0) {
+              setFormData(prev => {
+                const selectedDept = list.includes(prev.department) ? prev.department : list[0];
+                const availableDegrees = res.data.departmentDegrees?.[selectedDept] || ['B.Tech'];
+                const selectedDegree = availableDegrees.includes(prev.degree || '') ? prev.degree : availableDegrees[0];
+                return {
+                  ...prev,
+                  department: selectedDept,
+                  degree: selectedDegree
+                };
+              });
+            } else {
               setFormData(prev => ({
                 ...prev,
-                department: res.data.departments.includes(prev.department) ? prev.department : res.data.departments[0],
-                degree: res.data.departmentDegrees[prev.department]?.[0] || res.data.departmentDegrees[res.data.departments[0]]?.[0] || prev.degree
+                department: '',
+                degree: ''
               }));
             }
           }
         })
         .catch(err => {
-          console.warn('Failed to fetch dynamic academic options, using default options:', err);
+          console.warn('Failed to fetch dynamic academic options:', err);
+          setError('Failed to fetch departments from database.');
         });
     }
   }, [isOpen]);
@@ -167,6 +180,11 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
     e.preventDefault();
     if (!formData.applicantName.trim() || !formData.email.trim()) {
       setError('Please provide applicant full name and email address.');
+      return;
+    }
+
+    if (!formData.department || !formData.department.trim()) {
+      setError('Academic Department is mandatory. Please select a department registered in the database.');
       return;
     }
 
@@ -429,20 +447,31 @@ export const AdmissionApplicationModal: React.FC<AdmissionApplicationModalProps>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-700 mb-1 font-medium">Department / Discipline *</label>
+                    <label className="block text-slate-700 mb-1 font-medium">Department / Discipline <span className="text-rose-500">*</span></label>
                     <div className="relative">
                       <Building2 className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                       <select
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                        required
+                        disabled={departmentsList.length === 0}
+                        className="w-full bg-slate-50 border border-slate-300 rounded-[3px] pl-9 pr-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white disabled:bg-slate-100 disabled:cursor-not-allowed"
                       >
-                        {departmentsList.map((dept) => (
-                          <option key={dept} value={dept}>{dept}</option>
-                        ))}
+                        {departmentsList.length === 0 ? (
+                          <option value="">No departments found in database</option>
+                        ) : (
+                          departmentsList.map((dept) => (
+                            <option key={dept} value={dept}>{dept}</option>
+                          ))
+                        )}
                       </select>
                     </div>
+                    {departmentsList.length === 0 && (
+                      <p className="text-[11px] text-rose-600 mt-1">
+                        ⚠️ No departments are registered in the database. Please create a department in the Departments module before admitting students.
+                      </p>
+                    )}
                   </div>
 
                   <div>

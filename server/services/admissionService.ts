@@ -45,19 +45,39 @@ export class AdmissionService {
   };
 
   public static getAcademicOptions() {
-    const departments = Array.from(dbStore.departments.values()).map(d => ({
+    const rawDepts = Array.from(dbStore.departments.values())
+      .filter(d => !d.status || d.status === 'Active');
+
+    const departments = rawDepts.map(d => ({
       code: d.code,
       name: d.name
     }));
+
+    const departmentNames = rawDepts.map(d => d.name);
+
+    // Build degree mappings for the database departments
+    const departmentDegrees: Record<string, string[]> = {};
+    for (const d of rawDepts) {
+      if (this.deptCodeMap[d.name]) {
+        // Find existing degrees if known or standard defaults
+        departmentDegrees[d.name] = [
+          `B.Tech (${d.name})`,
+          `M.Tech (${d.name})`,
+          `Diploma in ${d.name}`
+        ];
+      } else {
+        departmentDegrees[d.name] = [
+          `Bachelor of Engineering / Technology (${d.code})`,
+          `Master of Technology (${d.code})`,
+          `Diploma in ${d.name}`
+        ];
+      }
+    }
+
     return {
-      departments: departments.length > 0 ? departments : [
-        { code: 'CSE', name: 'Computer Science & Engineering' },
-        { code: 'ECE', name: 'Electronics & Communication' },
-        { code: 'EEE', name: 'Electrical & Electronics' },
-        { code: 'ME', name: 'Mechanical Engineering' },
-        { code: 'BT', name: 'Biotechnology & Life Sciences' },
-        { code: 'CE', name: 'Civil Engineering' },
-      ],
+      departments: departmentNames,
+      departmentObjects: departments,
+      departmentDegrees,
       categories: ['General', 'OBC', 'SC', 'ST', 'EWS', 'Management'],
       sessions: ['2026-2027', '2025-2026']
     };
@@ -70,9 +90,9 @@ export class AdmissionService {
 
   public static generateAdmissionRollNumber(departmentName: string, year: number = 2026): string {
     const dept = Array.from(dbStore.departments.values()).find(
-      (d) => d.name.toLowerCase() === departmentName.toLowerCase() || d.code.toLowerCase() === departmentName.toLowerCase()
+      (d) => d.name.toLowerCase() === (departmentName || '').trim().toLowerCase() || d.code.toLowerCase() === (departmentName || '').trim().toLowerCase()
     );
-    const code = dept?.code || this.deptCodeMap[departmentName] || 'GEN';
+    const code = dept?.code || this.deptCodeMap[departmentName] || 'ADM';
     
     // Find highest index among existing students and admissions
     let count = 1000;
@@ -200,6 +220,26 @@ export class AdmissionService {
   }
 
   public static createApplication(input: CreateAdmissionInput): AdmissionRecord {
+    const rawDept = (input.department || '').trim();
+    if (!rawDept) {
+      throw new Error('Department is mandatory. Please select a valid academic department.');
+    }
+
+    // Verify department exists in dbStore
+    const matchingDept = Array.from(dbStore.departments.values()).find(
+      (d) => d.name.toLowerCase() === rawDept.toLowerCase() || d.code.toLowerCase() === rawDept.toLowerCase()
+    );
+
+    if (!matchingDept) {
+      const availableNames = Array.from(dbStore.departments.values()).map(d => d.name);
+      if (availableNames.length === 0) {
+        throw new Error('No academic departments are currently registered in the database. Please add an active department first.');
+      }
+      throw new Error(`Department "${rawDept}" is not recognized or present in the database. Please select from available departments: ${availableNames.join(', ')}`);
+    }
+
+    const canonicalDepartment = matchingDept.name;
+
     const id = `adm-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const applicationNumber = this.generateApplicationNumber();
 
@@ -216,7 +256,7 @@ export class AdmissionService {
       category: input.category || 'General',
       state: input.state,
       address: input.address,
-      department: input.department,
+      department: canonicalDepartment,
       degree: input.degree || 'B.Tech',
       academicTerm: input.academicTerm || '2026-2027 Session',
       classXPercentage: input.classXPercentage,

@@ -31,21 +31,11 @@ import { AdmissionApprovalModal } from './AdmissionApprovalModal';
 import { AdmissionRejectionModal } from './AdmissionRejectionModal';
 import { AdmissionDetailDrawer } from './AdmissionDetailDrawer';
 
-const DEPARTMENTS = [
-  'ALL',
-  'Computer Science & Engineering',
-  'Electronics & Communication',
-  'Electrical & Electronics',
-  'Mechanical Engineering',
-  'Biotechnology & Life Sciences',
-  'Department of Management Studies',
-  'Civil Engineering'
-];
-
 const CATEGORIES = ['ALL', 'General', 'OBC', 'SC', 'ST', 'EWS'];
 
 export const AdmissionManagementView: React.FC = () => {
   const [applications, setApplications] = useState<AdmissionApplication[]>([]);
+  const [departmentsList, setDepartmentsList] = useState<string[]>([]);
   const [stats, setStats] = useState<AdmissionStats>({
     total: 0,
     pending: 0,
@@ -118,6 +108,18 @@ export const AdmissionManagementView: React.FC = () => {
     sortBy,
     sortOrder
   ]);
+
+  useEffect(() => {
+    admissionApi.getAcademicOptions()
+      .then(res => {
+        if (res.success && res.data) {
+          setDepartmentsList(res.data.departments || []);
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load academic departments:', err);
+      });
+  }, []);
 
   useEffect(() => {
     fetchApplications();
@@ -285,7 +287,7 @@ export const AdmissionManagementView: React.FC = () => {
               className="w-full bg-slate-50 border border-slate-300 rounded-[3px] px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
             >
               <option value="ALL">All Departments / Streams</option>
-              {DEPARTMENTS.filter((d) => d !== 'ALL').map((dept) => (
+              {departmentsList.map((dept) => (
                 <option key={dept} value={dept}>{dept}</option>
               ))}
             </select>

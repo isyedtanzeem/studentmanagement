@@ -44,11 +44,12 @@ export const StudentBulkImportModal: React.FC<StudentBulkImportModalProps> = ({
         // Handle quoted CSV split
         const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
         if (values.length >= 2) {
+          const deptVal = (values[3] || '').trim();
           const student: Partial<Student> = {
             fullName: values[0] || `Student ${i}`,
             email: values[1] || `student${i}@scholarcore.edu`,
             phone: values[2] || '',
-            department: values[3] || 'Computer Science & Engineering',
+            department: deptVal,
             gender: (values[4] as any) || 'Male',
             enrollmentYear: Number(values[5]) || 2024,
             gpa: Number(values[6]) || 3.50,

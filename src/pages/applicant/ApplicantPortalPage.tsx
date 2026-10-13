@@ -58,8 +58,8 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccessApp, setSubmitSuccessApp] = useState<AdmissionApplication | null>(null);
 
-  const [departmentsList, setDepartmentsList] = useState<string[]>(DEPARTMENTS);
-  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>(DEPARTMENT_DEGREES);
+  const [departmentsList, setDepartmentsList] = useState<string[]>([]);
+  const [deptDegreesMap, setDeptDegreesMap] = useState<Record<string, string[]>>({});
 
   // Application Form state
   const [formData, setFormData] = useState<CreateAdmissionInput>({
@@ -73,8 +73,8 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     category: 'General',
     state: INDIAN_STATES[0],
     address: '',
-    department: DEPARTMENTS[0],
-    degree: DEPARTMENT_DEGREES[DEPARTMENTS[0]]?.[0] || 'B.Tech',
+    department: '',
+    degree: '',
     academicTerm: '2026-2027 Session',
     classXPercentage: 88.5,
     classXIIPercentage: 89.2,
@@ -87,19 +87,31 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
     admissionApi.getAcademicOptions()
       .then(res => {
         if (res.success && res.data) {
-          if (res.data.departments && res.data.departments.length > 0) {
-            setDepartmentsList(res.data.departments);
-            setDeptDegreesMap(res.data.departmentDegrees);
+          const list = res.data.departments || [];
+          setDepartmentsList(list);
+          setDeptDegreesMap(res.data.departmentDegrees || {});
+          if (list.length > 0) {
+            setFormData(prev => {
+              const selectedDept = list.includes(prev.department) ? prev.department : list[0];
+              const availableDegrees = res.data.departmentDegrees?.[selectedDept] || ['B.Tech'];
+              const selectedDegree = availableDegrees.includes(prev.degree || '') ? prev.degree : availableDegrees[0];
+              return {
+                ...prev,
+                department: selectedDept,
+                degree: selectedDegree
+              };
+            });
+          } else {
             setFormData(prev => ({
               ...prev,
-              department: res.data.departments.includes(prev.department) ? prev.department : res.data.departments[0],
-              degree: res.data.departmentDegrees[prev.department]?.[0] || res.data.departmentDegrees[res.data.departments[0]]?.[0] || prev.degree
+              department: '',
+              degree: ''
             }));
           }
         }
       })
       .catch(err => {
-        console.warn('Could not load dynamic academic options, using standard defaults:', err);
+        console.warn('Could not load dynamic academic options from DB:', err);
       });
   }, []);
 
@@ -253,6 +265,16 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
   const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.applicantName.trim() || !formData.email.trim() || !formData.phone?.trim()) {
+      setError('Applicant Name, Email, and Mobile Number are required.');
+      return;
+    }
+
+    if (!formData.department || !formData.department.trim()) {
+      setError('Academic Department is mandatory. Please select a valid department present in the university database.');
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
@@ -308,18 +330,18 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-poppins selection:bg-blue-100 selection:text-blue-900">
       {/* Top Banner & Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-xs">
+            <div className="w-10 h-10 bg-blue-600 rounded-[3px] flex items-center justify-center text-white font-bold shadow-xs">
               <GraduationCap className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold text-slate-900 tracking-tight">ScholarCore SIMS</h1>
-                <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-mono font-bold border border-blue-200">
+                <span className="px-2 py-0.5 rounded-[3px] bg-blue-50 text-blue-700 text-[10px] font-poppins font-bold border border-blue-200">
                   Admissions 2026-27
                 </span>
               </div>
@@ -337,7 +359,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   setIsApplyingNew(false);
                   setSubmitSuccessApp(null);
                 }}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-xs font-medium transition-all"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[3px] border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-xs font-medium transition-all"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Switch Mobile</span>
@@ -346,7 +368,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
             <button
               onClick={onBackToStaffLogin}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold shadow-2xs transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[3px] bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold shadow-2xs transition-all"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Staff / Officer Login</span>
@@ -360,9 +382,9 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
         {!isSearched ? (
           /* STEP 1: Mobile Number Login / Lookup Screen */
           <div className="max-w-xl mx-auto my-8 sm:my-12">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="bg-white border border-slate-200 rounded-[4px] p-6 sm:p-8 shadow-xs space-y-6">
               <div className="text-center space-y-2">
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 border border-blue-200 rounded-2xl flex items-center justify-center mx-auto shadow-2xs">
+                <div className="w-12 h-12 bg-blue-50 text-blue-600 border border-blue-200 rounded-[4px] flex items-center justify-center mx-auto shadow-2xs">
                   <Phone className="w-6 h-6" />
                 </div>
                 <h2 className="text-xl font-bold text-slate-900">Student Applicant Portal</h2>
@@ -372,7 +394,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
               </div>
 
               {error && (
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2.5">
+                <div className="p-3.5 rounded-[3px] bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2.5">
                   <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
                   <span>{error}</span>
                 </div>
@@ -384,7 +406,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                     Mobile Phone Number <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-2.5 text-xs font-mono font-semibold text-slate-500">
+                    <span className="absolute left-3.5 top-2.5 text-xs font-poppins font-semibold text-slate-500">
                       +91
                     </span>
                     <input
@@ -394,7 +416,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       placeholder="98765 00000"
                       pattern={MOBILE_NUMBER_REGEX.source}
                       title="Enter a valid 10-digit Indian mobile number."
-                      className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm font-mono placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
+                      className="w-full pl-12 pr-4 py-2.5 rounded-[3px] border border-slate-300 text-slate-900 text-sm font-poppins placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600"
                       required
                     />
                   </div>
@@ -406,7 +428,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="w-full py-3 rounded-[3px] bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -435,7 +457,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         setMobileNumber(s.phone);
                         handlePhoneLookup(undefined, s.phone);
                       }}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-xs font-mono transition-all shadow-2xs"
+                      className="px-2.5 py-1 rounded-[3px] border border-slate-200 bg-slate-50 text-slate-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 text-xs font-poppins transition-all shadow-2xs"
                     >
                       {s.label} ({s.phone})
                     </button>
@@ -445,7 +467,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
             </div>
 
             {/* Information card */}
-            <div className="mt-6 p-4 rounded-xl bg-blue-50/60 border border-blue-200 text-xs text-blue-900 space-y-2">
+            <div className="mt-6 p-4 rounded-[3px] bg-blue-50/60 border border-blue-200 text-xs text-blue-900 space-y-2">
               <div className="flex items-center gap-2 font-semibold text-blue-950">
                 <Info className="w-4 h-4 text-blue-600" />
                 <span>Key Information for Applicants (Session 2026-27)</span>
@@ -473,18 +495,18 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   <span>Back to Applications</span>
                 </button>
                 <h2 className="text-xl font-bold text-slate-900">New Student Admission Application</h2>
-                <p className="text-xs text-slate-500 font-mono">
+                <p className="text-xs text-slate-500 font-poppins">
                   Mobile Number: <span className="font-semibold text-slate-800">{formData.phone}</span>
                 </p>
               </div>
 
               {/* Form Step Indicator */}
-              <div className="hidden sm:flex items-center gap-2 font-mono text-xs">
+              <div className="hidden sm:flex items-center gap-2 font-poppins text-xs">
                 {[1, 2, 3, 4].map((s) => (
                   <div
                     key={s}
                     onClick={() => setFormStep(s as any)}
-                    className={`px-3 py-1 rounded-lg cursor-pointer border transition-all ${
+                    className={`px-3 py-1 rounded-[3px] cursor-pointer border transition-all ${
                       formStep === s
                         ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-2xs'
                         : formStep > s
@@ -500,24 +522,24 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
             {submitSuccessApp ? (
               /* Success Submission Card */
-              <div className="bg-white border border-emerald-200 rounded-2xl p-8 text-center space-y-6 shadow-xs">
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto border border-emerald-300 shadow-2xs">
+              <div className="bg-white border border-emerald-200 rounded-[4px] p-8 text-center space-y-6 shadow-xs">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-[4px] flex items-center justify-center mx-auto border border-emerald-300 shadow-2xs">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
 
                 <div className="space-y-2">
-                  <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-mono font-bold">
+                  <span className="px-3 py-1 rounded-[3px] bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-poppins font-bold">
                     Application Submitted Successfully
                   </span>
                   <h3 className="text-2xl font-bold text-slate-900">
-                    Application Number: <span className="font-mono text-blue-700">{submitSuccessApp.applicationNumber}</span>
+                    Application Number: <span className="font-poppins text-blue-700">{submitSuccessApp.applicationNumber}</span>
                   </h3>
                   <p className="text-xs text-slate-600 max-w-md mx-auto">
                     Your admission request for <span className="font-semibold">{submitSuccessApp.department}</span> has been logged. The Central Admissions Cell will review your credentials shortly.
                   </p>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 max-w-lg mx-auto text-left text-xs space-y-2 font-mono">
+                <div className="bg-slate-50 border border-slate-200 rounded-[3px] p-4 max-w-lg mx-auto text-left text-xs space-y-2 font-poppins">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Applicant Name:</span>
                     <span className="font-semibold text-slate-900">{submitSuccessApp.applicantName}</span>
@@ -545,7 +567,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       setIsApplyingNew(false);
                       if (formData.phone) handlePhoneLookup(undefined, formData.phone);
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all shadow-xs cursor-pointer"
+                    className="px-5 py-2.5 rounded-[3px] bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all shadow-xs cursor-pointer"
                   >
                     Track Live Application Status
                   </button>
@@ -553,9 +575,9 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
               </div>
             ) : (
               /* Application Multi-step Form */
-              <form onSubmit={handleSubmitApplication} className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+              <form onSubmit={handleSubmitApplication} className="bg-white border border-slate-200 rounded-[4px] p-6 sm:p-8 shadow-xs space-y-6">
                 {error && (
-                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2">
+                  <div className="p-3.5 rounded-[3px] bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
                     <span>{error}</span>
                   </div>
@@ -581,7 +603,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={formData.applicantName}
                           onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
                           placeholder="e.g. Aarav Sharma"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                           required
                         />
                       </div>
@@ -595,7 +617,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           placeholder="aarav.sharma@gmail.com"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                           required
                         />
                       </div>
@@ -609,7 +631,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={formData.fatherName}
                           onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
                           placeholder="e.g. Ramesh Chandra Sharma"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                           required
                         />
                       </div>
@@ -623,7 +645,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={formData.motherName}
                           onChange={(e) => setFormData({ ...formData, motherName: e.target.value })}
                           placeholder="e.g. Sunita Sharma"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                         />
                       </div>
 
@@ -632,7 +654,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         <select
                           value={formData.gender}
                           onChange={(e) => setFormData({ ...formData, gender: e.target.value as any })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white"
                         >
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
@@ -646,7 +668,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           type="date"
                           value={formData.dateOfBirth}
                           onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                         />
                       </div>
 
@@ -655,7 +677,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         <select
                           value={formData.category}
                           onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white"
                         >
                           <option value="General">General</option>
                           <option value="OBC">OBC</option>
@@ -672,7 +694,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         <select
                           value={formData.state}
                           onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                           required
                         >
                           {INDIAN_STATES.map((s) => (
@@ -691,7 +713,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         placeholder="Flat No, House Street, City, Pincode"
-                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
+                        className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                       />
                     </div>
 
@@ -699,7 +721,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(2)}
-                        className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-5 py-2 rounded-[3px] bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <span>Next: Program Choice</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -726,15 +748,25 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         <select
                           value={formData.department}
                           onChange={(e) => handleDepartmentChange(e.target.value)}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                           required
+                          disabled={departmentsList.length === 0}
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium disabled:bg-slate-100 disabled:cursor-not-allowed"
                         >
-                          {departmentsList.map((dept) => (
-                            <option key={dept} value={dept}>
-                              {dept}
-                            </option>
-                          ))}
+                          {departmentsList.length === 0 ? (
+                            <option value="">No departments found in database</option>
+                          ) : (
+                            departmentsList.map((dept) => (
+                              <option key={dept} value={dept}>
+                                {dept}
+                              </option>
+                            ))
+                          )}
                         </select>
+                        {departmentsList.length === 0 && (
+                          <p className="text-[11px] text-rose-600 mt-1">
+                            ⚠️ No academic departments are active in the database. Please contact admissions.
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -744,7 +776,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         <select
                           value={formData.degree}
                           onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 focus:border-blue-600 focus:outline-none bg-white font-medium"
                         >
                           {(deptDegreesMap[formData.department] || DEPARTMENT_DEGREES[formData.department] || ['B.Tech (Bachelor of Technology)']).map((deg) => (
                             <option key={deg} value={deg}>
@@ -760,7 +792,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           type="text"
                           value={formData.academicTerm}
                           readOnly
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-700 font-mono font-semibold"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-200 bg-slate-50 text-xs text-slate-700 font-poppins font-semibold"
                         />
                       </div>
                     </div>
@@ -769,7 +801,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(1)}
-                        className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 rounded-[3px] border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Previous</span>
@@ -778,7 +810,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(3)}
-                        className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-5 py-2 rounded-[3px] bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <span>Next: Academic Record</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -806,7 +838,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           max={100}
                           value={formData.classXPercentage || ''}
                           onChange={(e) => setFormData({ ...formData, classXPercentage: parseFloat(e.target.value) || 0 })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-mono focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 font-poppins focus:border-blue-600 focus:outline-none"
                         />
                       </div>
 
@@ -818,7 +850,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           max={100}
                           value={formData.classXIIPercentage || ''}
                           onChange={(e) => setFormData({ ...formData, classXIIPercentage: parseFloat(e.target.value) || 0 })}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-mono focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 font-poppins focus:border-blue-600 focus:outline-none"
                         />
                       </div>
 
@@ -829,7 +861,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={formData.entranceExamScore || ''}
                           onChange={(e) => setFormData({ ...formData, entranceExamScore: e.target.value })}
                           placeholder="e.g. JEE Main 92.4 %ile"
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-mono focus:border-blue-600 focus:outline-none"
+                          className="w-full px-3.5 py-2 rounded-[3px] border border-slate-300 text-xs text-slate-900 font-poppins focus:border-blue-600 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -838,7 +870,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(2)}
-                        className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 rounded-[3px] border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Previous</span>
@@ -847,7 +879,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(4)}
-                        className="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-5 py-2 rounded-[3px] bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <span>Next: Attach Documents</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -878,22 +910,22 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         return (
                           <div
                             key={doc.key}
-                            className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-3"
+                            className="p-3.5 rounded-[3px] border border-slate-200 bg-slate-50 flex items-center justify-between gap-3"
                           >
                             <div className="min-w-0">
                               <h4 className="text-xs font-semibold text-slate-900 truncate">{doc.title}</h4>
                               {existingAtt ? (
-                                <p className="text-[10px] text-emerald-600 font-mono truncate">
+                                <p className="text-[10px] text-emerald-600 font-poppins truncate">
                                   ✓ {existingAtt.name} ({existingAtt.size})
                                 </p>
                               ) : (
-                                <p className="text-[10px] text-slate-500 font-mono">
+                                <p className="text-[10px] text-slate-500 font-poppins">
                                   {doc.req ? 'Mandatory Verification Doc' : 'Optional / Secondary Doc'}
                                 </p>
                               )}
                             </div>
 
-                            <label className={`px-3 py-1.5 rounded-lg border text-[11px] font-mono font-semibold cursor-pointer transition-all shrink-0 flex items-center gap-1 ${
+                            <label className={`px-3 py-1.5 rounded-[3px] border text-[11px] font-poppins font-semibold cursor-pointer transition-all shrink-0 flex items-center gap-1 ${
                               existingAtt
                                 ? 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
                                 : 'border-slate-300 bg-white hover:bg-slate-100 text-slate-700'
@@ -912,13 +944,13 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                     </div>
 
                     {/* Custom Attachments Section */}
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3">
+                    <div className="p-4 rounded-[3px] border border-slate-200 bg-slate-50/70 space-y-3">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                        <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 font-poppins">
                           <Paperclip className="w-3.5 h-3.5 text-blue-600" />
                           Additional Document Attachments
                         </h4>
-                        <span className="text-[10px] text-slate-500 font-mono">
+                        <span className="text-[10px] text-slate-500 font-poppins">
                           {(formData.attachments || []).length} Attached
                         </span>
                       </div>
@@ -929,9 +961,9 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           value={customDocTitle}
                           onChange={(e) => setCustomDocTitle(e.target.value)}
                           placeholder="e.g. Caste Certificate / Income Proof / Sports Certificate"
-                          className="flex-1 w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-600 bg-white"
+                          className="flex-1 w-full px-3 py-1.5 text-xs rounded-[3px] border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-600 bg-white"
                         />
-                        <label className="w-full sm:w-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold cursor-pointer flex items-center justify-center gap-1 shrink-0 transition-colors">
+                        <label className="w-full sm:w-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-[3px] text-xs font-semibold cursor-pointer flex items-center justify-center gap-1 shrink-0 transition-colors">
                           <Plus className="w-3.5 h-3.5" />
                           <span>Attach File</span>
                           <input
@@ -948,13 +980,13 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           {(formData.attachments || []).map((att) => (
                             <div
                               key={att.id}
-                              className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between text-xs gap-2"
+                              className="p-2.5 rounded-[3px] bg-white border border-slate-200 flex items-center justify-between text-xs gap-2"
                             >
                               <div className="flex items-center gap-2 min-w-0">
                                 <Paperclip className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                                 <div className="min-w-0">
                                   <span className="font-semibold text-slate-900 block truncate">{att.category}</span>
-                                  <span className="text-[10px] text-slate-500 font-mono block truncate">
+                                  <span className="text-[10px] text-slate-500 font-poppins block truncate">
                                     {att.name} ({att.size || 'Attached'})
                                   </span>
                                 </div>
@@ -974,7 +1006,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       )}
                     </div>
 
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div className="p-4 rounded-[3px] bg-slate-50 border border-slate-200 space-y-2">
                       <label className="flex items-start gap-2.5 cursor-pointer">
                         <input
                           type="checkbox"
@@ -992,7 +1024,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="button"
                         onClick={() => setFormStep(3)}
-                        className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 rounded-[3px] border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Previous</span>
@@ -1001,7 +1033,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
+                        className="px-6 py-2.5 rounded-[3px] bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-xs disabled:opacity-50 cursor-pointer"
                       >
                         {submitting ? (
                           <>
@@ -1025,15 +1057,15 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
           /* STEP 3: Applicant Application Dashboard & Live Tracker */
           <div className="space-y-6">
             {/* Header & Switchers */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-[4px] p-5 shadow-xs">
               <div>
-                <span className="text-[11px] font-mono font-bold text-blue-700 uppercase tracking-wider block">
+                <span className="text-[11px] font-poppins font-bold text-blue-700 uppercase tracking-wider block">
                   Registered Applicant Account
                 </span>
                 <h2 className="text-lg font-bold text-slate-900">
-                  Applications for Mobile: <span className="font-mono text-blue-800">{mobileNumber}</span>
+                  Applications for Mobile: <span className="font-poppins text-blue-800">{mobileNumber}</span>
                 </h2>
-                <p className="text-xs text-slate-500 font-mono mt-0.5">
+                <p className="text-xs text-slate-500 font-poppins mt-0.5">
                   {applications.length} admission request{applications.length === 1 ? '' : 's'} logged in SIMS database
                 </p>
               </div>
@@ -1041,7 +1073,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleStartNewApplication}
-                  className="px-3.5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 font-semibold text-xs transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  className="px-3.5 py-2 rounded-[3px] bg-blue-600 text-white hover:bg-blue-700 font-semibold text-xs transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Apply for Another Program</span>
@@ -1056,7 +1088,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   <button
                     key={app.id}
                     onClick={() => setSelectedApp(app)}
-                    className={`px-4 py-2 rounded-xl text-xs font-mono transition-all whitespace-nowrap border ${
+                    className={`px-4 py-2 rounded-[3px] text-xs font-poppins transition-all whitespace-nowrap border ${
                       selectedApp?.id === app.id
                         ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-2xs'
                         : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -1077,15 +1109,15 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                     const badge = getStatusBadge(selectedApp.status);
                     const StatusIcon = badge.icon;
                     return (
-                      <div className={`border rounded-2xl p-6 shadow-xs ${badge.bg}`}>
+                      <div className={`border rounded-[4px] p-6 shadow-xs ${badge.bg}`}>
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-start gap-3">
-                            <div className="p-2.5 rounded-xl bg-white border border-slate-200 shrink-0 shadow-2xs">
+                            <div className="p-2.5 rounded-[3px] bg-white border border-slate-200 shrink-0 shadow-2xs">
                               <StatusIcon className="w-6 h-6 text-slate-900" />
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-mono font-bold uppercase tracking-wider">
+                                <span className="text-[11px] font-poppins font-bold uppercase tracking-wider">
                                   Current Application Status
                                 </span>
                               </div>
@@ -1108,16 +1140,16 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
                         {/* Approved Student ID Highlight */}
                         {selectedApp.status === 'Approved' && (
-                          <div className="mt-4 p-4 rounded-xl bg-white border border-emerald-300 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                          <div className="mt-4 p-4 rounded-[3px] bg-white border border-emerald-300 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
                             <div>
-                              <span className="text-[10px] font-mono uppercase font-bold text-emerald-800">
+                              <span className="text-[10px] font-poppins uppercase font-bold text-emerald-800">
                                 Official Generated Student Roll Number
                               </span>
-                              <div className="text-2xl font-extrabold font-mono text-emerald-700 tracking-wider">
+                              <div className="text-2xl font-extrabold font-poppins text-emerald-700 tracking-wider">
                                 {selectedApp.generatedStudentId || '2026CSE1001'}
                               </div>
                             </div>
-                            <div className="text-xs text-slate-600 font-mono">
+                            <div className="text-xs text-slate-600 font-poppins">
                               Status: <span className="text-emerald-700 font-bold">Active Enrolled Student</span>
                             </div>
                           </div>
@@ -1125,8 +1157,8 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
                         {/* Rejection Reason Highlight */}
                         {selectedApp.status === 'Rejected' && selectedApp.rejectionReason && (
-                          <div className="mt-4 p-4 rounded-xl bg-white border border-rose-300 text-rose-950 text-xs space-y-1 shadow-2xs">
-                            <span className="font-bold text-rose-800 block uppercase font-mono text-[10px]">
+                          <div className="mt-4 p-4 rounded-[3px] bg-white border border-rose-300 text-rose-950 text-xs space-y-1 shadow-2xs">
+                            <span className="font-bold text-rose-800 block uppercase font-poppins text-[10px]">
                               Rejection Communication Remarks
                             </span>
                             <p>{selectedApp.rejectionReason}</p>
@@ -1137,7 +1169,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   })()}
 
                   {/* Status Progress Stepper */}
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-[4px] p-6 shadow-xs space-y-4">
                     <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
                       <Clock className="w-4 h-4 text-blue-600" />
                       <span>Admission Verification Timeline</span>
@@ -1176,7 +1208,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       ].map((st) => (
                         <div
                           key={st.step}
-                          className={`p-3 rounded-xl border text-left transition-all ${
+                          className={`p-3 rounded-[3px] border text-left transition-all ${
                             st.completed
                               ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
                               : st.active
@@ -1185,7 +1217,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           }`}
                         >
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-mono font-bold">STAGE 0{st.step}</span>
+                            <span className="text-[10px] font-poppins font-bold">STAGE 0{st.step}</span>
                             {st.completed ? (
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                             ) : st.active ? (
@@ -1200,7 +1232,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   </div>
 
                   {/* Document Verification Checklist */}
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-[4px] p-6 shadow-xs space-y-4">
                     <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                       <div className="flex items-center gap-2">
                         <ShieldCheck className="w-4 h-4 text-blue-600" />
@@ -1209,7 +1241,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         </h3>
                       </div>
                       {selectedApp.verificationChecklist?.verifiedBy && (
-                        <span className="text-[10px] font-mono text-slate-500">
+                        <span className="text-[10px] font-poppins text-slate-500">
                           Verified by {selectedApp.verificationChecklist.verifiedBy}
                         </span>
                       )}
@@ -1228,7 +1260,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                         return (
                           <div
                             key={item.key}
-                            className={`p-3 rounded-xl border flex items-center justify-between gap-2 ${
+                            className={`p-3 rounded-[3px] border flex items-center justify-between gap-2 ${
                               isVerified
                                 ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
                                 : 'bg-slate-50 border-slate-200 text-slate-600'
@@ -1236,7 +1268,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                           >
                             <span className="text-xs font-medium">{item.label}</span>
                             <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                              className={`px-2 py-0.5 rounded text-[10px] font-poppins font-bold border ${
                                 isVerified
                                   ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                                   : 'bg-slate-200 text-slate-700 border-slate-300'
@@ -1251,12 +1283,12 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   </div>
 
                   {/* Application Data Details */}
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-[4px] p-6 shadow-xs space-y-4">
                     <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">
                       Submitted Personal & Academic Details
                     </h3>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-poppins">
                       <div>
                         <span className="text-slate-500 block text-[11px]">Applicant Full Name</span>
                         <span className="font-semibold text-slate-900">{selectedApp.applicantName}</span>
@@ -1287,13 +1319,13 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                       </div>
                       <div>
                         <span className="text-slate-500 block text-[11px]">Class X Marks</span>
-                        <span className="font-mono font-semibold text-slate-900">
+                        <span className="font-poppins font-semibold text-slate-900">
                           {selectedApp.classXPercentage ? `${selectedApp.classXPercentage}%` : 'N/A'}
                         </span>
                       </div>
                       <div>
                         <span className="text-slate-500 block text-[11px]">Class XII Marks</span>
-                        <span className="font-mono font-semibold text-slate-900">
+                        <span className="font-poppins font-semibold text-slate-900">
                           {selectedApp.classXIIPercentage ? `${selectedApp.classXIIPercentage}%` : 'N/A'}
                         </span>
                       </div>
@@ -1303,13 +1335,13 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
 
                 {/* Right 1 Col: Summary Card & Official Receipt */}
                 <div className="space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-[4px] p-6 shadow-xs space-y-4">
                     <div className="flex items-center gap-2 text-slate-900 font-bold text-sm pb-3 border-b border-slate-100">
                       <Building2 className="w-4 h-4 text-blue-600" />
                       <span>Application Summary</span>
                     </div>
 
-                    <div className="space-y-3 text-xs font-mono">
+                    <div className="space-y-3 text-xs font-poppins">
                       <div>
                         <span className="text-slate-500 block text-[10px]">Application ID</span>
                         <span className="font-bold text-blue-700 text-sm">{selectedApp.applicationNumber}</span>
@@ -1339,7 +1371,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                     <div className="pt-3 border-t border-slate-100 space-y-2">
                       <button
                         onClick={() => window.print()}
-                        className="w-full py-2 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-800 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                        className="w-full py-2 rounded-[3px] border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-800 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>Download Acknowledgment</span>
@@ -1348,14 +1380,14 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
                   </div>
 
                   {/* Admission Cell Contact */}
-                  <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xs space-y-3">
+                  <div className="bg-slate-900 text-white rounded-[4px] p-6 shadow-xs space-y-3">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400">
                       Central Admissions Helpline
                     </h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
                       For document verification queries or intake updates, contact the Registrar Office.
                     </p>
-                    <div className="text-xs font-mono space-y-1 text-slate-300 pt-1">
+                    <div className="text-xs font-poppins space-y-1 text-slate-300 pt-1">
                       <div>📞 +91 1800 123 4567</div>
                       <div>✉️ admissions@scholarcore.edu.in</div>
                       <div>🏢 Building A, Administrative Block</div>
@@ -1369,7 +1401,7 @@ export const ApplicantPortalPage: React.FC<ApplicantPortalPageProps> = ({ onBack
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500 font-mono">
+      <footer className="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500 font-poppins">
         ScholarCore SIMS • Public Admission Portal 2026-27 • Institutional Office of the Registrar
       </footer>
     </div>
