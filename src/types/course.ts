@@ -38,10 +38,12 @@ export interface CourseQueryParams {
 export interface CourseStats {
   total: number;
   active: number;
-  inactive: number;
-  totalEnrolled: number;
-  totalCredits: number;
-  avgFee: number;
+  inactive?: number;
+  totalCourses?: number;
+  activeCourses?: number;
+  totalEnrolled?: number;
+  totalCredits?: number;
+  avgFee?: number;
 }
 
 export interface DepartmentOption {

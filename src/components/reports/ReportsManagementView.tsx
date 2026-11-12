@@ -42,13 +42,12 @@ import {
   AlumniReportData,
 } from '../../types/report';
 import { reportApi } from '../../api/reportApi';
-import { SynopsisReaderView } from './SynopsisReaderView';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#14b8a6'];
 
 export const ReportsManagementView: React.FC = () => {
   const [reportType, setReportType] = useState<
-    'student' | 'admission' | 'department' | 'gender' | 'alumni' | 'synopsis'
+    'student' | 'admission' | 'department' | 'gender' | 'alumni'
   >('student');
 
   const [departmentFilter, setDepartmentFilter] = useState<string>('ALL');
@@ -56,44 +55,6 @@ export const ReportsManagementView: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [downloadingDocx, setDownloadingDocx] = useState<boolean>(false);
-
-  // Direct DOCX Synopsis Download Handler
-  const handleDownloadSynopsisDocx = async () => {
-    setDownloadingDocx(true);
-    try {
-      // First attempt: fetch from server endpoint
-      const response = await fetch('/api/v1/reports/synopsis-docx');
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ScholarCore_Project_Synopsis.docx';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        showBanner('success', 'ScholarCore Project Synopsis (.docx) downloaded successfully!');
-      } else {
-        // Fallback: direct link to static generated file
-        const a = document.createElement('a');
-        a.href = '/ScholarCore_Project_Synopsis.docx';
-        a.download = 'ScholarCore_Project_Synopsis.docx';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showBanner('success', 'ScholarCore Project Synopsis (.docx) downloaded successfully!');
-      }
-    } catch (err: any) {
-      console.error('Error downloading DOCX:', err);
-      // Fallback
-      window.open('/ScholarCore_Project_Synopsis.docx', '_blank');
-      showBanner('info', 'Opening ScholarCore Project Synopsis (.docx) download link.');
-    } finally {
-      setDownloadingDocx(false);
-    }
-  };
 
   // Report States
   const [studentReport, setStudentReport] = useState<StudentReportData | null>(null);
@@ -574,20 +535,6 @@ export const ReportsManagementView: React.FC = () => {
           <GraduationCap className="w-4 h-4" />
           <span>Alumni Report</span>
         </button>
-
-        <button
-          onClick={() => setReportType('synopsis')}
-          className={`pb-3 px-1 border-b-2 transition flex items-center space-x-2 whitespace-nowrap cursor-pointer ${
-            reportType === 'synopsis'
-              ? 'border-blue-600 text-blue-700 font-bold'
-              : 'border-transparent text-blue-600 hover:text-blue-800 font-semibold'
-          }`}
-        >
-          <Award className="w-4 h-4 text-blue-600" />
-          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-200">
-            Project Synopsis (.DOCX)
-          </span>
-        </button>
       </div>
 
       {/* Global Filters Bar */}
@@ -1061,14 +1008,6 @@ export const ReportsManagementView: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
-
-          {/* SYNOPSIS TAB VIEW */}
-          {reportType === 'synopsis' && (
-            <SynopsisReaderView
-              onDownloadDocx={handleDownloadSynopsisDocx}
-              isDownloading={downloadingDocx}
-            />
           )}
         </>
       )}

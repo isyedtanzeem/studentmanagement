@@ -54,7 +54,7 @@ export class CourseService {
 
     // Compute Overall Stats before filters
     const totalCourses = list.length;
-    const activeCourses = list.filter(c => c.status === 'Active').length;
+    const activeCourses = list.filter(c => !c.status || c.status === 'Active' || c.status.toLowerCase() === 'active').length;
     const totalCredits = list.reduce((acc, c) => acc + (c.credits || 0), 0);
     const totalEnrolled = list.reduce((acc, c) => acc + (c.enrolledStudents || 0), 0);
 
@@ -106,6 +106,8 @@ export class CourseService {
     return {
       courses: paginatedCourses,
       stats: {
+        total: totalCourses,
+        active: activeCourses,
         totalCourses,
         activeCourses,
         totalCredits,

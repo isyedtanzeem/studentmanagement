@@ -80,7 +80,13 @@ export const CourseManagementView: React.FC = () => {
       const res = await courseApi.getCourses(params);
       if (res.success) {
         setCourses(res.data);
-        setStats(res.stats);
+        const total = res.stats?.total ?? res.stats?.totalCourses ?? (res.data ? res.data.length : 0);
+        const active = res.stats?.active ?? res.stats?.activeCourses ?? (res.data ? res.data.filter(c => !c.status || c.status === 'Active' || (c.status as string).toLowerCase() === 'active').length : 0);
+        setStats({
+          ...(res.stats || {}),
+          total,
+          active
+        });
         setPagination((prev) => ({
           ...prev,
           currentPage: res.pagination.currentPage,
@@ -189,39 +195,39 @@ export const CourseManagementView: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Courses</span>
-          <span className="text-2xl font-bold text-slate-900 font-poppins mt-0.5 block">{stats.total}</span>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Active Intake</span>
-          <span className="text-2xl font-bold text-emerald-600 font-poppins mt-0.5 block">{stats.active}</span>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Enrolled</span>
-          <span className="text-2xl font-bold text-blue-600 font-poppins mt-0.5 block">{stats.totalEnrolled}</span>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Total Credits</span>
-          <span className="text-2xl font-bold text-purple-600 font-poppins mt-0.5 block">{stats.totalCredits}</span>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Avg Semester Fee</span>
-          <span className="text-2xl font-bold text-amber-600 font-poppins mt-0.5 block">
-            ₹{stats.avgFee > 0 ? stats.avgFee.toLocaleString('en-IN') : '0'}
+      {/* KPI Stats Cards - Total Courses & Active Intake */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white border border-[#D2D6DE] p-4 rounded-[3px] shadow-xs hover:border-slate-300 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 text-[11px] uppercase font-poppins font-semibold tracking-wider block">
+              Total Courses
+            </span>
+            <span className="w-8 h-8 rounded-[3px] bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+              <BookOpen className="w-4 h-4" />
+            </span>
+          </div>
+          <span className="text-2xl font-bold text-slate-900 font-poppins mt-2 block">
+            {stats.total ?? stats.totalCourses ?? courses.length}
+          </span>
+          <span className="text-[11px] text-slate-500 mt-1 block">
+            Institutional accredited degree programs & courses
           </span>
         </div>
 
-        <div className="bg-white border border-slate-200/90 p-4 rounded-[3px] shadow-xs">
-          <span className="text-slate-500 text-[10px] uppercase font-poppins font-semibold tracking-wider block">Avg Enrollment</span>
-          <span className="text-2xl font-bold text-indigo-600 font-poppins mt-0.5 block">
-            {stats.total > 0 ? Math.round(stats.totalEnrolled / stats.total) : 0}
+        <div className="bg-white border border-[#D2D6DE] p-4 rounded-[3px] shadow-xs hover:border-emerald-200 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 text-[11px] uppercase font-poppins font-semibold tracking-wider block">
+              Active Intake
+            </span>
+            <span className="w-8 h-8 rounded-[3px] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+              <GraduationCap className="w-4 h-4" />
+            </span>
+          </div>
+          <span className="text-2xl font-bold text-emerald-600 font-poppins mt-2 block">
+            {stats.active ?? stats.activeCourses ?? courses.filter(c => !c.status || c.status === 'Active' || (c.status as string).toLowerCase() === 'active').length}
+          </span>
+          <span className="text-[11px] text-slate-500 mt-1 block">
+            Curriculum active and accepting admissions
           </span>
         </div>
       </div>
